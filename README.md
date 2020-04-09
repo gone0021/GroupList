@@ -1,2 +1,8 @@
-# MyList
-any list by laravel
+# GroupList
+・グループ間で情報を共有する
+
+・共有する情報（items）は予定、行きたい場所、ダイビングログとする
+：希望などにより随時追加を考慮
+
+・カレンダー上にitemsが存在するグループがあれば「group」と表示
+・自分のitemsが存在する場合はどのitemsかを表示
