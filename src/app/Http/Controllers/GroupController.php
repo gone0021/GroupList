@@ -23,20 +23,72 @@ class GroupController extends Controller
         return view('/admin.create');
     }
 
-    public function insert(GroupRequest $req)
+    public function createAdd(GroupRequest $req)
     {
-        $val = $req->group_name;
+        $val = $req->all();
+        unset($val['_token']);
 
         $groups = new Group;
-        $groups->group_name = $val;
-        $groups->save();
+        $groups->fill($val)->save();
 
         return redirect('/admin/create/done');
     }
 
-    public function list()
+    public function list(Request $req)
     {
-        return view('/admin/list');
+        $p_num = 7;
+        $sort = $req->sort;
+
+        if ($sort == 'id_de') {
+            $group = Group::orderBy('id', 'desc')->paginate($p_num);
+        } else if ($sort == 'name_de') {
+            $group = Group::orderBy('group_name', 'desc')->paginate($p_num);
+        } else {
+            $group = Group::paginate($p_num);
+        }
+
+        if($group->isEmpty())  {
+            $group;
+        }
+
+        $param = [
+            'items' => $group,
+            'sort' => $sort,
+        ];
+        dump($param);
+
+        return view('/admin/list', $param);
+    }
+
+    public function edit(Request $req)
+    {
+        $g_id = $req->group_id;
+        $val = Group::find($g_id);
+
+        $param = [
+            'id' => $g_id,
+            'group_name' => $val->group_name,
+            'group_type' => $val->group_type,
+        ];
+
+        dump($param);
+        return view('/admin.edit', $param);
+    }
+
+
+    public function groupUpdate(GroupRequest $req)
+    {
+        $g_id = $req->id;
+        $val = $req->all();
+        unset($val['_token']);
+
+        $group = Group::find($g_id);
+        $group->fill($val)->update();
+
+        dump($val);
+        return view('/test');
+
+        return redirect('/admin/edit/done');
     }
 
 
@@ -49,41 +101,19 @@ class GroupController extends Controller
 
     public function show(Request $req)
     {
-        $id = Auth::user()->id;
-        $item = User::find($id);
+        $a_id = Auth::user()->id;
+        $item = User::find($a_id);
         $param = ['item' => $item];
         return view('/users.show', $param);
     }
 
 
-
-
-    // ------ 登録なし
     // ------ sample ------
-    public function editCheck(UsersRequest $req)
-    {
-        $param = $req->all();
-        unset($param['_token']);
-        return view('/users.check', $param);
-    }
-
-    public function update(Request $req)
-    {
-        $id = Auth::user()->id;
-        $users = User::find($id);
-
-        $val = $req->all();
-        unset($val['_token']);
-
-        $users->fill($val)->update();
-        return redirect('/users_done');
-    }
-
 
     public function account()
     {
-        $id = Auth::user()->id;
-        $param = ['id' => $id];
+        $a_id = Auth::user()->id;
+        $param = ['id' => $a_id];
         dump($param);
         return view('/users.account', $param);
     }
@@ -96,8 +126,8 @@ class GroupController extends Controller
 
     public function passwordUpdate(UsersRequest $req)
     {
-        $id = Auth::user()->id;
-        $users = User::find($id);
+        $a_id = Auth::user()->id;
+        $users = User::find($a_id);
 
         $inp = $req->password;
         $pass = Hash::make($inp);
@@ -125,9 +155,9 @@ class GroupController extends Controller
 
     public function deleteAction()
     {
-        $id = Auth::user()->id;
+        $a_id = Auth::user()->id;
 
-        User::find($id)->delete();
+        User::find($a_id)->delete();
         Auth::logout();
         return redirect('/users_delete_done');
     }

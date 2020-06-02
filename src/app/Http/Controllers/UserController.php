@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\GroupUser;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\GroupUse;
 
 class UserController extends Controller
 {
@@ -19,8 +21,8 @@ class UserController extends Controller
 
     public function show(Request $req)
     {
-        $id = Auth::user()->id;
-        $item = User::find($id);
+        $a_id = Auth::user()->id;
+        $item = User::find($a_id);
         $param = ['item' => $item];
 
         // dump($item);
@@ -44,8 +46,8 @@ class UserController extends Controller
         $val = $req->all();
         unset($val['_token']);
 
-        $id = Auth::user()->id;
-        $user = User::find($id);
+        $a_id = Auth::user()->id;
+        $user = User::find($a_id);
 
         $user->fill($val)->update();
 
@@ -55,8 +57,8 @@ class UserController extends Controller
 
     public function account()
     {
-        $id = Auth::user()->id;
-        $param = ['id' => $id];
+        $a_id = Auth::user()->id;
+        $param = ['id' => $a_id];
         return view('/users.account', $param);
     }
 
@@ -71,14 +73,13 @@ class UserController extends Controller
         $inp = $req->password;
         $pass = Hash::make($inp);
 
-        $id = Auth::user()->id;
-        $user = User::find($id);
+        $a_id = Auth::user()->id;
+        $user = User::find($a_id);
 
         $user->password = $pass;
         $user->update();
         return redirect('/users/password/done');
     }
-
 
     public function fort()
     {
@@ -92,25 +93,24 @@ class UserController extends Controller
 
     public function deleteAction(UserRequest $req)
     {
-        $inp = $req->id;
-        $id = Auth::user()->id;
+        $u_id = $req->user_id;
+        $a_id = Auth::user()->id;
 
         // idはint、post値はstringのため==で比較
-        if ($inp != $id) {
+        if ($u_id != $a_id) {
             Auth::logout();
             return view('welcome');
         } else {
-            User::find($id)->delete();
+            // User::find($u_id)->delete();
             Auth::logout();
             return redirect('/users/delete/done');
         }
     }
 
-
     public function group()
     {
-        $id = Auth::user()->id;
-        $group = User::find($id)->group()->get();
+        $a_id = Auth::user()->id;
+        $group = User::find($a_id)->group()->get();
         if($group->isEmpty())  {
             $param = 'none';
         }
@@ -124,10 +124,10 @@ class UserController extends Controller
 
     public function leave(Request $req)
     {
-        $id = $req->input('id');
+        // group_idをget
+        $g_id = $req->group_id;
 
-        $group = New Group;
-        $val = $group->find($id);
+        $val = Group::find($g_id);
         $param = [
             'id' => $val->id,
             "group_name" => $val->group_name,
@@ -139,22 +139,20 @@ class UserController extends Controller
 
     public function leaveAction(Request $req)
     {
-        $inp = $req->id;
-        $id = Auth::user()->id;
+        $a_id = Auth::user()->id;
+        $g_id = $req->group_id;
+        // postされる値は文字列のためintへ
+        $u_id = (int)$req->user_id;
 
-        $group = User::find($id)->group();
-
-
-        // idはint、post値は文字列のため==で比較
-        if ($inp != $id) {
+        if ($a_id !== $u_id) {
             Auth::logout();
-            return view('welcome');
+            return view('/users.index');
         } else {
-            User::find($id)->delete();
-            Auth::logout();
-            return redirect('/users/delete/done');
+            groupUser::where([ 'group_id' => $g_id, 'user_id' => $u_id ])->delete();
+            return redirect('/users/leave/done');
         }
     }
-    // dump($param);
+
+    // return view('/test');
 
 }

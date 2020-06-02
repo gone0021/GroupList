@@ -92,7 +92,8 @@
 
         {{-- menu --}}
         <main class="py-4">
-            @yield('content')
+            @section('content')
+            @show
         </main>
     </div>
 </body>

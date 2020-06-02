@@ -1,53 +1,74 @@
-@extends('layouts.app')
+@extends('layouts.cardapp')
+@section('card')
+<div class="card-header">Dashboard</div>
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="card-body">
 
-                <div class="card-body">
+    <table class="table">
+        <tr>
+            <th>
+                <span class="mr-2">id</span>
+                <a href="/admin/list?sort=id" >↓</a>
+                <a href="/admin/list?sort=id_de">↑</a>
+            </th>
+            <th>
+                <span class="mr-2">グループ名</span>
+                <a href="/admin/list?sort=name" >↓</a>
+                <a href="/admin/list?sort=name_de">↑</a>
+            </th>
+            <th>操作</th>
+        </tr>
+        @foreach ($items as $item)
+        {{-- @if ($item->id != null) --}}
+        <tr>
+            <td>
+                {{ $item->id }}
+            </td>
+            <td>
+                {{ $item->group_name }}
+            </td>
 
-                    <table class="table">
-                        <tr>
-                            <th>グループ名</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr class="">
-                            <td class="">ユーザー名</td>
-                            {{-- <td class="">{{ $item->email }}</td> --}}
+            <td>
+                <div>
+                    {{-- 編集 --}}
+                    <form action="{{ url('admin/edit') }}" method="get" class="float-left mr-3">
+                        <input type="hidden" name="group_id" value="{{ $item->id }}">
 
-                            <td>
-                                {{-- 編集 --}}
-                                <a href="{{ url('admin/create') }}" class="btn btn-light mr-3">
-                                    編集
-                                </a>
+                        <input type="submit" value="{{ __('Edit') }}" class="btn btn-light">
+                    </form>
 
-                                {{-- ユーザーの追加 --}}
-                                <a href="{{ url('admin/create') }}" class="btn btn-light mr-3">
-                                    ユーザー追加
-                                </a>
+                    {{-- ユーザーの追加 --}}
+                    <form action="{{ url('admin/edit') }}" method="get" class="float-left mr-3">
+                        <input type="hidden" name="group_id" value="{{ $item->id }}">
 
-                            </td>
+                        <input type="submit" value="{{ __('Add User') }}" class="btn btn-light">
+                    </form>
 
-                        </tr>
+                    {{-- 削除 --}}
+                    <form action="{{ url('admin/edit') }}" method="get" class="float-both">
+                        <input type="hidden" name="group_id" value="{{ $item->id }}">
 
-                        <tr>
-                            <th class="">メールアドレス</th>
-                        </tr>
-
-                    </table>
-
-                    <div class="col-md-10">
-                        <a href="{{ route('admin') }}" class="btn btn-light">
-                            {{ __('Return') }}
-                        </a>
-                    </div>
+                        <input type="submit" value="{{ __('Delete') }}" class="btn btn-light">
+                    </form>
 
                 </div>
-            </div>
-        </div>
-    </div>
+            </td>
+            @endforeach
+        </tr>
+    </table>
+
+
+<div>
+    {{ $items->appends(['sort' => $sort])->links() }}
+    {{-- {{ $items->links() }} --}}
 </div>
+
+<div class="col-md-10">
+        <a href="{{ route('admin') }}" class="btn btn-light">
+            {{ __('Return') }}
+        </a>
+    </div>
+
+</div>
+
 @endsection

@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::post('users/update', 'UserController@userUpdate');
 
     Route::get('users/account', 'UserController@account'); //
+
     Route::get('users/password', 'UserController@password'); //
     Route::post('users/password', 'UserController@passwordUpdate');
 
@@ -47,33 +48,33 @@ Route::middleware('auth')->group(function () {
 
     Route::get('users/group', 'UserController@group');
 
-
-
-    Route::get('users/leave/{id?}', 'UserController@leave'); //
-    // Route::get('users/leave/', 'UserController@leave'); //
-    // Route::post('users/leave', 'UserController@leaveAction');
-
+    Route::get('users/leave/', 'UserController@leave');
+    Route::post('users/leave', 'UserController@leaveAction');
 
     // admin
     Route::get('admin', 'GroupController@index')->name('admin'); //
     Route::get('admin/create', 'GroupController@create');
-    Route::post('admin/create', 'GroupController@insert');
+    Route::post('admin/create', 'GroupController@createAdd');
 
+    Route::get('admin/list', 'GroupController@list');
+    Route::get('admin/edit', 'GroupController@edit');
+    Route::post('admin/edit', 'GroupController@groupUpdate');
 
     // admin group
 
 
     // ------ 作成中
-    Route::get('admin/list', 'GroupController@list');
 
     Route::get('group', 'GroupController@groupIndex')->name('group');
 });
 
 // ----- done
-Route::get('users/done', 'DoneController@users');
+Route::get('users/done', 'DoneController@usersEdit');
 Route::get('users/password/done', 'DoneController@usersPassword');
 Route::get('users/delete/done', 'DoneController@usersDelete');
-Route::get('admin/create/done', 'DoneController@group');
+Route::get('users/leave/done', 'DoneController@usersLeave');
+Route::get('admin/create/done', 'DoneController@adminCreate');
+Route::get('admin/edit/done', 'DoneController@adminEdit');
 
 
 

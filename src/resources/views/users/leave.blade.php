@@ -1,38 +1,31 @@
-@extends('layouts.app')
+@extends('layouts.cardapp')
+@section('card')
 
-@section('content')
+<div class="card-header">Dashboard</div>
+<div class="card-body">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+    <p class="text-md-center lead">
 
-                <div class="card-body">
-                    <p class="text-md-center lead">
+        グループ "{{ $group_name }}"を
 
-                        グループ "
-                        {{ $group_name }}
-                        "を
+        {{ __('Are you sure you want to leave?') }}
+    </p>
+    <div class="text-md-center lead">
+        <div class="col-md-10">
 
-                        {{ __('Are you sure you want to leave?') }}
-                    </p>
-                    <div class="text-md-center lead">
-                        <div class="col-md-10">
+            <form action="{{ url('users/leave') }}" method="post">
+                @csrf
+                <input type="hidden" name="group_id" value="{{ $id }}">
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
 
-                            <form action="{{ url('users/leave') }}" method="post">
-                                <input type="submit" name="" id="" value="{{ __('Leave') }}" class="btn btn-light mr-3">
+                <input type="submit" name="" id="" value="{{ __('Leave') }}" class="btn btn-light mr-3">
 
 
-                                <a href="{{ url('users/group') }}" class="btn btn-light">
-                                    {{ __('Return') }}
-                                </a>
-                            </form>
+                <a href="{{ url('users/group') }}" class="btn btn-light">
+                    {{ __('Return') }}
+                </a>
+            </form>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

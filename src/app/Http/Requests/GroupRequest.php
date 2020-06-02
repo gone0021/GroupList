@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Rules\Current;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Group;
 
 class GroupRequest extends FormRequest
 {
@@ -32,9 +33,10 @@ class GroupRequest extends FormRequest
             'group_name' => [
                 "required",
                 'max:255',
-                Rule::unique('users')->ignore(Auth::id()),
+                Rule::unique('groups')->ignore($this->input('id')),
                 // Rule::unique('user')->ignore(Auth::deleted_at()),
             ],
+            'group_type' => 'integer',
 
             'current_password' => new Current(),
         ];
@@ -46,6 +48,7 @@ class GroupRequest extends FormRequest
             'group_name.required' => 'グループ名を入力してください',
             'group_name.max' => '255文字まで',
             'group_name.unique' => '登録があります',
+            'group_type.integer' => '整数のみ',
         ];
     }
 }

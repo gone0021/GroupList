@@ -1,5 +1,6 @@
 {
     "A fresh verification link has been sent to your email address.": "新しい確認リンクを送りました。",
+    "Add User": "ユーザの追加",
     "Admin Page": "管理者ページ",
     "All rights reserved.": "",
     "Are you sure you want to leave?": "本当に脱退しますか？",
@@ -19,6 +20,7 @@
     "Forgot Your Password?": "パスワードを忘れた方はこちら",
     "Go Home": "ホームへ",
     "Group Name" : "グループ名",
+    "Group Type": "グループ属性",
     "Hello!": "こんにちは",
     "hi": "こんにちは",
     "If you did not create an account, no further action is required.": "アカウントの作成にお心当たりが無い場合は、このメールを無視してください。",
