@@ -18,17 +18,14 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-// ------
-
-// auth
+// --- assist
 Route::post('register_check', 'AssistController@registerCheck');
-Route::post('register_add', 'AssistController@registerAdd');
 Route::get('register_done', 'DoneController@register');
 
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
-    // user
+    // --- user
     Route::get('users', 'UserController@index')->name('users'); //
 
     Route::get('users/show', 'UserController@show');
@@ -51,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('users/leave/', 'UserController@leave');
     Route::post('users/leave', 'UserController@leaveAction');
 
-    // admin
+    // --- admin
     Route::get('admin', 'GroupController@index')->name('admin'); //
     Route::get('admin/create', 'GroupController@create');
     Route::post('admin/create', 'GroupController@createAdd');
@@ -60,27 +57,43 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/edit', 'GroupController@edit');
     Route::post('admin/edit', 'GroupController@groupUpdate');
 
-    // admin group
+    Route::get('admin/delete', 'GroupController@delete');
+    Route::get('admin/fort', 'GroupController@fort'); //
+    Route::post('admin/delete', 'GroupController@deleteAction');
+
+
+    Route::get('admin/user/deleted', 'GroupController@userDeleted')->name('user_deleted');
+    Route::post('admin/user/deleted', 'GroupController@userRrestore');
+
+
+    Route::get('admin/user/show', 'GroupController@userShow');
+
+    // --- group admin
 
 
     // ------ 作成中
+
+    Route::get('admin/user', 'GroupController@user');
+
+
+    Route::get('admin/group/user', 'GroupController@userList');
 
     Route::get('group', 'GroupController@groupIndex')->name('group');
 });
 
 // ----- done
+Route::post('register_add', 'AssistController@registerAdd');
 Route::get('users/done', 'DoneController@usersEdit');
 Route::get('users/password/done', 'DoneController@usersPassword');
 Route::get('users/delete/done', 'DoneController@usersDelete');
 Route::get('users/leave/done', 'DoneController@usersLeave');
 Route::get('admin/create/done', 'DoneController@adminCreate');
 Route::get('admin/edit/done', 'DoneController@adminEdit');
+Route::get('admin/delete/done', 'DoneController@adminDelete');
 
 
 
 // ------ 作るか悩み中
-Route::get('admin/fort', 'UserController@fort'); //
-Route::post('admin/ort', 'UserController@fortCheck');
 
 
 // ------ 未作成
