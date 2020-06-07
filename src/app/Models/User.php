@@ -23,4 +23,39 @@ class User extends Model
         return $this->belongsToMany('App\Models\Group');
     }
 
+    public function groupUser()
+    {
+        // return $this->hasMany('App\Models\GroupUser', 'id', 'user_id' );
+        return $this->belongsTo('App\Models\GroupUser', 'user_id', 'id');
+    }
+
+    // public function scopeSoftDelete($query, $str)
+    // {
+    //     return  $this->onlyTrashed()->where('airline_id', 1);
+    // }
+
+    public $p_num = 7;
+    public function scopeSortId()
+    {
+        $group = $this->orderBy('id', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeSortName()
+    {
+        $group = $this->orderBy('user_name', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeTrashedSortId()
+    {
+        $group = $this->onlyTrashed()->orderBy('id', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeTrashedSortName()
+    {
+        $group = $this->onlyTrashed()->orderBy('user_name', 'desc')->paginate($this->p_num);
+        return $group;
+    }
 }

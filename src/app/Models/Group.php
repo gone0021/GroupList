@@ -20,4 +20,35 @@ class Group extends Model
     {
         return $this->belongsToMany('App\Models\User');
     }
+
+    public function groupUser()
+    {
+        // return $this->hasMany('App\Models\GroupUser', 'id', 'group_id' );
+        return $this->belongsTo('App\Models\GroupUser', 'group_id', 'id' );
+    }
+
+    public $p_num = 7;
+    public function scopeSortId()
+    {
+        $group = $this->orderBy('id', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeSortName()
+    {
+        $group = $this->orderBy('group_name', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeTrashedSortId()
+    {
+        $group = $this->onlyTrashed()->orderBy('id', 'desc')->paginate($this->p_num);
+        return $group;
+    }
+
+    public function scopeTrashedSortName()
+    {
+        $group = $this->onlyTrashed()->orderBy('group_name', 'desc')->paginate($this->p_num);
+        return $group;
+    }
 }
