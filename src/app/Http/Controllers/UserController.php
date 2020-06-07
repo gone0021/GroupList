@@ -81,14 +81,14 @@ class UserController extends Controller
         return redirect('/users/password/done');
     }
 
-    public function fort()
-    {
-        return view('/users.fort');
-    }
-
     public function delete()
     {
         return view('/users.delete');
+    }
+
+    public function fort()
+    {
+        return view('/users.fort');
     }
 
     public function deleteAction(UserRequest $req)
@@ -101,7 +101,7 @@ class UserController extends Controller
             Auth::logout();
             return view('welcome');
         } else {
-            // User::find($u_id)->delete();
+            User::find($u_id)->delete();
             Auth::logout();
             return redirect('/users/delete/done');
         }
@@ -111,7 +111,7 @@ class UserController extends Controller
     {
         $a_id = Auth::user()->id;
         $group = User::find($a_id)->group()->get();
-        if($group->isEmpty())  {
+        if ($group->isEmpty()) {
             $param = 'none';
         }
 
@@ -142,13 +142,13 @@ class UserController extends Controller
         $a_id = Auth::user()->id;
         $g_id = $req->group_id;
         // postされる値は文字列のためintへ
-        $u_id = (int)$req->user_id;
+        $u_id = (int) $req->user_id;
 
         if ($a_id !== $u_id) {
             Auth::logout();
             return view('/users.index');
         } else {
-            groupUser::where([ 'group_id' => $g_id, 'user_id' => $u_id ])->delete();
+            groupUser::where(['group_id' => $g_id, 'user_id' => $u_id])->delete();
             return redirect('/users/leave/done');
         }
     }
