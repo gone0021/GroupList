@@ -25,60 +25,114 @@ Route::get('register_done', 'DoneController@register');
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
-    // --- user
+    // --- user ---
     Route::get('users', 'UserController@index')->name('users'); //
 
+    // --- show
     Route::get('users/show', 'UserController@show');
 
+    // u edit
     Route::get('users/edit', 'UserController@edit'); //
     Route::post('users/edit', 'UserController@editCheck');
     Route::post('users/update', 'UserController@userUpdate');
 
+    // edit account
     Route::get('users/account', 'UserController@account'); //
 
+    // e password
     Route::get('users/password', 'UserController@password'); //
     Route::post('users/password', 'UserController@passwordUpdate');
 
+    // e delete
     Route::get('users/delete', 'UserController@delete'); //
     Route::get('users/fort', 'UserController@fort'); //
+    // deleteした時に名前を"xxx_id_deleted"へupdateする機能を追加する
     Route::post('users/delete', 'UserController@deleteAction');
 
+    // --- group list
     Route::get('users/group', 'UserController@group');
 
     Route::get('users/leave/', 'UserController@leave');
     Route::post('users/leave', 'UserController@leaveAction');
 
-    // --- admin
-    Route::get('admin', 'GroupController@index')->name('admin'); //
-    Route::get('admin/create', 'GroupController@create');
-    Route::post('admin/create', 'GroupController@createAdd');
+    // --- admin ---
+    Route::get('admin', 'AdminController@index')->name('admin'); //
 
-    Route::get('admin/list', 'GroupController@list');
-    Route::get('admin/edit', 'GroupController@edit');
-    Route::post('admin/edit', 'GroupController@groupUpdate');
+    // --- user list
+    Route::get('admin/user', 'AdminController@user');
+    Route::get('admin/user/sort_id', 'SortController@adminUser');
+    Route::get('admin/user/sort_name', 'SortController@adminUser');
 
-    Route::get('admin/delete', 'GroupController@delete');
-    Route::get('admin/fort', 'GroupController@fort'); //
-    Route::post('admin/delete', 'GroupController@deleteAction');
+    Route::get('admin/user/show', 'AdminController@userShow');
+    Route::get('admin/user/group', 'AdminController@userGroup');
+
+    Route::get('admin/user/deleted', 'AdminController@userDeleted')->name('user_deleted');
+    Route::get('admin/user/deleted/sort_id', 'SortController@adminUserDeleted');
+    Route::get('admin/user/deleted/sort_name', 'SortController@adminUserDeleted');
+    Route::post('admin/user/deleted', 'AdminController@userRestore');
+
+    // テスト用 運用時は使わん
+    Route::get('admin/user/delete', 'AdminController@userDel');
+
+    // --- create group
+    Route::get('admin/create', 'AdminController@create');
+    Route::post('admin/create', 'AdminController@createAdd');
+
+    // --- edit group
+    Route::get('admin/list', 'AdminController@list');
+    Route::get('admin/list/sort_id', 'SortController@adminList');
+    Route::get('admin/list/sort_name', 'SortController@adminList');
+
+    Route::get('admin/group/user', 'AdminController@groupUser');
+
+    Route::get('admin/edit', 'AdminController@edit');
+    Route::post('admin/edit', 'AdminController@groupUpdate');
+
+    Route::get('admin/delete', 'AdminController@delete');
+    Route::get('admin/fort', 'AdminController@fort'); //
+    // deleteした時に名前を"xxx_id_deleted"へupdateする機能を追加する
+    Route::post('admin/delete', 'AdminController@deleteAction');
+
+    Route::get('admin/group/deleted', 'AdminController@groupDeleted')->name('group_deleted');
+    Route::get('admin/group/deleted/sort_id', 'SortController@adminGroupDeleted');
+    Route::get('admin/group/deleted/sort_name', 'SortController@adminGroupDeleted');
+    Route::post('admin/group/deleted', 'AdminController@groupRestore');
+
+    // --- group
+    Route::get('group', 'AdminController@groupIndex')->name('group');
+    Route::get('group/sort_id', 'SortController@group');
+    Route::get('group/sort_name', 'SortController@group');
+
+    Route::get('group/user', 'AdminController@groupUser');
+
+    Route::get('group/user/add', 'AdminController@addUser');
+    Route::get('group/user/add/sort_id', 'SortController@groupUserAdd');
+    Route::get('group/user/ad//sort_name', 'SortController@groupUserAdd');
 
 
-    Route::get('admin/user/deleted', 'GroupController@userDeleted')->name('user_deleted');
-    Route::post('admin/user/deleted', 'GroupController@userRrestore');
+    // --- sort setting ---
+    // user
+    // Route::get('admin/user/sort_id', 'SortController@adminUser');
+    // Route::get('admin/user/sort_name', 'SortController@adminUser');
+    // user ---deleted
+    // Route::get('admin/user/deleted/sort_id', 'SortController@adminUserDeleted');
+    // Route::get('admin/user/deleted/sort_name', 'SortController@adminUserDeleted');
+    // admin edit ---list
+    // Route::get('admin/list/sort_id', 'SortController@adminList');
+    // Route::get('admin/list/sort_name', 'SortController@adminList');
+    // group
+    // Route::get('group/sort_id', 'SortController@group');
+    // Route::get('group/sort_name', 'SortController@group');
 
-
-    Route::get('admin/user/show', 'GroupController@userShow');
-
-    // --- group admin
-
+    // 作成中
+    Route::post('group/user/add', 'AdminController@addAction');
 
     // ------ 作成中
 
-    Route::get('admin/user', 'GroupController@user');
+    Route::get('admin/user/list', 'AdminController@userlist');
 
 
-    Route::get('admin/group/user', 'GroupController@userList');
 
-    Route::get('group', 'GroupController@groupIndex')->name('group');
 });
 
 // ----- done
@@ -90,6 +144,7 @@ Route::get('users/leave/done', 'DoneController@usersLeave');
 Route::get('admin/create/done', 'DoneController@adminCreate');
 Route::get('admin/edit/done', 'DoneController@adminEdit');
 Route::get('admin/delete/done', 'DoneController@adminDelete');
+Route::get('admin/group/user/done', 'DoneController@groupAddUser');
 
 
 
@@ -97,7 +152,7 @@ Route::get('admin/delete/done', 'DoneController@adminDelete');
 
 
 // ------ 未作成
-Route::get('group_list', 'GroupController@new');
+Route::get('group_list', 'AdminController@new');
 
 Route::get('mygroup', 'UserController@index')->name('groups');
 Route::get('calendar', 'UserController@index')->name('calendar');
