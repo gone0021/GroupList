@@ -71,7 +71,7 @@
                                 {{-- dropdown-item --}}
                                 <a class="dropdown-item" href="{{ route('users') }}">Home</a>
                                 <a class="dropdown-item" href="{{ route('calendar') }}">カレンダー</a>
-                                <a class="dropdown-item" href="{{ route('items') }}">投稿一覧</a>
+                                {{-- <a class="dropdown-item" href="{{ route('items') }}">投稿一覧</a> --}}
 
                                 {{-- logout --}}
                                 <a class="dropdown-item" href="{{ route('logout') }}"

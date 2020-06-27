@@ -1,41 +1,35 @@
-@extends('layouts.app')
+@extends('layouts.cardapp')
 
-@section('content')
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">Dashboard</div>
+@section('card')
 
-        <div class="card-body">
-          <table class="table table-hover col-md-10 offset-md-1">
-            <tr class="">
-              <th class="">ユーザー名</th>
-              <td class="">{{ $item->user_name }}</td>
-            </tr>
+<div class="card-header">{{ __('My Data') }}</div>
 
-            <tr>
-              <th class="">メールアドレス</th>
-              <td class="">{{ $item->email }}</td>
-            </tr>
+<div class="card-body">
+    <table class="table table-hover col-md-10 offset-md-1">
+        <tr class="">
+            <th class="">ユーザー名</th>
+            <td class="">{{ $item->user_name }}</td>
+        </tr>
 
-            <tr>
-              <th class="">誕生日</th>
-              <td class="">{{ $item->birthday }}</td>
-            </tr>
-          </table>
+        <tr>
+            <th class="">メールアドレス</th>
+            <td class="">{{ $item->email }}</td>
+        </tr>
 
-          <div class="col-md-10 offset-md-2">
-            <a href="{{ url('users/edit') }}" class="mr-3 btn btn-light">
+        <tr>
+            <th class="">誕生日</th>
+            <td class="">{{ $item->birthday }}</td>
+        </tr>
+    </table>
+
+    <div class="col-md-10 offset-md-2">
+        <a href="{{ url('users/edit') }}" class="mr-3 btn btn-light">
             {{ __('Edit') }}
-            </a>
-            <a href="{{ route('users') }}" class="btn btn-light">
-              {{ __('Return') }}
-            </a>
-          </div>
-        </div>
-      </div>
+        </a>
+        <a href="{{ route('users') }}" class="btn btn-light">
+            {{ __('Return') }}
+        </a>
     </div>
-  </div>
 </div>
+
 @endsection

@@ -25,12 +25,13 @@ Route::get('register_done', 'DoneController@register');
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
-    // --- user ---
+    /************
+    --- user ---
+    ************/
     Route::get('users', 'UserController@index')->name('users'); //
 
     // --- show
     Route::get('users/show', 'UserController@show');
-
     // u edit
     Route::get('users/edit', 'UserController@edit'); //
     Route::post('users/edit', 'UserController@editCheck');
@@ -38,7 +39,6 @@ Route::middleware('auth')->group(function () {
 
     // edit account
     Route::get('users/account', 'UserController@account'); //
-
     // e password
     Route::get('users/password', 'UserController@password'); //
     Route::post('users/password', 'UserController@passwordUpdate');
@@ -51,27 +51,44 @@ Route::middleware('auth')->group(function () {
 
     // --- group list
     Route::get('users/group', 'UserController@group');
-
+    // lrave
     Route::get('users/leave/', 'UserController@leave');
     Route::post('users/leave', 'UserController@leaveAction');
 
-    // --- admin ---
-    Route::get('admin', 'AdminController@index')->name('admin'); //
+    // --- item list
+    Route::get('users/item/list', 'UserController@itemList');
+    // --- item group
+    Route::get('users/item/group', 'UserController@itemGroup');
+
+    /************
+    --- admin ---
+    ************/
+    Route::get('admin', 'AdminController@index')->name('admin');
+
+    Route::get('admin/error', 'AdminController@error'); //
 
     // --- user list
     Route::get('admin/user', 'AdminController@user');
-    Route::get('admin/user/sort_id', 'SortController@adminUser');
-    Route::get('admin/user/sort_name', 'SortController@adminUser');
+    Route::get('admin/user/sort_id_a', 'SortController@adminUser');
+    Route::get('admin/user/sort_id_d', 'SortController@adminUser');
+    Route::get('admin/user/sort_name_a', 'SortController@adminUser');
+    Route::get('admin/user/sort_name_d', 'SortController@adminUser');
 
+    // show user
     Route::get('admin/user/show', 'AdminController@userShow');
     Route::get('admin/user/group', 'AdminController@userGroup');
 
+    // deleted
     Route::get('admin/user/deleted', 'AdminController@userDeleted')->name('user_deleted');
-    Route::get('admin/user/deleted/sort_id', 'SortController@adminUserDeleted');
-    Route::get('admin/user/deleted/sort_name', 'SortController@adminUserDeleted');
+    Route::get('admin/user/deleted/sort_id_a', 'SortController@adminUserDeleted');
+    Route::get('admin/user/deleted/sort_id_d', 'SortController@adminUserDeleted');
+    Route::get('admin/user/deleted/sort_name_a', 'SortController@adminUserDeleted');
+    Route::get('admin/user/deleted/sort_name_d', 'SortController@adminUserDeleted');
+
+    // restore
     Route::post('admin/user/deleted', 'AdminController@userRestore');
 
-    // テスト用 運用時は使わん
+    // 一覧からユーザーを削除 ※テスト用、運用時の使用は検討中
     Route::get('admin/user/delete', 'AdminController@userDel');
 
     // --- create group
@@ -80,62 +97,94 @@ Route::middleware('auth')->group(function () {
 
     // --- edit group
     Route::get('admin/list', 'AdminController@list');
-    Route::get('admin/list/sort_id', 'SortController@adminList');
-    Route::get('admin/list/sort_name', 'SortController@adminList');
+    Route::get('admin/list/sort_id_a', 'SortController@adminList');
+    Route::get('admin/list/sort_id_d', 'SortController@adminList');
+    Route::get('admin/list/sort_name_a', 'SortController@adminList');
+    Route::get('admin/list/sort_name_d', 'SortController@adminList');
 
+    // group user
     Route::get('admin/group/user', 'AdminController@groupUser');
 
+    // edit group
     Route::get('admin/edit', 'AdminController@edit');
     Route::post('admin/edit', 'AdminController@groupUpdate');
 
+    // group admin
+    Route::get('admin/group_admin', 'AdminController@groupAdmin');
+    Route::get('admin/group_admin/sort_id_a', 'SortController@adminGroupAdmin');
+    Route::get('admin/group_admin/sort_id_d', 'SortController@adminGroupAdmin');
+    Route::get('admin/group_admin/sort_name_a', 'SortController@adminGroupAdmin');
+    Route::get('admin/group_admin/sort_name_d', 'SortController@adminGroupAdmin');
+
+    // add group admin
+    Route::get('admin/group_admin/add', 'AdminController@addGroupAdmin');
+    Route::get('admin/group_admin/add/sort_id_a', 'SortController@adminAddGroupAdmin');
+    Route::get('admin/group_admin/add/sort_id_d', 'SortController@adminAddGroupAdmin');
+    Route::get('admin/group_admin/add/sort_name_a', 'SortController@adminAddGroupAdmin');
+    Route::get('admin/group_admin/add/sort_name_d', 'SortController@adminAddGroupAdmin');
+    Route::post('admin/group_admin/add', 'AdminController@addGroupAdminAction');
+
+    // delete group admin
+    Route::get('admin/group_admin/delete', 'AdminController@deleteGroupAdmin');
+    Route::post('admin/group_admin/delete', 'AdminController@deleteGroupAdminAction');
+
+    // delete groop
     Route::get('admin/delete', 'AdminController@delete');
     Route::get('admin/fort', 'AdminController@fort'); //
     // deleteした時に名前を"xxx_id_deleted"へupdateする機能を追加する
     Route::post('admin/delete', 'AdminController@deleteAction');
 
-    Route::get('admin/group/deleted', 'AdminController@groupDeleted')->name('group_deleted');
-    Route::get('admin/group/deleted/sort_id', 'SortController@adminGroupDeleted');
-    Route::get('admin/group/deleted/sort_name', 'SortController@adminGroupDeleted');
+    // deleted group
+    Route::get('admin/group/deleted', 'AdminController@deletedGroup')->name('group_deleted');
+    Route::get('admin/group/deleted/sort_id_a', 'SortController@adminGroupDeleted');
+    Route::get('admin/group/deleted/sort_id_d', 'SortController@adminGroupDeleted');
+    Route::get('admin/group/deleted/sort_name_a', 'SortController@adminGroupDeleted');
+    Route::get('admin/group/deleted/sort_name_d', 'SortController@adminGroupDeleted');
     Route::post('admin/group/deleted', 'AdminController@groupRestore');
 
-    // --- group
+    // --- group ---
+    // admin_userを取得する設定に変更する
     Route::get('group', 'AdminController@groupIndex')->name('group');
-    Route::get('group/sort_id', 'SortController@group');
-    Route::get('group/sort_name', 'SortController@group');
+    Route::get('group/sort_id_a', 'SortController@group');
+    Route::get('group/sort_id_d', 'SortController@group');
+    Route::get('group/sort_name_a', 'SortController@group');
+    Route::get('group/sort_name_d', 'SortController@group');
 
+    // group user
     Route::get('group/user', 'AdminController@groupUser');
 
+    // add user
     Route::get('group/user/add', 'AdminController@addUser');
-    Route::get('group/user/add/sort_id', 'SortController@groupUserAdd');
-    Route::get('group/user/ad//sort_name', 'SortController@groupUserAdd');
-
-
-    // --- sort setting ---
-    // user
-    // Route::get('admin/user/sort_id', 'SortController@adminUser');
-    // Route::get('admin/user/sort_name', 'SortController@adminUser');
-    // user ---deleted
-    // Route::get('admin/user/deleted/sort_id', 'SortController@adminUserDeleted');
-    // Route::get('admin/user/deleted/sort_name', 'SortController@adminUserDeleted');
-    // admin edit ---list
-    // Route::get('admin/list/sort_id', 'SortController@adminList');
-    // Route::get('admin/list/sort_name', 'SortController@adminList');
-    // group
-    // Route::get('group/sort_id', 'SortController@group');
-    // Route::get('group/sort_name', 'SortController@group');
-
-    // 作成中
+    Route::get('group/user/add/sort_id_a', 'SortController@groupUserAdd');
+    Route::get('group/user/add/sort_id_d', 'SortController@groupUserAdd');
+    Route::get('group/user/add/sort_name_a', 'SortController@groupUserAdd');
+    Route::get('group/user/add/sort_name_d', 'SortController@groupUserAdd');
     Route::post('group/user/add', 'AdminController@addAction');
 
-    // ------ 作成中
+    /************
+    --- items ---
+    ************/
 
-    Route::get('admin/user/list', 'AdminController@userlist');
+     // --- Trip List ---
+     Route::get('items', 'ItemController@index')->name('items');
+     Route::get('items/sort_type_a', 'SortController@itemIndex');
+     Route::get('items/sort_type_d', 'SortController@itemIndex');
+     Route::get('items/sort_title_a', 'SortController@itemIndex');
+     Route::get('items/sort_title_d', 'SortController@itemIndex');
+     Route::get('items/sort_date_a', 'SortController@itemIndex');
+     Route::get('items/sort_date_d', 'SortController@itemIndex');
+
+     // 作成中
+    Route::get('items/sort_user_a', 'SortController@tripIndex');
+    Route::get('items/sort_user_d', 'SortController@tripIndex');
 
 
-
+    // --- items ---
 });
 
-// ----- done
+/**
+ ** done
+ **/
 Route::post('register_add', 'AssistController@registerAdd');
 Route::get('users/done', 'DoneController@usersEdit');
 Route::get('users/password/done', 'DoneController@usersPassword');
@@ -143,17 +192,14 @@ Route::get('users/delete/done', 'DoneController@usersDelete');
 Route::get('users/leave/done', 'DoneController@usersLeave');
 Route::get('admin/create/done', 'DoneController@adminCreate');
 Route::get('admin/edit/done', 'DoneController@adminEdit');
+Route::get('admin/group_admin/done', 'DoneController@adminGroupAdminAdd');
 Route::get('admin/delete/done', 'DoneController@adminDelete');
 Route::get('admin/group/user/done', 'DoneController@groupAddUser');
 
 
-
-// ------ 作るか悩み中
-
+// ------------------------------------------------------------+
+//      done
+// ------------------------------------------------------------+
 
 // ------ 未作成
-Route::get('group_list', 'AdminController@new');
-
-Route::get('mygroup', 'UserController@index')->name('groups');
 Route::get('calendar', 'UserController@index')->name('calendar');
-Route::get('items', 'UserController@index')->name('items');

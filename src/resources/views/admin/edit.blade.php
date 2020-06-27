@@ -1,7 +1,8 @@
 @extends('layouts.cardapp')
 @section('card')
-
-<div class="card-header">Dashboard</div>
+<div class="card-header">{{ __(' Edit Group')}} ：
+    <span class="h5">{{ $group_name }}</span>
+</div>
 
 <div class="card-body">
     @if (session('status'))
@@ -34,8 +35,8 @@
 
             <div class="col-md-6">
                 <select name="group_type">
-                    <option value="0">なし</option>
-                    <option value="1">ダイビング</option>
+                    <option value="0" @if ($group_type == '0') selected @endif>なし</option>
+                    <option value="1" @if ($group_type == '1') selected @endif>ダイビング</option>
                 </select>
             </div>
         </div>

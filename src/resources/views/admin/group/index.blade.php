@@ -1,48 +1,65 @@
-@extends('layouts.app')
+@extends('layouts.cardapp')
+@section('card')
+<div class="card-header">{{ __(' Group List')}}</div>
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+<div class="card-body">
 
-                <div class="card-body">
+    <table class="table">
+        <tr>
+            <th>
+                <span class="mr-2">id</span>
+                <a href="{{ url('group/sort_id_a') }}">↓</a>
+                <a href="{{ url('group/sort_id_d') }}">↑</a>
+            </th>
+            <th>
+                <span class="mr-2">グループ名</span>
+                <a href="{{ url('group/sort_name_a') }}">↓</a>
+                <a href="{{ url('group/sort_name_d') }}">↑</a>
+            </th>
+            <th>操作</th>
+        </tr>
+        @foreach ($items as $item)
+        <tr>
+            <td>
+                {{ $item->id }}
+            </td>
+            <td>
+                {{ $item->group_name }}
+            </td>
 
-                    <table class="table">
-                        <tr>
-                            <th>グループ名</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr class="">
-                            <td class="">ユーザー名</td>
-                            {{-- <td class="">{{ $item->email }}</td> --}}
+            <td>
+                <div>
+                    {{-- ユーザー一覧 --}}
+                    <form action="{{ url('group/user') }}" method="get" class="float-left mr-3">
+                        <input type="hidden" name="group_id" value="{{ $item->id }}">
 
-                            <td>
-                                {{-- ユーザーの追加 --}}
-                                <a href="{{ url('admin/create') }}" class="btn btn-light mr-3">
-                                    ユーザー追加
-                                </a>
+                        <input type="submit" value="{{ __('User List') }}" class="btn btn-light">
+                    </form>
 
-                            </td>
+                    {{-- ユーザーの追加 --}}
+                    <form action="{{ url('group/user/add') }}" method="get" class="float-left mr-3">
+                        <input type="hidden" name="group_id" value="{{ $item->id }}">
 
-                        </tr>
-
-                        <tr>
-                            <th class="">メールアドレス</th>
-                        </tr>
-
-                    </table>
-
-                    <div class="col-md-10">
-                        <a href="{{ route('users') }}" class="btn btn-light">
-                            {{ __('Return') }}
-                        </a>
-                    </div>
+                        <input type="submit" value="{{ __('Add User') }}" class="btn btn-light">
+                    </form>
 
                 </div>
-            </div>
-        </div>
+            </td>
+            @endforeach
+        </tr>
+    </table>
+
+
+    <div>
+        {{ $items->links() }}
     </div>
+
+    <div class="col-md-10">
+        <a href="{{ route('admin') }}" class="btn btn-light">
+            {{ __('Return') }}
+        </a>
+    </div>
+
 </div>
+
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">Dashboard</div>
+<div class="card-header">{{ __(' New Group')}}</div>
 
 <div class="card-body">
 
@@ -29,7 +29,7 @@
 
             <div class="col-md-6">
                 <select name="group_type">
-                    <option value="0">なし</option>
+                    <option value="0" selected>なし</option>
                     <option value="1">ダイビング</option>
                 </select>
             </div>

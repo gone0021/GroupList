@@ -3,11 +3,10 @@
 @section('card')
 
 <div class="card">
-    <div class="card-header">Dashboard</div>
+    <div class="card-header">{{ __('Participating Group List') }}</div>
 
     <div class="card-body">
 
-        @if ($items != null)
         <table class="table">
             <tr>
                 <th>グループ名</th>
@@ -15,7 +14,6 @@
             </tr>
 
             @foreach ($items as $item)
-            {{-- @if ($item->id != null) --}}
             <tr class="">
                 <td class="">
                     {{ $item->group_name }}
@@ -31,9 +29,6 @@
             </tr>
             @endforeach
         </table>
-        @else
-        <p>参加しているグループはありません</p>
-        @endif
 
         <div class="col-md-10">
             <a href="{{ route('users') }}" class="btn btn-light">

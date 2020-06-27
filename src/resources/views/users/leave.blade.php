@@ -1,7 +1,7 @@
 @extends('layouts.cardapp')
 @section('card')
 
-<div class="card-header">Dashboard</div>
+<div class="card-header">{{ __('Leave Group') }}</div>
 <div class="card-body">
 
     <p class="text-md-center lead">
