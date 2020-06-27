@@ -12,50 +12,73 @@ class User extends Model
     protected $guarded = array('id');
     use SoftDeletes;
 
-
     protected $casts = [
-        'id' => 'integer'
+        // 'id' => 'integer',
+        // 'id_admin' => 'integer'
     ];
 
     public function group()
     {
-        // return $this->belongsToMany('App\Models\Groups', 'groups_users','user_id', 'group_id' );
         return $this->belongsToMany('App\Models\Group');
     }
 
     public function groupUser()
     {
-        // return $this->hasMany('App\Models\GroupUser', 'id', 'user_id' );
         return $this->belongsTo('App\Models\GroupUser', 'user_id', 'id');
     }
 
-    // public function scopeSoftDelete($query, $str)
-    // {
-    //     return  $this->onlyTrashed()->where('airline_id', 1);
-    // }
+    public function trip()
+    {
+        return $this->hasMany('App\Models\Trip');
+    }
 
+
+
+    /************
+    - sort -
+    ************/
     public $p_num = 7;
-    public function scopeSortId()
+    public function scopeSortIdAsc()
     {
-        $group = $this->orderBy('id', 'desc')->paginate($this->p_num);
-        return $group;
+        $user = $this->orderBy('id', 'asc')->paginate($this->p_num);
+        return $user;
+    }
+    public function scopeSortIdDesc()
+    {
+        $user = $this->orderBy('id', 'desc')->paginate($this->p_num);
+        return $user;
     }
 
-    public function scopeSortName()
+    public function scopeSortNameAsc()
     {
-        $group = $this->orderBy('user_name', 'desc')->paginate($this->p_num);
-        return $group;
+        $user = $this->orderBy('user_name', 'asc')->paginate($this->p_num);
+        return $user;
+    }
+    public function scopeSortNameDesc()
+    {
+        $user = $this->orderBy('user_name', 'desc')->paginate($this->p_num);
+        return $user;
     }
 
-    public function scopeTrashedSortId()
+    public function scopeTrashedSortIdAsc()
     {
-        $group = $this->onlyTrashed()->orderBy('id', 'desc')->paginate($this->p_num);
-        return $group;
+        $user = $this->onlyTrashed()->orderBy('id', 'asc')->paginate($this->p_num);
+        return $user;
+    }
+    public function scopeTrashedSortIdDesc()
+    {
+        $user = $this->onlyTrashed()->orderBy('id', 'desc')->paginate($this->p_num);
+        return $user;
     }
 
-    public function scopeTrashedSortName()
+    public function scopeTrashedSortNameAsc()
     {
-        $group = $this->onlyTrashed()->orderBy('user_name', 'desc')->paginate($this->p_num);
-        return $group;
+        $user = $this->onlyTrashed()->orderBy('user_name', 'asc')->paginate($this->p_num);
+        return $user;
+    }
+    public function scopeTrashedSortNameDesc()
+    {
+        $user = $this->onlyTrashed()->orderBy('user_name', 'desc')->paginate($this->p_num);
+        return $user;
     }
 }

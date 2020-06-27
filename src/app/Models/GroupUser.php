@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroupUser extends Model
 {
     protected $table = 'group_user';
-    protected $primaryKey = [ 'group_id', 'user_id' ];
+    protected $primaryKey = [ 'group_id', 'user_id', 'group_admin' ];
     public $incrementing = false;
 
     public function user()

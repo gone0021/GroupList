@@ -27,26 +27,52 @@ class Group extends Model
         return $this->belongsTo('App\Models\GroupUser', 'group_id', 'id' );
     }
 
+    public function groupAdmin()
+    {
+        // return $this->hasMany('App\Models\GroupUser', 'id', 'group_id' );
+        return $this->belongsTo('App\Models\GroupAdmin', 'group_id', 'id' );
+    }
+
     public $p_num = 7;
-    public function scopeSortId()
+    public function scopeSortIdAsc()
+    {
+        $group = $this->orderBy('id', 'asc')->paginate($this->p_num);
+        return $group;
+    }
+    public function scopeSortIdDesc()
     {
         $group = $this->orderBy('id', 'desc')->paginate($this->p_num);
         return $group;
     }
 
-    public function scopeSortName()
+    public function scopeSortNameAsc()
+    {
+        $group = $this->orderBy('group_name', 'asc')->paginate($this->p_num);
+        return $group;
+    }
+    public function scopeSortNameDesc()
     {
         $group = $this->orderBy('group_name', 'desc')->paginate($this->p_num);
         return $group;
     }
 
-    public function scopeTrashedSortId()
+    public function scopeTrashedSortIdAsc()
+    {
+        $group = $this->onlyTrashed()->orderBy('id', 'asc')->paginate($this->p_num);
+        return $group;
+    }
+    public function scopeTrashedSortIdDesc()
     {
         $group = $this->onlyTrashed()->orderBy('id', 'desc')->paginate($this->p_num);
         return $group;
     }
 
-    public function scopeTrashedSortName()
+    public function scopeTrashedSortNameAsc()
+    {
+        $group = $this->onlyTrashed()->orderBy('group_name', 'asc')->paginate($this->p_num);
+        return $group;
+    }
+    public function scopeTrashedSortNameDesc()
     {
         $group = $this->onlyTrashed()->orderBy('group_name', 'desc')->paginate($this->p_num);
         return $group;
