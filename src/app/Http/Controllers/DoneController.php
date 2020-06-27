@@ -19,7 +19,7 @@ class DoneController extends Controller
 
     public function usersEdit()
     {
-        $title = 'Dashboard';
+        $title = __(' Completed Edit');
         $msg = '編集が完了しました';
         $link =  route('users');
         $disp = 'Home';
@@ -30,7 +30,7 @@ class DoneController extends Controller
 
     public function usersPassword()
     {
-        $title = 'Dashboard';
+        $title = __(' Completed Edit Password');
         $msg = 'パスワードを変更しました';
         $link =  route('users');
         $disp = 'Home';
@@ -41,7 +41,7 @@ class DoneController extends Controller
 
     public function usersDelete()
     {
-        $title = 'Dashboard';
+        $title = __(' Completed Delete Account');
         $msg = 'アカウントを削除しました';
         $link =  url('/');
         $disp = 'Home';
@@ -52,7 +52,7 @@ class DoneController extends Controller
 
     public function usersLeave()
     {
-        $title = 'Dashboard';
+        $title = __(' Completed Leave Group');
         $msg = '脱退が完了しました';
         $link =  route('users');
         $disp = 'Home';
@@ -63,7 +63,7 @@ class DoneController extends Controller
 
     public function adminCreate()
     {
-        $title = __('Admin Page');
+        $title = __(' Admin Page');
         $msg = '登録が完了しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -74,8 +74,19 @@ class DoneController extends Controller
 
     public function adminEdit()
     {
-        $title = __('Admin Page');
+        $title = __(' Edit Group');
         $msg = '更新が完了しました';
+        $link =  route('admin');
+        $disp = '管理者ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+    public function adminGroupAdminAdd()
+    {
+        $title = __(' Admin Page');
+        $msg = '登録が完了しました';
         $link =  route('admin');
         $disp = '管理者ページ';
 
@@ -85,7 +96,7 @@ class DoneController extends Controller
 
     public function adminDelete()
     {
-        $title = __('Admin Page');
+        $title = __(' Admin Page');
         $msg = 'グループを削除しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -97,7 +108,7 @@ class DoneController extends Controller
 
     public function groupAddUser()
     {
-        $title = __('Admin Page');
+        $title = __(' Admin Page');
         $msg = 'ユーザーを追加しました';
         $link =  route('group');
         $disp = '管理者ページ';

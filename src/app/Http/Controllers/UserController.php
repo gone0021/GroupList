@@ -10,13 +10,24 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupUser;
 use Illuminate\Support\Facades\Hash;
-use PhpParser\Node\Stmt\GroupUse;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return view('/users.index');
+        $is_admin = Auth::user()->is_admin;
+
+        $user_id = Auth::id();
+        $g_u = GroupUser::where('user_id', $user_id)->pluck('group_id');
+        $Group = Group::whereIn('id' , $g_u)->get();
+
+        $param = ['items' => $Group];
+
+        // dump($user_id);
+        // dump($is_admin);
+        // dump($g_u);
+        return view('/users.index', $Group);
     }
 
     public function show(Request $req)
@@ -24,8 +35,6 @@ class UserController extends Controller
         $a_id = Auth::user()->id;
         $item = User::find($a_id);
         $param = ['item' => $item];
-
-        // dump($item);
         return view('/users.show', $param);
     }
 
@@ -96,7 +105,6 @@ class UserController extends Controller
         $u_id = $req->user_id;
         $a_id = Auth::user()->id;
 
-        // idはint、post値はstringのため==で比較
         if ($u_id != $a_id) {
             Auth::logout();
             return view('welcome');
@@ -116,15 +124,11 @@ class UserController extends Controller
         }
 
         $param = ['items' => $group];
-        dump($param);
-
-
         return view('/users.group', $param);
     }
 
     public function leave(Request $req)
     {
-        // group_idをget
         $g_id = $req->group_id;
 
         $val = Group::find($g_id);
@@ -132,25 +136,52 @@ class UserController extends Controller
             'id' => $val->id,
             "group_name" => $val->group_name,
         ];
-
-        dump($param);
         return view('/users.leave', $param);
     }
 
     public function leaveAction(Request $req)
     {
-        $a_id = Auth::user()->id;
+        $u_id = Auth::user()->id;
         $g_id = $req->group_id;
-        // postされる値は文字列のためintへ
-        $u_id = (int) $req->user_id;
 
-        if ($a_id !== $u_id) {
+        if ($u_id != $u_id) {
             Auth::logout();
             return view('/users.index');
         } else {
             groupUser::where(['group_id' => $g_id, 'user_id' => $u_id])->delete();
             return redirect('/users/leave/done');
         }
+    }
+
+    public function itemList()
+    {
+        $a_id = Auth::user()->id;
+        $group = User::find($a_id)->group()->get();
+
+        $table = DB::table('users as u')
+        ->join('trips as t', 'u.id', '=', 't.user_id')
+        // ->join('group_user', 'users.id','group_user.user_id')
+        // ->join('groups as g', 'gu.group_id','g.id')
+        ->where('u.id', $a_id)
+        ->groupBy('t.item_type')
+        // ->where('trips.user_id',$u_id)
+        ->get();
+
+        $param = ['items' => $table];
+        dump($table);
+        dump($a_id);
+        // return view('test');
+        return view('/users.item_list', $param);
+    }
+
+
+    public function itemGroup()
+    {
+        $a_id = Auth::user()->id;
+        $group = User::find($a_id)->group()->get();
+
+        $param = ['items' => $group];
+        return view('/users.item_group', $param);
     }
 
     // return view('/test');
