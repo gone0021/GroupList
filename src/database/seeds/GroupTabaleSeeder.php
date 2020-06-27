@@ -12,8 +12,32 @@ class GroupTabaleSeeder extends Seeder
     public function run()
     {
         $param = [
+            'group_name' => '海',
+            'group_type' => 1,
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
+        ];
+        DB::table('groups')->insert($param);
+
+        $param = [
+            'group_name' => '山',
+            'group_type' => 0,
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
+        ];
+        DB::table('groups')->insert($param);
+
+        $param = [
+            'group_name' => '川',
+            'group_type' => 0,
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
+        ];
+        DB::table('groups')->insert($param);
+
+        $param = [
             'group_name' => '沖縄',
-            'group_type' => 2,
+            'group_type' => 1,
             'created_at' => new DateTime(),
             'updated_at' => new DateTime(),
         ];
@@ -28,7 +52,7 @@ class GroupTabaleSeeder extends Seeder
 
         $param = [
             'group_name' => '四国',
-            'group_type' => 2,
+            'group_type' => 1,
             'created_at' => new DateTime(),
             'updated_at' => new DateTime(),
         ];
