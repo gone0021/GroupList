@@ -14,5 +14,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(GroupTabaleSeeder::class);
         // $this->call(GroupUserTabaleSeeder::class);
         // $this->call(TripTabelSeeder::class);
+        // $this->call(DiveLogTabelSeeder::class);
+        // $this->call(PlanTabelSeeder::class);
     }
 }
