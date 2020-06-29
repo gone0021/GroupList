@@ -20,7 +20,8 @@ class SortController extends Controller
 
     public function adminUser()
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -44,7 +45,8 @@ class SortController extends Controller
 
     public function adminUserDeleted()
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -68,7 +70,8 @@ class SortController extends Controller
 
     public function adminList()
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -92,7 +95,8 @@ class SortController extends Controller
 
     public function adminGroupAdmin(Request $req)
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -125,7 +129,8 @@ class SortController extends Controller
 
     public function adminAddGroupAdmin(Request $req)
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -161,7 +166,8 @@ class SortController extends Controller
 
     public function adminGroupDeleted()
     {
-        if (Auth::user()->is_admin != 1) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -184,7 +190,9 @@ class SortController extends Controller
 
     public function group()
     {
-        if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
+        // if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
             return view('/admin.error');
         }
 
@@ -206,9 +214,43 @@ class SortController extends Controller
         return view('/admin/group.index', $param);
     }
 
+    public function groupUser(Request $req)
+    {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
+            return view('/admin.error');
+        }
+
+        $ses_get = $req->session()->get('group_id');
+        $group = Group::find($ses_get);
+
+        $user_in_group = Group::find($ses_get)->user()->get();
+        $plucked = $user_in_group->pluck('id');
+
+        if (request()->path() == 'group/user/sort_id_a') {
+            $items = user::whereIn('id', $plucked)->orderBy('id', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'group/user/sort_id_d') {
+            $items = user::whereIn('id', $plucked)->orderBy('id', 'desc')->paginate($this->page);
+        }
+
+        if (request()->path() == 'group/user/sort_name_a') {
+            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'group/user/sort_name_d') {
+            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'desc')->paginate($this->page);
+        }
+
+        $param = [
+            'items' => $items,
+            'ses_group_id' => $ses_get,
+            'group_name' => $group->group_name,
+        ];
+        return view('/admin/group.user', $param);
+    }
+
     public function groupUserAdd(Request $req)
     {
-        if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
+        $admin = new AdminController;
+        if (!$admin->checkAdmin()) {
             return view('/admin.error');
         }
 

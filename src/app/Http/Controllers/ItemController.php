@@ -17,23 +17,26 @@ class ItemController extends Controller
 {
     public function index()
     {
-        $a_id = Auth::id();
-        $g_id = GroupUser::where('user_id', $a_id)->pluck('group_id');
+        // $a_id = Auth::id();
+        $g_id = GroupUser::where('user_id', Auth::id())->pluck('group_id');
         // $g_id = Trip::where('user_id', $a_id)->get();
         $group = Group::whereIn('id',$g_id)->get('group_name');
 
-        $trip = Trip::where('user_id', $a_id)->get();
+        // $trip = Trip::where('user_id', Auth::id())->get();
 
-        // $trip = DB::table('trips as t')
-        // ->join('group_user as gu', 't.user_id','gu.user_id')
-        // // ->join('group_user', 'users.id','group_user.user_id')
-        // ->join('groups as g', 'gu.group_id','g.id')
+        $items = DB::table('users as u')
+        ->join('group_user as gu', '=', 'u.id','gu.user_id')
+        ->join('groups as g', 'gu.id','g.id')
+        ->join('trips as t', '=', 'u._id','t.user_id')
+        ->join('dive_logs as d', '=', 'u._id','d.user_id')
+        ->join('plans as p', '=', 'u._id','p.user_id')
+        // ->join('group_user', 'users.id','group_user.user_id')
         // ->groupBy('t.id')
-        // // ->where('trips.user_id',$a_id)
-        // ->get();
+        ->where('u.id', Auth::id())
+        ->get();
 
         $param = [
-            'items' => $trip,
+            'items' => $items,
             'g_id' => $g_id,
             'group' => $group,
             // 'user' => $users,
