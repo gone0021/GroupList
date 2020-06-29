@@ -25,9 +25,9 @@ Route::get('register_done', 'DoneController@register');
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
-    /************
+    /************\
     --- user ---
-    ************/
+    \************/
     Route::get('users', 'UserController@index')->name('users'); //
 
     // --- show
@@ -60,9 +60,9 @@ Route::middleware('auth')->group(function () {
     // --- item group
     Route::get('users/item/group', 'UserController@itemGroup');
 
-    /************
+    /************\
     --- admin ---
-    ************/
+    \************/
     Route::get('admin', 'AdminController@index')->name('admin');
 
     Route::get('admin/error', 'AdminController@error'); //
@@ -143,7 +143,6 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/group/deleted', 'AdminController@groupRestore');
 
     // --- group ---
-    // admin_userを取得する設定に変更する
     Route::get('group', 'AdminController@groupIndex')->name('group');
     Route::get('group/sort_id_a', 'SortController@group');
     Route::get('group/sort_id_d', 'SortController@group');
@@ -152,7 +151,10 @@ Route::middleware('auth')->group(function () {
 
     // group user
     Route::get('group/user', 'AdminController@groupUser');
-
+    Route::get('group/user/sort_id_a', 'SortController@groupUser');
+    Route::get('group/user/sort_id_d', 'SortController@groupUser');
+    Route::get('group/user/sort_name_a', 'SortController@groupUser');
+    Route::get('group/user/sort_name_d', 'SortController@groupUser');
     // add user
     Route::get('group/user/add', 'AdminController@addUser');
     Route::get('group/user/add/sort_id_a', 'SortController@groupUserAdd');
@@ -160,21 +162,23 @@ Route::middleware('auth')->group(function () {
     Route::get('group/user/add/sort_name_a', 'SortController@groupUserAdd');
     Route::get('group/user/add/sort_name_d', 'SortController@groupUserAdd');
     Route::post('group/user/add', 'AdminController@addAction');
+    // 一覧からユーザーを削除 ※テスト用、運用時の使用は検討中
+    Route::post('group/user/delete', 'AdminController@groupUserDel');
 
-    /************
+    /************\
     --- items ---
-    ************/
+    \************/
 
-     // --- Trip List ---
-     Route::get('items', 'ItemController@index')->name('items');
-     Route::get('items/sort_type_a', 'SortController@itemIndex');
-     Route::get('items/sort_type_d', 'SortController@itemIndex');
-     Route::get('items/sort_title_a', 'SortController@itemIndex');
-     Route::get('items/sort_title_d', 'SortController@itemIndex');
-     Route::get('items/sort_date_a', 'SortController@itemIndex');
-     Route::get('items/sort_date_d', 'SortController@itemIndex');
+    // ---Items List ---
+    Route::get('items', 'ItemController@index')->name('items');
+    Route::get('items/sort_type_a', 'SortController@itemIndex');
+    Route::get('items/sort_type_d', 'SortController@itemIndex');
+    Route::get('items/sort_title_a', 'SortController@itemIndex');
+    Route::get('items/sort_title_d', 'SortController@itemIndex');
+    Route::get('items/sort_date_a', 'SortController@itemIndex');
+    Route::get('items/sort_date_d', 'SortController@itemIndex');
 
-     // 作成中
+    // 作成中
     Route::get('items/sort_user_a', 'SortController@tripIndex');
     Route::get('items/sort_user_d', 'SortController@tripIndex');
 

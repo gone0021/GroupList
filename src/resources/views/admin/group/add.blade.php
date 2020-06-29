@@ -1,6 +1,6 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' User List')}} ：
+<div class="card-header">{{ __(' Add User')}} ：
     <span class="h5">{{ $group_name }}</span>
 </div>
 
@@ -20,6 +20,7 @@
             </th>
             <th>操作</th>
         </tr>
+
         @foreach ($items as $item)
         <tr>
             <td>
