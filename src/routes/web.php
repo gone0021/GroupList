@@ -25,9 +25,9 @@ Route::get('register_done', 'DoneController@register');
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
-    /************\
+    /************************\
     --- user ---
-    \************/
+    \************************/
     Route::get('users', 'UserController@index')->name('users'); //
 
     // --- show
@@ -56,13 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::post('users/leave', 'UserController@leaveAction');
 
     // --- item list
-    Route::get('users/item/list', 'UserController@itemList');
+    Route::get('users/item/list', 'UserController@itemList')->name('item_list');
     // --- item group
-    Route::get('users/item/group', 'UserController@itemGroup');
+    Route::get('users/item/group', 'UserController@itemGroup')->name('item_group');
 
-    /************\
+    /************************\
     --- admin ---
-    \************/
+    \************************/
     Route::get('admin', 'AdminController@index')->name('admin');
 
     Route::get('admin/error', 'AdminController@error'); //
@@ -165,25 +165,30 @@ Route::middleware('auth')->group(function () {
     // 一覧からユーザーを削除 ※テスト用、運用時の使用は検討中
     Route::post('group/user/delete', 'AdminController@groupUserDel');
 
-    /************\
-    --- items ---
-    \************/
 
-    // ---Items List ---
-    Route::get('items', 'ItemController@index')->name('items');
-    Route::get('items/sort_type_a', 'SortController@itemIndex');
-    Route::get('items/sort_type_d', 'SortController@itemIndex');
-    Route::get('items/sort_title_a', 'SortController@itemIndex');
-    Route::get('items/sort_title_d', 'SortController@itemIndex');
-    Route::get('items/sort_date_a', 'SortController@itemIndex');
-    Route::get('items/sort_date_d', 'SortController@itemIndex');
+    /************************\
+    --- Items List ---
+    \************************/
 
-    // 作成中
-    Route::get('items/sort_user_a', 'SortController@tripIndex');
-    Route::get('items/sort_user_d', 'SortController@tripIndex');
+    // --- Items List ---
+    Route::get('trips', 'TripController@index')->name('trips');
+    Route::get('trips/sort_type_a', 'SortController@itemIndex');
+    Route::get('trips/sort_type_d', 'SortController@itemIndex');
+    Route::get('trips/sort_title_a', 'SortController@itemIndex');
+    Route::get('trips/sort_title_d', 'SortController@itemIndex');
+    Route::get('trips/sort_date_a', 'SortController@itemIndex');
+    Route::get('trips/sort_date_d', 'SortController@itemIndex');
+
+    Route::get('trips/status', 'TripController@status');
+
+    Route::get('trips/edit', 'TripController@edit');
+
+    Route::get('trips/delete', 'TripController@delete');
 
 
-    // --- items ---
+    /************************\
+    --- Items List ---
+    \************************/
 });
 
 /**

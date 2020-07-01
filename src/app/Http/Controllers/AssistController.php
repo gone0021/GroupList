@@ -11,6 +11,12 @@ use App\Models\User;
 
 class AssistController extends Controller
 {
+    /**
+     * 新規登録_確認
+     * 
+     * @param Request $req
+     * @return void
+     */
     public function registerCheck(UserRequest $req)
     {
         $val = $req->all();
@@ -22,6 +28,12 @@ class AssistController extends Controller
         return view('/assist.register_check', $param, );
     }
 
+    /**
+     * 新規登録_実行
+     * 
+     * @param Request $req
+     * @return void
+     */
     public function registerAdd(Request $req)
     {
         $users = new User;

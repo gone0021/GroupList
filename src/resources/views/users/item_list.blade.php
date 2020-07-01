@@ -3,7 +3,7 @@
 @section('card')
 
 <div class="card">
-    <div class="card-header">{{ __('Participating Group List') }}</div>
+    <div class="card-header">{{ __(' Item Type') }}</div>
 
     <div class="card-body">
 
@@ -13,21 +13,45 @@
                 <th>操作</th>
             </tr>
 
-            @foreach ($items as $item)
-            <tr class="">
-                <td class="">
-                    {{ $item->item_type }}
-                </td>
-
+            @empty(!$dive)
+            <tr>
+                <td>ダイビング</td>
                 <td>
-                    <form action="{{ url('users/leave') }}" method="get">
-                        <input type="hidden" name="group_id" value="{{ $item->id }}">
+                    <form action="{{ url('dive_logs') }}" method="get">
+                        <input type="hidden" name="item_type" value="0">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @endempty
+
+            @empty(!$trip)
+            <tr>
+                <td>場所</td>
+                <td>
+                    <form action="{{ url('trips') }}" method="get">
+                        <input type="hidden" name="item_type" value="1">
+
+                        <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
+                    </form>
+                </td>
+            </tr>
+            @endempty
+
+            @empty(!$plan)
+            <tr>
+                <td>予定</td>
+                <td>
+                    <form action="{{ url('users/leave') }}" method="get">
+                        <input type="hidden" name="item_type" value="2">
+
+                        <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
+                    </form>
+                </td>
+            </tr>
+            @endempty
+
         </table>
 
         <div class="col-md-10">

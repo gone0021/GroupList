@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Trip extends Model
+class Plan extends Model
 {
-    protected $table = 'trips';
+    protected $table = 'plans';
     protected $guarded = array('id');
     use SoftDeletes;
 
     protected $casts = [
         'id' => 'integer',
-        'is_went' => 'integer',
     ];
 
     public function user()
@@ -27,5 +26,4 @@ class Trip extends Model
     {
         return $this->belongsTo('App\Models\GroupUser', 'user_id', 'user_id');
     }
-
 }

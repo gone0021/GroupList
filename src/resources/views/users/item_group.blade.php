@@ -3,7 +3,7 @@
 @section('card')
 
 <div class="card">
-    <div class="card-header">{{ __('Participating Group List') }}</div>
+    <div class="card-header">{{ __(' Group Type') }}</div>
 
     <div class="card-body">
 
@@ -14,8 +14,8 @@
             </tr>
 
             @foreach ($items as $item)
-            <tr class="">
-                <td class="">
+            <tr >
+                <td >
                     {{ $item->group_name }}
                 </td>
 

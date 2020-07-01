@@ -14,10 +14,15 @@ use App\Models\Trip;
 class SortController extends Controller
 {
     public $page = 7;
-    /************
+    /************************\
     --- AdminController ---
-    ************/
+    \************************/
 
+    /**
+     * ユーザー一覧
+     *
+     * @return void
+     */
     public function adminUser()
     {
         $admin = new AdminController;
@@ -43,6 +48,11 @@ class SortController extends Controller
         return view('/admin.user', $param);
     }
 
+    /**
+     * 削除済ユーザー
+     *
+     * @return void
+     */
     public function adminUserDeleted()
     {
         $admin = new AdminController;
@@ -68,6 +78,11 @@ class SortController extends Controller
         return view('/admin.user_deleted', $param);
     }
 
+    /**
+     * グループ一覧
+     *
+     * @return void
+     */
     public function adminList()
     {
         $admin = new AdminController;
@@ -93,6 +108,11 @@ class SortController extends Controller
         return view('/admin/list', $param);
     }
 
+    /**
+     * グループ管理者一覧
+     *
+     * @return void
+     */
     public function adminGroupAdmin(Request $req)
     {
         $admin = new AdminController;
@@ -100,7 +120,7 @@ class SortController extends Controller
             return view('/admin.error');
         }
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         $group_admin = GroupUser::where('group_id', $ses_get)->where('group_admin', 1)->pluck('user_id');
@@ -127,6 +147,11 @@ class SortController extends Controller
     }
 
 
+    /**
+     * グループ管理者の追加
+     *
+     * @return void
+     */
     public function adminAddGroupAdmin(Request $req)
     {
         $admin = new AdminController;
@@ -134,7 +159,7 @@ class SortController extends Controller
             return view('/admin.error');
         }
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         // group_userからグループ管理者以外を取得して配列へ
@@ -164,6 +189,11 @@ class SortController extends Controller
     }
 
 
+    /**
+     * 削除済グループ
+     *
+     * @return void
+     */
     public function adminGroupDeleted()
     {
         $admin = new AdminController;
@@ -188,6 +218,11 @@ class SortController extends Controller
         return view('/admin.group_deleted', $param);
     }
 
+    /**
+     * 管理グループ一覧
+     *
+     * @return void
+     */
     public function group()
     {
         $admin = new AdminController;
@@ -214,6 +249,12 @@ class SortController extends Controller
         return view('/admin/group.index', $param);
     }
 
+    /**
+     * 管理グループ
+     * 参加者一覧
+     *
+     * @return void
+     */
     public function groupUser(Request $req)
     {
         $admin = new AdminController;
@@ -221,7 +262,7 @@ class SortController extends Controller
             return view('/admin.error');
         }
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         $user_in_group = Group::find($ses_get)->user()->get();
@@ -247,6 +288,12 @@ class SortController extends Controller
         return view('/admin/group.user', $param);
     }
 
+    /**
+     * 管理グループ
+     * ユーザーの追加
+     *
+     * @return void
+     */
     public function groupUserAdd(Request $req)
     {
         $admin = new AdminController;
@@ -254,63 +301,63 @@ class SortController extends Controller
             return view('/admin.error');
         }
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         $user_in_group = Group::find($ses_get)->user()->get();
         $plucked = $user_in_group->pluck('id');
 
-        $user_not = user::whereNotIn('id', $plucked)->paginate($this->page);
-
         if (request()->path() == 'group/user/add/sort_id_a') {
-            $user_not = user::whereNotIn('id', $plucked)->orderBy('id', 'asc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'asc')->paginate($this->page);
         } else if (request()->path() == 'group/user/add/sort_id_d') {
-            $user_not = user::whereNotIn('id', $plucked)->orderBy('id', 'desc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'desc')->paginate($this->page);
         }
 
         if (request()->path() == 'group/user/add/sort_name_a') {
-            $user_not = user::whereNotIn('id', $plucked)->orderBy('user_name', 'asc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'asc')->paginate($this->page);
         } else if (request()->path() == 'group/user/add/sort_name_d') {
-            $user_not = user::whereNotIn('id', $plucked)->orderBy('user_name', 'desc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'desc')->paginate($this->page);
         }
 
         $param = [
-            'items' => $user_not,
+            'items' => $items,
             'ses_group_id' => $ses_get,
             'group_name' => $group->group_name,
         ];
         return view('/admin/group.add', $param);
     }
 
-    /************
+    /************************\
     --- TrripController ---
-    ************/
+    \************************/
+
+    /**
+     * 個人_Trip List
+     *
+     * @return void
+     */
     public function itemIndex()
     {
+        $ses_get = session()->get('item_type');
+        $a_id = Auth::id();
+
         if (request()->path() == 'trips/sort_title_a') {
-            $trip = Trip::sortTitleAsc();
+            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('trip_title', 'asc')->paginate($this->page);
         } else if (request()->path() == 'trips/sort_title_d') {
-            $trip = Trip::sortTitleDesc();
+            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('trip_title', 'desc')->paginate($this->page);
         }
 
         if (request()->path() == 'trips/sort_date_a') {
-            $trip = Trip::sortDateAsc();
+            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
         } else if (request()->path() == 'trips/sort_date_d') {
-            $trip = Trip::sortDateDesc();
-        }
-
-        if (request()->path() == 'trips/sort_user_a') {
-            // $trip = Trip::sortUserAsc();
-            $new = new Trip;
-            $trip = $new->user()->orderBy('user_name')->paginate(7);
-        } else if (request()->path() == 'trips/sort_user_d') {
-            $trip = Trip::sortUserDesc();
+            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
         }
 
         $param = [
-            'items' => $trip,
+            'items' => $items,
+            'ses_item_type' => $ses_get,
         ];
-        return view('/trips.index', $param);
+        return view('/item_list/trips.index', $param);
     }
     // return view('/test');
 }

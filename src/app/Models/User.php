@@ -21,7 +21,7 @@ class User extends Model
     ];
 
     /** groupsのリレーション
-     * 
+     *
      * @return void
      */
     public function group()
@@ -30,7 +30,7 @@ class User extends Model
     }
 
     /** 中間テーブルのリレーション
-     * 
+     *
      * @return void
      */
     public function groupUser()
@@ -39,7 +39,7 @@ class User extends Model
     }
 
     /** tripsのリレーション
-     * 
+     *
      * @return void
      */
     public function trip()
@@ -47,7 +47,23 @@ class User extends Model
         return $this->hasMany('App\Models\Trip');
     }
 
+    /** tripsのリレーション
+     *
+     * @return void
+     */
+    public function diveLog()
+    {
+        return $this->hasMany('App\Models\DiveLog');
+    }
 
+    /** tripsのリレーション
+     *
+     * @return void
+     */
+    public function plan()
+    {
+        return $this->hasMany('App\Models\Plna');
+    }
 
     /************
     - sort -
@@ -59,7 +75,7 @@ class User extends Model
     /**
      * ソートid
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeSortIdAsc()
@@ -71,7 +87,7 @@ class User extends Model
     /**
      * ソートid
      * desc
-     * 
+     *
      * @return void
      */
      public function scopeSortIdDesc()
@@ -83,7 +99,7 @@ class User extends Model
     /**
      * ソートname
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeSortNameAsc()
@@ -95,7 +111,7 @@ class User extends Model
     /**
      * ソートname
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeSortNameDesc()
@@ -107,7 +123,7 @@ class User extends Model
     /**
      * 削除済のソートid
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortIdAsc()
@@ -119,7 +135,7 @@ class User extends Model
     /**
      * 削除済のソートid
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortIdDesc()
@@ -132,7 +148,7 @@ class User extends Model
     /**
      * 削除済のソートname
      * desc
-     * 
+     *
      * @return void
      */
         public function scopeTrashedSortNameAsc()
@@ -144,7 +160,7 @@ class User extends Model
     /**
      * 削除済のソートname
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortNameDesc()

@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 
 class DoneController extends Controller
 {
+    /**
+     * 新規登録
+     * 
+     * @return void
+     */
     public function register()
     {
-        $title = __('Register');
+        $title = __('Register Completed');
         $msg = '登録が完了しました';
         $link =  route('login');
         $disp = 'Login';
@@ -17,10 +22,15 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * ユーザー情報の編集
+     * 
+     * @return void
+     */
     public function usersEdit()
     {
-        $title = __(' Completed Edit');
-        $msg = '編集が完了しました';
+        $title = __(' Edit Completed');
+         $msg = '編集が完了しました';
         $link =  route('users');
         $disp = 'Home';
 
@@ -28,9 +38,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * パスワードの変更
+     * 
+     * @return void
+     */
     public function usersPassword()
     {
-        $title = __(' Completed Edit Password');
+        $title = __(' Edit Password Completed');
         $msg = 'パスワードを変更しました';
         $link =  route('users');
         $disp = 'Home';
@@ -39,9 +54,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * ユーザーの削除
+     * 
+     * @return void
+     */
     public function usersDelete()
     {
-        $title = __(' Completed Delete Account');
+        $title = __(' Delete Account Completed');
         $msg = 'アカウントを削除しました';
         $link =  url('/');
         $disp = 'Home';
@@ -50,9 +70,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * グループの脱退
+     * 
+     * @return void
+     */
     public function usersLeave()
     {
-        $title = __(' Completed Leave Group');
+        $title = __(' Leave Group Completed');
         $msg = '脱退が完了しました';
         $link =  route('users');
         $disp = 'Home';
@@ -61,9 +86,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * グループの作成
+     * 
+     * @return void
+     */
     public function adminCreate()
     {
-        $title = __(' Admin Page');
+        $title = __(' New Group Completed');
         $msg = '登録が完了しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -72,9 +102,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * グループの編集
+     * 
+     * @return void
+     */
     public function adminEdit()
     {
-        $title = __(' Edit Group');
+        $title = __(' Edit Group Completed');
         $msg = '更新が完了しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -83,9 +118,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * グループ管理者の追加
+     * 
+     * @return void
+     */
     public function adminGroupAdminAdd()
     {
-        $title = __(' Admin Page');
+        $title = __(' Add Admin Completed');
         $msg = '登録が完了しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -94,9 +134,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+    /**
+     * グループの削除
+     * 
+     * @return void
+     */
     public function adminDelete()
     {
-        $title = __(' Admin Page');
+        $title = __(' Derlete Group Completed');
         $msg = 'グループを削除しました';
         $link =  route('admin');
         $disp = '管理者ページ';
@@ -105,10 +150,14 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
-
+    /**
+     * ユーザーの追加
+     * 
+     * @return void
+     */
     public function groupAddUser()
     {
-        $title = __(' Admin Page');
+        $title = __(' Add User Completed');
         $msg = 'ユーザーを追加しました';
         $link =  route('group');
         $disp = '管理者ページ';

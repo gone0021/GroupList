@@ -17,9 +17,9 @@ class AdminController extends Controller
     private $page = 7;
 
 
-    /************\
+    /************************\
     --- 自作メソッド ---
-    \************/
+    \************************/
 
     /**
      * マスター管理者のチェック
@@ -97,9 +97,9 @@ class AdminController extends Controller
         }
     }
 
-    /************\
+    /************************\
     --- admin ---
-    \************/
+    \************************/
 
     /**
      * エラーページ
@@ -131,7 +131,6 @@ class AdminController extends Controller
      *
      * @return void
      */
-    // --- user list ----
     public function user()
     {
         // $this->checkMasterAdmin();
@@ -347,7 +346,7 @@ class AdminController extends Controller
         }
         // sessionの保存と取得
         $req->session()->put('group_id', $req->group_id);
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         // group_userからグループ管理者を取得して配列へ
@@ -376,7 +375,7 @@ class AdminController extends Controller
         if (!$this->checkAdmin()) {
             return view('/admin.error');
         }
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         // group_userからグループ管理者以外を取得して配列へ
@@ -405,7 +404,7 @@ class AdminController extends Controller
             return view('/admin.error');
         }
         $u_id = $req->user_id;
-        $ses_get = $req->session()->get('group_id');
+        $ses_get =session()->get('group_id');
 
         GroupUser::where('group_id', $ses_get)->where('user_id', $u_id)->where('group_admin', 0)->update(['group_admin' => 1]);
         User::find($u_id)->update(['is_admin' => 2]);
@@ -428,7 +427,7 @@ class AdminController extends Controller
         }
         $u_id = $req->user_id;
         $user = User::find($u_id);
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         $param = [
@@ -489,7 +488,6 @@ class AdminController extends Controller
      *
      * @return void
      */
-
     public function fort()
     {
         // $ses_get = $req->session()->get('group_id');
@@ -507,7 +505,7 @@ class AdminController extends Controller
         if (!$this->checkAdmin()) {
             return view('/admin.error');
         }
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
 
         Group::find($ses_get)->delete();
         GroupUser::where('group_id', $ses_get)->delete();
@@ -538,7 +536,6 @@ class AdminController extends Controller
      * @param Request $req
      * @return void
      */
-
     public function groupRestore(Request $req)
     {
         if (!$this->checkAdmin()) {
@@ -549,16 +546,15 @@ class AdminController extends Controller
         return back();
     }
 
-    /************\
+    /************************\
     --- group ---
-    \************/
+    \************************/
 
     /**
      * 管理グループ一覧
      *
      * @return void
      */
-
     public function groupIndex()
     {
         if (!$this->checkAdmin()) {
@@ -586,7 +582,6 @@ class AdminController extends Controller
      * @param Request $req
      * @return void
      */
-
     public function groupUser(Request $req)
     {
         if (!$this->checkAdmin()) {
@@ -594,7 +589,7 @@ class AdminController extends Controller
         }
 
         $req->session()->put('group_id', $req->group_id);
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
 
         $user_list = Group::find($ses_get)->user()->paginate($this->page);
         $group = Group::find($ses_get);
@@ -630,7 +625,6 @@ class AdminController extends Controller
      * @param Request $req
      * @return void
      */
-
     public function addUser(Request $req)
     {
         if (!$this->checkAdmin()) {
@@ -638,7 +632,7 @@ class AdminController extends Controller
         }
         $req->session()->put('group_id', $req->group_id);
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
         // groupsとusersを結合してグループに属するユーザーを取得して配列へ
@@ -676,13 +670,12 @@ class AdminController extends Controller
      * @param Request $req
      * @return void
      */
-
     public function addAction(Request $req)
     {
         if (!$this->checkAdmin()) {
             return view('/admin.error');
         }
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
 
         $gu = new GroupUser;
         $gu->user_id = $req->user_id;
@@ -706,7 +699,7 @@ class AdminController extends Controller
             return view('/admin.error');
         }
 
-        $ses_get = $req->session()->get('group_id');
+        $ses_get = session()->get('group_id');
 
         if (!$this->checkAdminNum($req->user_id)) {
             User::find($req->user_id)->update(['is_admin' => 0]);

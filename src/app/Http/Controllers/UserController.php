@@ -9,18 +9,26 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\Trip;
+use App\Models\DiveLog;
+use App\Models\Plan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    /**
+     * ユーザーページ
+     *
+     * @return void
+     */
     public function index()
     {
         $is_admin = Auth::user()->is_admin;
 
         $user_id = Auth::id();
         $g_u = GroupUser::where('user_id', $user_id)->pluck('group_id');
-        $Group = Group::whereIn('id' , $g_u)->get();
+        $Group = Group::whereIn('id', $g_u)->get();
 
         $param = ['items' => $Group];
 
@@ -30,7 +38,12 @@ class UserController extends Controller
         return view('/users.index', $Group);
     }
 
-    public function show(Request $req)
+    /**
+     * ユーザー情報の確認
+     *
+     * @return void
+     */
+    public function show()
     {
         $a_id = Auth::user()->id;
         $item = User::find($a_id);
@@ -38,11 +51,21 @@ class UserController extends Controller
         return view('/users.show', $param);
     }
 
+    /**
+     * ユーザー情報の編集
+     *
+     * @return void
+     */
     public function edit()
     {
         return view('/users.edit');
     }
 
+    /**
+     * ユーザー情報の編集_確認画面
+     *
+     * @return void
+     */
     public function editCheck(UserRequest $req)
     {
         $param = $req->all();
@@ -50,6 +73,11 @@ class UserController extends Controller
         return view('/users.check', $param);
     }
 
+    /**
+     * ユーザー情報の編集_実行
+     *
+     * @return void
+     */
     public function userUpdate(Request $req)
     {
         $val = $req->all();
@@ -63,7 +91,11 @@ class UserController extends Controller
         return redirect('/users/done');
     }
 
-
+    /**
+     * パスワードの変更・削除
+     *
+     * @return void
+     */
     public function account()
     {
         $a_id = Auth::user()->id;
@@ -71,12 +103,21 @@ class UserController extends Controller
         return view('/users.account', $param);
     }
 
-
+    /**
+     * パスワードの変更
+     *
+     * @return void
+     */
     public function password()
     {
         return view('/users.password');
     }
 
+    /**
+     * パスワードの変更_実行
+     *
+     * @return void
+     */
     public function passwordUpdate(UserRequest $req)
     {
         $inp = $req->password;
@@ -90,43 +131,64 @@ class UserController extends Controller
         return redirect('/users/password/done');
     }
 
+    /**
+     * ユーザーの削除
+     *
+     * @return void
+     */
     public function delete()
     {
         return view('/users.delete');
     }
 
+    /**
+     * パスワードによる確認
+     *
+     * @return void
+     */
     public function fort()
     {
         return view('/users.fort');
     }
 
+    /**
+     * ユーザーの削除_実行
+     *
+     * @return void
+     */
     public function deleteAction(UserRequest $req)
     {
-        $u_id = $req->user_id;
         $a_id = Auth::user()->id;
 
-        if ($u_id != $a_id) {
+        if ($req->user_id != $a_id) {
             Auth::logout();
             return view('welcome');
         } else {
-            User::find($u_id)->delete();
+            User::find($req->user_id)->delete();
             Auth::logout();
             return redirect('/users/delete/done');
         }
     }
 
+    /**
+     * 参加グループ
+     *
+     * @return void
+     */
     public function group()
     {
         $a_id = Auth::user()->id;
         $group = User::find($a_id)->group()->get();
-        if ($group->isEmpty()) {
-            $param = 'none';
-        }
 
         $param = ['items' => $group];
         return view('/users.group', $param);
     }
 
+    /**
+     * グループの脱退
+     *
+     * @return void
+     */
     public function leave(Request $req)
     {
         $g_id = $req->group_id;
@@ -139,42 +201,54 @@ class UserController extends Controller
         return view('/users.leave', $param);
     }
 
+    /**
+     * グループの脱退_実行
+     *
+     * @return void
+     */
     public function leaveAction(Request $req)
     {
-        $u_id = Auth::user()->id;
+        $a_id = Auth::user()->id;
         $g_id = $req->group_id;
 
-        if ($u_id != $u_id) {
+        if ($req->user_id != $a_id) {
             Auth::logout();
             return view('/users.index');
         } else {
-            groupUser::where(['group_id' => $g_id, 'user_id' => $u_id])->delete();
+            groupUser::where(['group_id' => $g_id, 'user_id' => $a_id])->delete();
             return redirect('/users/leave/done');
         }
     }
 
+    /**
+     * 個人の投稿一覧
+     *
+     * @return void
+     */
     public function itemList()
     {
-        $a_id = Auth::user()->id;
-        $group = User::find($a_id)->group()->get();
+        $a_id = Auth::id();
 
-        $table = DB::table('users as u')
-        ->join('trips as t', 'u.id', '=', 't.user_id')
-        // ->join('group_user', 'users.id','group_user.user_id')
-        // ->join('groups as g', 'gu.group_id','g.id')
-        ->where('u.id', $a_id)
-        ->groupBy('t.item_type')
-        // ->where('trips.user_id',$u_id)
-        ->get();
+        $dive = DiveLog::where('user_id', $a_id)->count();
+        $trip = Trip::where('user_id', $a_id)->count();
+        $plan = Plan::where('user_id', $a_id)->count();
 
-        $param = ['items' => $table];
-        dump($table);
-        dump($a_id);
+        $param = [
+            'dive' => $dive,
+            'trip' => $trip,
+            'plan' => $plan,
+        ];
+
+        dump($param);
         // return view('test');
         return view('/users.item_list', $param);
     }
 
-
+    /**
+     * グループごとの投稿
+     *
+     * @return void
+     */
     public function itemGroup()
     {
         $a_id = Auth::user()->id;
