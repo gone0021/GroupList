@@ -179,9 +179,18 @@ Route::middleware('auth')->group(function () {
     Route::get('trips/sort_date_a', 'SortController@itemIndex');
     Route::get('trips/sort_date_d', 'SortController@itemIndex');
 
+    // status change
     Route::get('trips/status', 'TripController@status');
 
+    // new
+    Route::get('trips/new', 'TripController@new'); //
+    Route::post('trips/new', 'TripController@newCheck');
+    Route::post('trips/create', 'TripController@newCreate');
+
+    // create
     Route::get('trips/edit', 'TripController@edit');
+    Route::post('trips/edit', 'TripController@editCheck');
+    Route::post('trips/update', 'TripController@tripUpdate');
 
     Route::get('trips/delete', 'TripController@delete');
 
@@ -205,6 +214,8 @@ Route::get('admin/group_admin/done', 'DoneController@adminGroupAdminAdd');
 Route::get('admin/delete/done', 'DoneController@adminDelete');
 Route::get('admin/group/user/done', 'DoneController@groupAddUser');
 
+Route::get('trips/new/done', 'DoneController@tripNew');
+Route::get('trips/edit/done', 'DoneController@tripEdit');
 
 // ------------------------------------------------------------+
 //      done

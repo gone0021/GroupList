@@ -1,6 +1,11 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' Trip List')}}</div>
+<div class="card-header">
+    {{ __(' Trip List')}}
+    <span class="ml-5">
+    <a href="{{ url('trips/new') }}?item_type=1">{{ __( 'New' ) }}</a>
+    </span>
+</div>
 
 <div class="card-body">
 
@@ -8,13 +13,13 @@
         <tr>
             <th>
                 <span class="mr-2">タイトル</span>
-                <a href="{{ url('trips/sort_title_a') }}?item_type={{ $ses_item_type }}">↓</a>
-                <a href="{{ url('trips/sort_title_d') }}?item_type={{ $ses_item_type }}">↑</a>
+                <a href="{{ url('trips/sort_title_a') }}?item_type=1">↓</a>
+                <a href="{{ url('trips/sort_title_d') }}?item_type=1">↑</a>
             </th>
             <th>
                 <span class="mr-2">日付</span>
-                <a href="{{ url('trips/sort_date_a') }}?item_type={{ $ses_item_type }}">↓</a>
-                <a href="{{ url('trips/sort_date_d') }}?item_type={{ $ses_item_type }}">↑</a>
+                <a href="{{ url('trips/sort_date_a') }}?item_type=1">↓</a>
+                <a href="{{ url('trips/sort_date_d') }}?item_type=1">↑</a>
             </th>
 
             <th>状態</th>
@@ -37,7 +42,7 @@
             {{-- 状態 --}}
             <td>
                 @if ($item->is_went == 0)
-                行きたい
+                気になる
                 @else
                 行った
                 @endif
@@ -49,21 +54,21 @@
                 <div>
                     {{-- 状態 --}}
                     <form action="{{ url('trips/status') }}" method="get" class="float-left mr-3">
-                        <input type="hidden" name="trip_id" value="{{ $item->id }}">
+                        <input type="hidden" name="id" value="{{ $item->id }}">
 
                         <input type="submit" value="{{ __('Status') }}" class="btn btn-light">
                     </form>
 
                     {{-- 更新 --}}
                     <form action="{{ url('trips/edit') }}" method="get" class=" float-left mr-3">
-                        <input type="hidden" name="trip_id" value="{{ $item->id }}">
+                        <input type="hidden" name="id" value="{{ $item->id }}">
 
                         <input type="submit" value="{{ __('Edit') }}" class="btn btn-light">
                     </form>
 
                     {{-- 削除 --}}
                     <form action="{{ url('trips/delete') }}" method="get" class="float-left">
-                        <input type="hidden" name="trip_id" value="{{ $item->id }}">
+                        <input type="hidden" name="id" value="{{ $item->id }}">
 
                         <input type="submit" value="{{ __('Delete') }}" class="btn btn-light">
                     </form>
@@ -75,7 +80,7 @@
 
 
     <div>
-        {{-- {{ $items->links() }} --}}
+        {{ $items->links() }}
     </div>
 
     <div class="col-md-10">

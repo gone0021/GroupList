@@ -16,7 +16,6 @@ class AdminController extends Controller
     /** ぺジネーションの数 */
     private $page = 7;
 
-
     /************************\
     --- 自作メソッド ---
     \************************/

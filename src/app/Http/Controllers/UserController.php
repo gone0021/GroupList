@@ -177,7 +177,7 @@ class UserController extends Controller
      */
     public function group()
     {
-        $a_id = Auth::user()->id;
+        $a_id = Auth::id();
         $group = User::find($a_id)->group()->get();
 
         $param = ['items' => $group];

@@ -8,7 +8,7 @@ class DoneController extends Controller
 {
     /**
      * 新規登録
-     * 
+     *
      * @return void
      */
     public function register()
@@ -24,7 +24,7 @@ class DoneController extends Controller
 
     /**
      * ユーザー情報の編集
-     * 
+     *
      * @return void
      */
     public function usersEdit()
@@ -40,7 +40,7 @@ class DoneController extends Controller
 
     /**
      * パスワードの変更
-     * 
+     *
      * @return void
      */
     public function usersPassword()
@@ -56,7 +56,7 @@ class DoneController extends Controller
 
     /**
      * ユーザーの削除
-     * 
+     *
      * @return void
      */
     public function usersDelete()
@@ -72,7 +72,7 @@ class DoneController extends Controller
 
     /**
      * グループの脱退
-     * 
+     *
      * @return void
      */
     public function usersLeave()
@@ -88,7 +88,7 @@ class DoneController extends Controller
 
     /**
      * グループの作成
-     * 
+     *
      * @return void
      */
     public function adminCreate()
@@ -104,7 +104,7 @@ class DoneController extends Controller
 
     /**
      * グループの編集
-     * 
+     *
      * @return void
      */
     public function adminEdit()
@@ -120,7 +120,7 @@ class DoneController extends Controller
 
     /**
      * グループ管理者の追加
-     * 
+     *
      * @return void
      */
     public function adminGroupAdminAdd()
@@ -136,7 +136,7 @@ class DoneController extends Controller
 
     /**
      * グループの削除
-     * 
+     *
      * @return void
      */
     public function adminDelete()
@@ -152,7 +152,7 @@ class DoneController extends Controller
 
     /**
      * ユーザーの追加
-     * 
+     *
      * @return void
      */
     public function groupAddUser()
@@ -161,6 +161,39 @@ class DoneController extends Controller
         $msg = 'ユーザーを追加しました';
         $link =  route('group');
         $disp = '管理者ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+    /**
+     * グループの編集
+     *
+     * @return void
+     */
+    public function tripNew()
+    {
+        $title = __(' New Trip Item');
+        $msg = '登録が完了しました';
+        $link =  route('trips');
+        $disp = '場所ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+
+    /**
+     * tripsの編集
+     *
+     * @return void
+     */
+    public function tripEdit()
+    {
+        $title = __(' Edit Trip Item');
+        $msg = '更新が完了しました';
+        $link =  route('trips');
+        $disp = '場所ページ';
 
         $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
         return view('/assist.done', $param);

@@ -15,26 +15,16 @@ use Illuminate\Support\Facades\DB;
 
 class TripController extends Controller
 {
+    /** ぺジネーションの数 */
+    private $page = 7;
+
     public function index(Request $req)
     {
-        $req->session()->put('item_type', $req->item_type);
-        $ses_get = session()->get('item_type');
-
         $a_id = Auth::id();
-        $trip = Trip::where('user_id', $a_id)->get();
-
-        // $g_id = GroupUser::where('user_id', $a_id)->pluck('group_id');
-
-        $param = [
-            'items' => $trip,
-            // 'g_id' => $g_id,
-            'ses_item_type' => $ses_get,
-        ];
-        // dump($param);
-        // return view('test',$trip);
+        $trip = Trip::where('user_id', $a_id)->paginate($this->page);
+        $param = ['items' => $trip,];
         return view('/item_list/trips.index', $param);
     }
-
 
     /**
      * 状態の編集
@@ -44,54 +34,93 @@ class TripController extends Controller
      */
     public function status(Request $req)
     {
-        $trip = Trip::find($req->trip_id);
+        $trip = Trip::find($req->id);
 
-        if ($trip->is_went !== 0) {
-            Trip::find($req->trip_id)->update(['is_went' => 0]);
+        if ($trip->is_went != 0) {
+            Trip::find($req->id)->update(['is_went' => 0]);
             return back();
         } else {
-            Trip::find($req->trip_id)->update(['is_went' => 1]);
+            Trip::find($req->id)->update(['is_went' => 1]);
             return back();
         }
     }
 
+    /** 新規登録 */
+    public function new()
+    {
+        return view('/item_list/trips.new');
+    }
 
     /**
-     * 編集ページ
+     * 新規登録_確認
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function newCheck(Request $req)
+    {
+        $this->validate($req, Trip::$rules, Trip::$messages);
+
+        $items = $req->all();
+        $param = ['items' => $items,];
+        return view('/item_list/trips.new_check', $param);
+    }
+
+    /** 新規登録_実行
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function newCreate(Request $req)
+    {
+        $val = $req->all();
+        unset($val['_token']);
+
+        $trip = new Trip;
+        $trip->fill($val)->save();
+        return redirect('/trips/new/done');
+    }
+
+    /**
+     * 編集
      *
      * @param Request $req
      * @return void
      */
     public function edit(Request $req)
     {
-        $ses_get = session()->get('item_type');
-        $items = Trip::find($req->trip_id)->get();
-
-        $param = [
-            'items' => $items,
-            'ses_item_type' => $ses_get,
-        ];
+        $items = Trip::find($req->id);
+        $param = ['items' => $items,];
         return view('/item_list/trips.edit', $param);
     }
 
     /**
-     * グループ編集
-     * 実行
+     * 編集_確認
      *
      * @param Request $req
      * @return void
      */
-    public function groupUpdate(GroupRequest $req)
+    public function editCheck(Request $req)
+    {
+        // $this->validate($req, Trip::$rules, Trip::$messages);
+        $items = $req->all();
+        $param = ['items' => $items,];
+        return view('/item_list/trips.edit_check', $param);
+    }
+
+    /**
+     * 編集_実行
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function tripUpdate(Request $req)
     {
         $val = $req->all();
         unset($val['_token']);
 
-        $group = Trip::find($req->id);
-        $group->fill($val)->update();
-
-        return redirect('/admin/edit/done');
+        $trip = Trip::find($req->id);
+        $trip->fill($val)->update();
+        return redirect('/trips/edit/done');
     }
-
 }
-
-

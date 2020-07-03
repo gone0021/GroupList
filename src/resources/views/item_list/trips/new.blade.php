@@ -1,13 +1,10 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' Edit Trip List')}}</div>
+<div class="card-header">{{ __(' New Trip Item')}}</div>
 
 <div class="card-body">
-    <form method="post" action="{{ url('trips/edit') }}">
+    <form method="post" action="{{ url('trips/new') }}">
         @csrf
-
-        {{-- item_id --}}
-        <input type="hidden" name="id" value="{{ $items->id }}">
 
         {{-- item_type --}}
         <input type="hidden" name="item_type" value="1">
@@ -18,7 +15,7 @@
 
             <div class="col-md-6">
                 <input id="trip_title" type="text" class="form-control @error('trip_title') is-invalid @enderror"
-                    name="trip_title" value="{{ $items->trip_title }}" required autocomplete="trip_title" autofocus>
+                    name="trip_title" value="{{ old('trip_title') }}" required autocomplete="trip_title" autofocus>
 
                 @error('trip_title')
                 <span class="invalid-feedback" role="alert">
@@ -34,7 +31,7 @@
 
             <div class="col-md-6">
                 <input id="date" type="date" class="form-control @error('date') is-invalid @enderror" name="date"
-                    value="{{ $items->date }}" required autocomplete="email">
+                    value="{{ old('date') }}" required autocomplete="date" autofocus>
 
                 @error('date')
                 <span class="invalid-feedback" role="alert">
@@ -50,7 +47,7 @@
 
             <div class="col-md-6">
                 <input id="point_name" type="text" class="form-control @error('point_name') is-invalid @enderror"
-                    name="point_name" value="{{ $items->point_name }}" required autocomplete="point_name">
+                    name="point_name" value="{{ old('point_name') }}" required autocomplete="point_name" autofocus>
 
                 @error('point_name')
                 <span class="invalid-feedback" role="alert">
@@ -65,10 +62,10 @@
             <label for="is_went" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 
             <div class="col-md-6">
-                <input type="radio" name="is_went" value="0" @if ($items->is_went == 0) checked @endif id="want"
+                <input type="radio" name="is_went" value="0" @if (old('is_went') == 0) checked @endif id="want"
                 class="">
                 <label for="want" class="mr-3">気になる</label>
-                <input type="radio" name="is_went" value="1" @if ($items->is_went == 1) checked @endif id="went"
+                <input type="radio" name="is_went" value="1" @if (old('is_went') == 1) checked @endif id="went"
                 class="">
                 <label for="went">行った</label>
             </div>
@@ -80,19 +77,16 @@
 
             <div class="col-md-6">
                 <input id="map_item" type="text" class="form-control @error('map_item') is-invalid @enderror"
-                    name="map_item" value="{{ $items->map_item }}" required autocomplete="map_item">
-
+                    name="map_item" required autocomplete="new-map_item">
                 @error('map_item')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-
                 <p>
                     <a href="https://www.google.co.jp/maps/" target="blank">GoogleMap</a>から「共有→地図を埋め込む」のURLを貼り付けてください
                 </p>
             </div>
-
         </div>
 
         {{-- comment --}}
@@ -100,13 +94,16 @@
             <label for="comment" class="col-md-4 col-form-label text-md-right">{{ __('Comment') }}</label>
 
             <div class="col-md-6">
-                <input id="comment" type="text" class="form-control" name="comment" value="{{ $items->comment }}">
+                <input id="comment" type="text" class="form-control" name="comment" value="{{ old('comment') }}">
+                {{-- <textarea name="comment" id="comment" class="form-control" cols="60" rows="5">
+                    {{ old('comment') }}
+                </textarea> --}}
 
-                @error('comment')
+                {{-- @error('password')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
+                @enderror --}}
             </div>
         </div>
 
@@ -116,8 +113,8 @@
 
             <div class="col-md-6">
                 <select name="open_range">
-                    <option value="0" @if ($items->open_range == '0') selected @endif>個人</option>
-                    <option value="1" @if ($items->open_range == '1') selected @endif>グループ</option>
+                    <option value="0">個人</option>
+                    <option value="1">グループ</option>
                 </select>
             </div>
         </div>
@@ -128,11 +125,12 @@
 
             <div class="col-md-6">
                 <select name="is_open">
-                    <option value="0" @if ($items->is_open == '0') selected @endif>詳細表示しない</option>
-                    <option value="1" @if ($items->is_open == '1') selected @endif>詳細表示する</option>
+                    <option value="0">詳細表示しない</option>
+                    <option value="1">詳細表示する</option>
                 </select>
             </div>
         </div>
+
 
         <div class="col-md-10 offset-md-2">
             <input type="submit" value="{{ __('Do') }}" class="mr-3 btn btn-light">
@@ -141,9 +139,9 @@
                 {{ __('Return') }}
             </a>
         </div>
-
-
     </form>
+
+
 
 </div>
 

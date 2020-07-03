@@ -227,7 +227,7 @@ class SortController extends Controller
     {
         $admin = new AdminController;
         if (!$admin->checkAdmin()) {
-        // if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
+            // if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
             return view('/admin.error');
         }
 
@@ -338,24 +338,22 @@ class SortController extends Controller
      */
     public function itemIndex()
     {
-        $ses_get = session()->get('item_type');
         $a_id = Auth::id();
 
         if (request()->path() == 'trips/sort_title_a') {
-            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('trip_title', 'asc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('trip_title', 'asc')->paginate($this->page);
         } else if (request()->path() == 'trips/sort_title_d') {
-            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('trip_title', 'desc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('trip_title', 'desc')->paginate($this->page);
         }
 
         if (request()->path() == 'trips/sort_date_a') {
-            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
         } else if (request()->path() == 'trips/sort_date_d') {
-            $items = Trip::where('item_type', $ses_get)->where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
         }
 
         $param = [
             'items' => $items,
-            'ses_item_type' => $ses_get,
         ];
         return view('/item_list/trips.index', $param);
     }
