@@ -16,7 +16,7 @@ class CreateDiveLogsTable extends Migration
         Schema::create('dive_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->tinyInteger('item_type')->default(0);
+            $table->integer('item_type')->default(0);
             $table->text('divelog_title');
             $table->date('date');
             $table->text('point_name');
@@ -42,7 +42,7 @@ class CreateDiveLogsTable extends Migration
             $table->Integer('weight');
             $table->text('map_item')->nullable();
             $table->text('comment')->nullable();
-            $table->tinyInteger('open_rage')->default(2);
+            $table->tinyInteger('open_rage')->default(0);
             $table->tinyInteger('is_open')->default(0);
             $table->softDeletes();
             $table->timestamps();

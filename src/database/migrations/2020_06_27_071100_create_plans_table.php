@@ -16,14 +16,14 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->text('item_type')->default(2);
+            $table->integer('item_type')->default(2);
             $table->text('plan_title');
             $table->dateTime('start');
             $table->dateTime('finish');
             $table->tinyInteger('is_fixed')->default(0);
             $table->text('map_item')->nullable();
             $table->text('comment')->nullable();
-            $table->tinyInteger('open_rage')->default(2);
+            $table->tinyInteger('open_rage')->default(1);
             $table->tinyInteger('is_open')->default(0);
             $table->softDeletes();
             $table->timestamps();
