@@ -42,7 +42,7 @@ class CreateDiveLogsTable extends Migration
             $table->Integer('weight');
             $table->text('map_item')->nullable();
             $table->text('comment')->nullable();
-            $table->tinyInteger('open_rage')->default(0);
+            $table->tinyInteger('open_range')->default(0);
             $table->tinyInteger('is_open')->default(0);
             $table->softDeletes();
             $table->timestamps();

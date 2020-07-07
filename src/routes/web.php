@@ -79,12 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/user/group', 'AdminController@userGroup');
 
     // deleted
-    Route::get('admin/user/deleted', 'AdminController@userDeleted')->name('user_deleted');
+    Route::get('admin/user/deleted', 'AdminController@deletedUser')->name('user_deleted');
     Route::get('admin/user/deleted/sort_id_a', 'SortController@adminUserDeleted');
     Route::get('admin/user/deleted/sort_id_d', 'SortController@adminUserDeleted');
     Route::get('admin/user/deleted/sort_name_a', 'SortController@adminUserDeleted');
     Route::get('admin/user/deleted/sort_name_d', 'SortController@adminUserDeleted');
-
     // restore
     Route::post('admin/user/deleted', 'AdminController@userRestore');
 
@@ -165,19 +164,18 @@ Route::middleware('auth')->group(function () {
     // 一覧からユーザーを削除 ※テスト用、運用時の使用は検討中
     Route::post('group/user/delete', 'AdminController@groupUserDel');
 
-
     /************************\
-    --- Items List ---
+    --- trips ---
     \************************/
 
-    // --- Items List ---
+    // --- index ---
     Route::get('trips', 'TripController@index')->name('trips');
-    Route::get('trips/sort_type_a', 'SortController@itemIndex');
-    Route::get('trips/sort_type_d', 'SortController@itemIndex');
-    Route::get('trips/sort_title_a', 'SortController@itemIndex');
-    Route::get('trips/sort_title_d', 'SortController@itemIndex');
-    Route::get('trips/sort_date_a', 'SortController@itemIndex');
-    Route::get('trips/sort_date_d', 'SortController@itemIndex');
+    Route::get('trips/sort_title_a', 'SortController@tripIndex');
+    Route::get('trips/sort_title_d', 'SortController@tripIndex');
+    Route::get('trips/sort_date_a', 'SortController@tripIndex');
+    Route::get('trips/sort_date_d', 'SortController@tripIndex');
+
+    Route::get('trips/detail', 'TripController@detailTrip');
 
     // status change
     Route::get('trips/status', 'TripController@status');
@@ -193,21 +191,150 @@ Route::middleware('auth')->group(function () {
     Route::post('trips/update', 'TripController@tripUpdate');
 
     Route::get('trips/delete', 'TripController@delete');
+    Route::post('trips/delete', 'TripController@deleteAction');
+
+    // delted
+    Route::get('trips/deleted', 'TripController@deletedTrip')->name('trip_deleted');
+    Route::get('trips/deleted/sort_title_a', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_title_d', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_date_a', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_date_d', 'SortController@tripDeleted');
+
+    Route::post('trips/deleted', 'TripController@tripRestore');
+
+    Route::get('trips/deleted_detail', 'TripController@deletedDetailTrip');
+
+    /************************\
+    --- plans ---
+    \************************/
+
+    // --- index ---
+    Route::get('plans', 'PlanController@index')->name('plans');
+    Route::get('plans/sort_title_a', 'SortController@planIndex');
+    Route::get('plans/sort_title_d', 'SortController@planIndex');
+    Route::get('plans/sort_date_a', 'SortController@planIndex');
+    Route::get('plans/sort_date_d', 'SortController@planIndex');
+
+    Route::get('plans/detail', 'PlanController@detailPlan');
+
+    // status change
+    Route::get('plans/status', 'PlanController@status');
+
+    // new
+    Route::get('plans/new', 'PlanController@new'); //
+    Route::post('plans/new', 'PlanController@newCheck');
+    Route::post('plans/create', 'PlanController@newCreate');
+
+    // create
+    Route::get('plans/edit', 'PlanController@edit');
+    Route::post('plans/edit', 'PlanController@editCheck');
+    Route::post('plans/update', 'PlanController@planUpdate');
+
+    Route::get('plans/delete', 'PlanController@delete');
+    Route::post('plans/delete', 'PlanController@deleteAction');
+
+    // delted
+    Route::get('plans/deleted', 'PlanController@deletedPlan')->name('plan_deleted');
+    Route::get('plans/deleted/sort_title_a', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_title_d', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_start_a', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_start_d', 'SortController@planDeleted');
+
+    Route::post('plans/deleted', 'PlanController@planRestore');
+    Route::get('plans/deleted_detail', 'PlanController@deletedDetailPlan');
 
 
     /************************\
-    --- Items List ---
+    --- daive_logs ---
     \************************/
+
+    // --- index ---
+    Route::get('divelogs', 'DivelogController@index')->name('divelogs');
+    Route::get('divelogs/sort_title_a', 'SortController@planIndex');
+    Route::get('divelogs/sort_title_d', 'SortController@planIndex');
+    Route::get('divelogs/sort_date_a', 'SortController@planIndex');
+    Route::get('divelogs/sort_date_d', 'SortController@planIndex');
+
+    Route::get('divelogs/detail', 'DivelogController@detailPlan');
+
+    // status change
+    Route::get('divelogs/status', 'DivelogController@status');
+
+    // new
+    Route::get('divelogs/new', 'DivelogController@new'); //
+    Route::post('divelogs/new', 'DivelogController@newCheck');
+    Route::post('divelogs/create', 'DivelogController@newCreate');
+
+    // create
+    Route::get('divelogs/edit', 'DivelogController@edit');
+    Route::post('divelogs/edit', 'DivelogController@editCheck');
+    Route::post('divelogs/update', 'DivelogController@planUpdate');
+
+    Route::get('divelogs/delete', 'DivelogController@delete');
+    Route::post('divelogs/delete', 'DivelogController@deleteAction');
+
+    // delted
+    Route::get('divelogs/deleted', 'DivelogController@deletedPlan')->name('plan_deleted');
+    Route::get('divelogs/deleted/sort_title_a', 'SortController@planDeleted');
+    Route::get('divelogs/deleted/sort_title_d', 'SortController@planDeleted');
+    Route::get('divelogs/deleted/sort_start_a', 'SortController@planDeleted');
+    Route::get('divelogs/deleted/sort_start_d', 'SortController@planDeleted');
+
+    Route::post('divelogs/deleted', 'DivelogController@planRestore');
+    Route::get('divelogs/deleted_detail', 'PlanController@deletedDetailPlan');
+
+    /************************\
+    --- divelogs ---
+    \************************/
+
+    // --- index ---
+    Route::get('plans', 'PlanController@index')->name('plans');
+    Route::get('plans/sort_title_a', 'SortController@planIndex');
+    Route::get('plans/sort_title_d', 'SortController@planIndex');
+    Route::get('plans/sort_start_a', 'SortController@planIndex');
+    Route::get('plans/sort_start_d', 'SortController@planIndex');
+
+    Route::get('plans/detail', 'PlanController@detailPlan');
+
+    // status change
+    Route::get('plans/status', 'PlanController@status');
+
+    // new
+    Route::get('plans/new', 'PlanController@new'); //
+    Route::post('plans/new', 'PlanController@newCheck');
+    Route::post('plans/create', 'PlanController@newCreate');
+
+    // create
+    Route::get('plans/edit', 'PlanController@edit');
+    Route::post('plans/edit', 'PlanController@editCheck');
+    Route::post('plans/update', 'PlanController@planUpdate');
+
+    Route::get('plans/delete', 'PlanController@delete');
+    Route::post('plans/delete', 'PlanController@deleteAction');
+
+    // delted
+    Route::get('plans/deleted', 'PlanController@deletedPlan')->name('plan_deleted');
+    Route::get('plans/deleted/sort_title_a', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_title_d', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_start_a', 'SortController@planDeleted');
+    Route::get('plans/deleted/sort_start_d', 'SortController@planDeleted');
+
+    Route::post('plans/deleted', 'PlanController@planRestore');
+    Route::get('plans/deleted_detail', 'PlanController@deletedDetailPlan');
+
+
+
 });
 
-/**
- ** done
- **/
+    /************************\
+    --- done ---
+    \************************/
 Route::post('register_add', 'AssistController@registerAdd');
 Route::get('users/done', 'DoneController@usersEdit');
 Route::get('users/password/done', 'DoneController@usersPassword');
 Route::get('users/delete/done', 'DoneController@usersDelete');
 Route::get('users/leave/done', 'DoneController@usersLeave');
+
 Route::get('admin/create/done', 'DoneController@adminCreate');
 Route::get('admin/edit/done', 'DoneController@adminEdit');
 Route::get('admin/group_admin/done', 'DoneController@adminGroupAdminAdd');
@@ -216,6 +343,15 @@ Route::get('admin/group/user/done', 'DoneController@groupAddUser');
 
 Route::get('trips/new/done', 'DoneController@tripNew');
 Route::get('trips/edit/done', 'DoneController@tripEdit');
+Route::get('trips/delete/done', 'DoneController@tripDelete');
+
+Route::get('plans/new/done', 'DoneController@planNew');
+Route::get('plans/edit/done', 'DoneController@planEdit');
+Route::get('plans/delete/done', 'DoneController@planDelete');
+
+Route::get('trips/new/done', 'DoneController@tripNew');
+Route::get('trips/edit/done', 'DoneController@tripEdit');
+Route::get('trips/delete/done', 'DoneController@tripDelete');
 
 // ------------------------------------------------------------+
 //      done

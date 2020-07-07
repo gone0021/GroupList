@@ -208,7 +208,7 @@ class AdminController extends Controller
      *
      * @return void
      */
-    public function userDeleted()
+    public function deletedUser()
     {
         if (!$this->checkMasterAdmin()) {
             return view('/admin.error');
@@ -285,7 +285,7 @@ class AdminController extends Controller
         $group = Group::paginate($this->page);
 
         $param = ['items' => $group];
-        return view('/admin/list', $param);
+        return redirect('/admin/list', $param);
     }
 
     /**

@@ -17,7 +17,7 @@
             <tr>
                 <td>ダイビング</td>
                 <td>
-                    <form action="{{ url('dive_logs') }}" method="get">
+                    <form action="{{ url('divelogs') }}" method="get">
                         <input type="hidden" name="item_type" value="0">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
@@ -43,7 +43,7 @@
             <tr>
                 <td>予定</td>
                 <td>
-                    <form action="{{ url('users/leave') }}" method="get">
+                    <form action="{{ url('plans') }}" method="get">
                         <input type="hidden" name="item_type" value="2">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">

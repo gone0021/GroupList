@@ -23,7 +23,7 @@ class CreatePlansTable extends Migration
             $table->tinyInteger('is_fixed')->default(0);
             $table->text('map_item')->nullable();
             $table->text('comment')->nullable();
-            $table->tinyInteger('open_rage')->default(1);
+            $table->tinyInteger('open_range')->default(1);
             $table->tinyInteger('is_open')->default(0);
             $table->softDeletes();
             $table->timestamps();

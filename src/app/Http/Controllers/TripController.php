@@ -4,13 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserRequest;
 use App\Models\Trip;
-use App\Models\User;
-use App\Models\Group;
-use App\Models\GroupUser;
 use Illuminate\Support\Facades\DB;
 
 class TripController extends Controller
@@ -22,8 +17,24 @@ class TripController extends Controller
     {
         $a_id = Auth::id();
         $trip = Trip::where('user_id', $a_id)->paginate($this->page);
+
         $param = ['items' => $trip,];
+        // dump($param);
         return view('/item_list/trips.index', $param);
+    }
+
+    /**
+     * 詳細
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function detailTrip(Request $req)
+    {
+        $items = Trip::find($req->id);
+        $param = ['items' => $items,];
+        // dump($req->id);
+        return view('/item_list/trips.detail', $param);
     }
 
     /**
@@ -36,11 +47,11 @@ class TripController extends Controller
     {
         $trip = Trip::find($req->id);
 
-        if ($trip->is_went != 0) {
-            Trip::find($req->id)->update(['is_went' => 0]);
+        if ($trip->status != 0) {
+            Trip::find($req->id)->update(['status' => 0]);
             return back();
         } else {
-            Trip::find($req->id)->update(['is_went' => 1]);
+            Trip::find($req->id)->update(['status' => 1]);
             return back();
         }
     }
@@ -122,5 +133,73 @@ class TripController extends Controller
         $trip = Trip::find($req->id);
         $trip->fill($val)->update();
         return redirect('/trips/edit/done');
+    }
+
+    /**
+     * 削除_確認
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function delete(Request $req)
+    {
+        $items = Trip::find($req->id);
+        $param = ['items' => $items,];
+        return view('/item_list/trips.delete', $param);
+    }
+
+    /**
+     * 削除_実行
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function deleteAction(Request $req)
+    {
+        Trip::find($req->id)->delete();
+        // dump($req->id);
+        // return view('test');
+        return redirect('/trips/delete/done');
+    }
+
+
+    /**
+     * 削除済アイテムの表示
+     *
+     * @return void
+     */
+    public function deletedTrip()
+    {
+        $teims = Trip::onlyTrashed()->paginate($this->page);
+
+        $param = ['items' => $teims];
+        // dump($param);
+        return view('/item_list/trips.deleted', $param);
+    }
+
+    /**
+     * 削除済アイテムの復元
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function tripRestore(Request $req)
+    {
+        Trip::onlyTrashed()->where('id', $req->id)->restore();
+        return back();
+    }
+
+    /**
+     * 削除済_詳細
+     *
+     * @param Request $req
+     * @return void
+     */
+    public function deletedDetailTrip(Request $req)
+    {
+        $items = Trip::onlyTrashed()->find($req->id);
+        $param = ['items' => $items,];
+        dump($req->id);
+        return view('/item_list/trips.detail', $param);
     }
 }

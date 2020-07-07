@@ -1,48 +1,60 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' New Trip List')}}</div>
+<div class="card-header">{{ __(' Edit Plan Item')}}</div>
 
 <div class="card-body">
-    <form method="post" action="{{ url('trips/create') }}">
+    <form method="post" action="{{ url('plans/update') }}">
         @csrf
-        {{-- user_id --}}
-        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+
+        {{-- item_id --}}
+        <input type="hidden" name="id" value="{{ $items['id'] }}">
 
         {{-- item_type --}}
-        <input type="hidden" name="item_type" value="1">
+        <input type="hidden" name="item_type" value="2">
 
-        {{-- trip_title --}}
+        {{-- item_title --}}
         <div class="form-group row">
-            <label for="trip_title" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
+            <label for="plan_title" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
 
             <div class="col-md-6">
-                <input type="hidden" name="trip_title" value="{{ $items['trip_title'] }}">
+                <input type="hidden" name="plan_title" value="{{ $items['plan_title'] }}">
 
-                <span>{{ $items['trip_title'] }}</span>
+                <span>{{ $items['plan_title'] }}</span>
             </div>
         </div>
 
-        {{-- date --}}
+        {{-- start --}}
         <div class="form-group row">
-            <label for="date" class="col-md-4 col-form-label text-md-right">{{ __('Date') }}</label>
+            <label for="start" class="col-md-4 col-form-label text-md-right">{{ __('Start Time') }}</label>
 
             <div class="col-md-6">
-                <input type="hidden" name="date" value="{{ $items['date'] }}">
+                <input type="hidden" name="start" value="{{ $items['start'] }}">
 
-                <span>{{ $items['date'] }}</span>
+                @php
+                $start = date_create($items['start']);
+                $start = date_format($start , 'Y-m-d H:i');
+                @endphp
+
+                {{ date('y年m月d日 H:i', strtotime($start)) }}
             </div>
         </div>
 
-        {{-- point_name --}}
+        {{-- finish --}}
         <div class="form-group row">
-            <label for="point_name" class="col-md-4 col-form-label text-md-right">{{ __('Point Name') }}</label>
+            <label for="finish" class="col-md-4 col-form-label text-md-right">{{ __('Finish Time') }}</label>
 
             <div class="col-md-6">
-                <input type="hidden" name="point_name" value="{{ $items['point_name'] }}">
+                <input type="hidden" name="finish" value="{{ $items['finish'] }}">
 
-                <span>{{ $items['point_name'] }}</span>
+                @php
+                $finish = date_create($items['finish']);
+                $finish = date_format($finish , 'Y-m-d H:i');
+                @endphp
+
+                {{ date('y年m月d日 H:i', strtotime($finish)) }}
             </div>
         </div>
+
 
         {{-- status --}}
         <div class="form-group row">
@@ -53,9 +65,9 @@
 
                 <span>
                     @if ($items['status'] == 0)
-                    気になる
+                    予定
                     @else
-                    行った
+                    確定
                     @endif
                 </span>
             </div>
@@ -110,9 +122,9 @@
 
                 <span>
                     @if ($items['is_open'] == 0)
-                    場所
+                    予定
                     @else
-                    {{ $items['trip_title'] }}
+                    {{ $items['plan_title'] }}
                     @endif
                 </span>
             </div>

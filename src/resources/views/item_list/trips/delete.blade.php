@@ -1,12 +1,14 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' New Trip List')}}</div>
+<div class="card-header">{{ __(' Delete Trip Item')}} ：
+    <span class="h5">{{ $items->trip_title }}</span>
+</div>
 
 <div class="card-body">
-    <form method="post" action="{{ url('trips/create') }}">
+    <form method="post" action="{{ url('trips/delete') }}">
         @csrf
         {{-- user_id --}}
-        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+        <input type="hidden" name="id" value="{{ $items->id }}">
 
         {{-- item_type --}}
         <input type="hidden" name="item_type" value="1">
@@ -119,7 +121,7 @@
         </div>
 
         <div class="col-md-10 offset-md-2">
-            <input type="submit" value="{{ __('Do') }}" class="mr-3 btn btn-light">
+            <input type="submit" value="{{ __('Delete') }}" class="mr-3 btn btn-light">
 
             <button type="button" onclick="history.back()" class="btn btn-light">戻る</button>
         </div>

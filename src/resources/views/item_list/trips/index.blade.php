@@ -3,7 +3,7 @@
 <div class="card-header">
     {{ __(' Trip List')}}
     <span class="ml-5">
-    <a href="{{ url('trips/new') }}?item_type=1">{{ __( 'New' ) }}</a>
+        <a href="{{ url('trips/new') }}?item_type=1">{{ __( 'New' ) }}</a>
     </span>
 </div>
 
@@ -30,23 +30,31 @@
         @foreach ($items as $item)
         <tr>
             {{-- タイトル --}}
+
             <td>
-                {{ $item->trip_title }}
+                {{-- <a href="{{ url('trips/detail') }}?item_type={{ $item->id }}"> {{ $item->plan_title }} </a> --}}
+                {{-- {{ $item->plan_title }} --}}
+
+                <form action="{{ url('trips/detail') }}" method="get" class="float-left mr-3">
+                    <input type="hidden" name="id" value="{{ $item->id }}">
+                    {{-- {{ $item->plan_title }} --}}
+                    <input type="submit" value="{{ $item->trip_title }}" class="btn btn-link">
+                </form>
             </td>
 
             {{-- 日付 --}}
             <td>
-                {{ $item->date }}
+                {{ date('y年m月d日', strtotime($item->date)) }}
             </td>
 
             {{-- 状態 --}}
             <td>
-                @if ($item->is_went == 0)
+                @if ($item->status == 0)
                 気になる
                 @else
                 行った
                 @endif
-                {{-- {{ $item->is_went }} --}}
+                {{-- {{ $item->status }} --}}
             </td>
 
             {{-- 操作 --}}
@@ -89,7 +97,7 @@
         </a>
 
         {{-- 削除済 --}}
-        <a href="{{ route('group_deleted') }}" class="btn btn-light">
+        <a href="{{ route('trip_deleted') }}" class="btn btn-light">
             {{ __('Deleted') }}
         </a>
     </div>

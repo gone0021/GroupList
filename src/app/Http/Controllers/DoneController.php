@@ -30,7 +30,7 @@ class DoneController extends Controller
     public function usersEdit()
     {
         $title = __(' Edit Completed');
-         $msg = '編集が完了しました';
+        $msg = '編集が完了しました';
         $link =  route('users');
         $disp = 'Home';
 
@@ -167,7 +167,7 @@ class DoneController extends Controller
     }
 
     /**
-     * グループの編集
+     * tripsの新規作成
      *
      * @return void
      */
@@ -194,6 +194,74 @@ class DoneController extends Controller
         $msg = '更新が完了しました';
         $link =  route('trips');
         $disp = '場所ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+    /**
+     * tripsの削除
+     *
+     * @return void
+     */
+    public function tripDelete()
+    {
+        $title = __(' Delete Trip Item');
+        $msg = '削除が完了しました';
+        $link =  route('trips');
+        $disp = '場所ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+
+
+    /**
+     * plansの新規作成
+     *
+     * @return void
+     */
+    public function planNew()
+    {
+        $title = __(' New Trip Item');
+        $msg = '登録が完了しました';
+        $link =  route('plans');
+        $disp = '予定ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+
+    /**
+     * plansの編集
+     *
+     * @return void
+     */
+    public function planEdit()
+    {
+        $title = __(' Edit Trip Item');
+        $msg = '更新が完了しました';
+        $link =  route('plans');
+        $disp = '予定ページ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+
+    /**
+     * plansの削除
+     *
+     * @return void
+     */
+    public function planDelete()
+    {
+        $title = __(' Delete Trip Item');
+        $msg = '削除が完了しました';
+        $link =  route('plans');
+        $disp = '予定ページ';
 
         $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
         return view('/assist.done', $param);

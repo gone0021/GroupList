@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\Trip;
+use App\Models\Plan;
 
 class SortController extends Controller
 {
@@ -328,7 +329,7 @@ class SortController extends Controller
     }
 
     /************************\
-    --- TrripController ---
+    --- TripController ---
     \************************/
 
     /**
@@ -336,7 +337,7 @@ class SortController extends Controller
      *
      * @return void
      */
-    public function itemIndex()
+    public function tripIndex()
     {
         $a_id = Auth::id();
 
@@ -357,5 +358,84 @@ class SortController extends Controller
         ];
         return view('/item_list/trips.index', $param);
     }
+
+    /**
+     * 個人_Trip List
+     *
+     * @return void
+     */
+    public function tripDeleted()
+    {
+        if (request()->path() == 'trips/deleted/sort_title_a') {
+            $items = Trip::trashedSortNameAsc();
+        } else if (request()->path() == 'trips/deleted/sort_title_d') {
+            $items = Trip::trashedSortNameDesc();
+        }
+
+        if (request()->path() == 'trips/deleted/sort_date_a') {
+            $items = Trip::trashedSortDateAsc();
+        } else if (request()->path() == 'trips/deleted/sort_date_d') {
+            $items = Trip::trashedSortDateDesc();
+        }
+
+        $param = [
+            'items' => $items,
+        ];
+        return view('/item_list/trips.deleted', $param);
+    }
+
+    /************************\
+    --- PlnaController ---
+    \************************/
+
+    /**
+     * 個人_Plan List
+     *
+     * @return void
+     */
+    public function planIndex()
+    {
+        $a_id = Auth::id();
+
+        if (request()->path() == 'plans/sort_title_a') {
+            $items = Plan::where('user_id', $a_id)->orderBy('plan_title', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'plans/sort_title_d') {
+            $items = Plan::where('user_id', $a_id)->orderBy('plan_title', 'desc')->paginate($this->page);
+        }
+
+        if (request()->path() == 'plans/sort_start_a') {
+            $items = Plan::where('user_id', $a_id)->orderBy('start', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'plans/sort_start_d') {
+            $items = Plan::where('user_id', $a_id)->orderBy('start', 'desc')->paginate($this->page);
+        }
+
+        $param = ['items' => $items,];
+        return view('/item_list/plans.index', $param);
+    }
+
+    /**
+     * 個人_Plan List
+     *
+     * @return void
+     */
+    public function planDeleted()
+    {
+        if (request()->path() == 'plans/deleted/sort_title_a') {
+            $items = Plan::trashedSortNameAsc();
+        } else if (request()->path() == 'plans/deleted/sort_title_d') {
+            $items = Plan::trashedSortNameDesc();
+        }
+
+        if (request()->path() == 'plans/deleted/sort_start_a') {
+            $items = Plan::trashedSortStartAsc();
+        } else if (request()->path() == 'plans/deleted/sort_start_d') {
+            $items = Plan::trashedSortStartDesc();
+        }
+
+        $param = ['items' => $items,];
+        return view('/item_list/plans.deleted', $param);
+    }
+
+
     // return view('/test');
 }

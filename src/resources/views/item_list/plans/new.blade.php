@@ -1,15 +1,10 @@
 @extends('layouts.cardapp')
 @section('card')
-<div class="card-header">{{ __(' Edit Plan Item')}} ：
-    <span class="h5">{{ $items->plan_title }}</span>
-</div>
+<div class="card-header">{{ __(' New Plna Item')}}</div>
 
 <div class="card-body">
-    <form method="post" action="{{ url('plans/edit') }}">
+    <form method="post" action="{{ url('plans/new') }}">
         @csrf
-
-        {{-- item_id --}}
-        <input type="hidden" name="id" value="{{ $items->id }}">
 
         {{-- item_type --}}
         <input type="hidden" name="item_type" value="2">
@@ -20,7 +15,7 @@
 
             <div class="col-md-6">
                 <input id="plan_title" type="text" class="form-control @error('plan_title') is-invalid @enderror"
-                    name="plan_title" value="{{ $items->plan_title }}" required>
+                    name="plan_title" value="{{ old('plan_title') }}" placeholder="タイトル" required>
 
                 @error('plan_title')
                 <span class="invalid-feedback" role="alert">
@@ -32,15 +27,11 @@
 
         {{-- start --}}
         <div class="form-group row">
-            <label for="start" class="col-md-4 col-form-label text-md-right">{{ __('Start Time') }}</label>
+            <label for="start" class="col-md-4 col-form-label text-md-right">{{ __('Date') }}</label>
 
-            @php
-            $start = date_create($items->start);
-            $start = date_format($start , 'Y-m-d H:i');
-            @endphp
             <div class="col-md-6">
-                <input id="start" type="datetime-local" class="form-control @error('start') is-invalid @enderror"
-                    name="start" value="{{ $items->start }}" required>
+                <input id="start" type="datetime-local" class="form-control @error('start') is-invalid @enderror" name="start"
+                    value="{{ old('start') }}" required>
 
                 @error('start')
                 <span class="invalid-feedback" role="alert">
@@ -52,14 +43,29 @@
 
         {{-- finish --}}
         <div class="form-group row">
-            <label for="finish" class="col-md-4 col-form-label text-md-right">{{ __('Finish Time') }}</label>
+            <label for="finish" class="col-md-4 col-form-label text-md-right">{{ __('Date') }}</label>
 
             <div class="col-md-6">
-                <input id="finish" type="datetime-local"
-                    class="form-control @error('finish') is-invalid @enderror" name="finish"
-                    value="{{ $items->finish }}" required>
+                <input id="finish" type="datetime-local" class="form-control @error('finish') is-invalid @enderror" name="finish"
+                    value="{{ old('finish') }}" required>
 
                 @error('finish')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+        </div>
+
+        {{-- point_name --}}
+        <div class="form-group row">
+            <label for="point_name" class="col-md-4 col-form-label text-md-right">{{ __('Point Name') }}</label>
+
+            <div class="col-md-6">
+                <input id="point_name" type="text" class="form-control @error('point_name') is-invalid @enderror"
+                    name="point_name" value="{{ old('point_name') }}" placeholder="ポイント名" required>
+
+                @error('point_name')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -72,11 +78,9 @@
             <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 
             <div class="col-md-6">
-                <input type="radio" name="status" value="0" @if ($items->status == 0) checked @endif id="want"
-                class="">
+                <input type="radio" name="status" value="0" @if (old('status')==0) checked @endif id="want" class="">
                 <label for="want" class="mr-3">予定</label>
-                <input type="radio" name="status" value="1" @if ($items->status == 1) checked @endif id="went"
-                class="">
+                <input type="radio" name="status" value="1" @if (old('status')==1) checked @endif id="went" class="">
                 <label for="went">確定</label>
             </div>
         </div>
@@ -87,19 +91,16 @@
 
             <div class="col-md-6">
                 <input id="map_item" type="text" class="form-control @error('map_item') is-invalid @enderror"
-                    name="map_item" value="{{ $items->map_item }}" required>
-
+                    name="map_item">
                 @error('map_item')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
-
                 <p>
                     <a href="https://www.google.co.jp/maps/" target="blank">GoogleMap</a>から「共有→地図を埋め込む」のURLを貼り付けてください
                 </p>
             </div>
-
         </div>
 
         {{-- comment --}}
@@ -107,13 +108,16 @@
             <label for="comment" class="col-md-4 col-form-label text-md-right">{{ __('Comment') }}</label>
 
             <div class="col-md-6">
-                <input id="comment" type="text" class="form-control" name="comment" value="{{ $items->comment }}">
+                <input id="comment" type="text" class="form-control" name="comment" value="{{ old('comment') }}">
+                {{-- <textarea name="comment" id="comment" class="form-control" cols="60" rows="5">
+                    {{ old('comment') }}
+                </textarea> --}}
 
-                @error('comment')
+                {{-- @error('password')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
+                @enderror --}}
             </div>
         </div>
 
@@ -123,8 +127,8 @@
 
             <div class="col-md-6">
                 <select name="open_range">
-                    <option value="0" @if ($items->open_range == '0') selected @endif>個人</option>
-                    <option value="1" @if ($items->open_range == '1') selected @endif>グループ</option>
+                    <option value="0">個人</option>
+                    <option value="1">グループ</option>
                 </select>
             </div>
         </div>
@@ -135,11 +139,12 @@
 
             <div class="col-md-6">
                 <select name="is_open">
-                    <option value="0" @if ($items->is_open == '0') selected @endif>詳細表示しない</option>
-                    <option value="1" @if ($items->is_open == '1') selected @endif>詳細表示する</option>
+                    <option value="0">詳細表示しない</option>
+                    <option value="1">詳細表示する</option>
                 </select>
             </div>
         </div>
+
 
         <div class="col-md-10 offset-md-2">
             <input type="submit" value="{{ __('Do') }}" class="mr-3 btn btn-light">
@@ -148,9 +153,9 @@
                 {{ __('Return') }}
             </a>
         </div>
-
-
     </form>
+
+
 
 </div>
 
