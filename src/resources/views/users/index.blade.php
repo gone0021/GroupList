@@ -31,8 +31,27 @@
     </p>
 
     <p>
-        カレンダー表示
+        <a href="{{ url('calendar') }}">
+            {{-- <a href="{{ url('users/group') }}"> --}}
+            カレンダー表示
+        </a>
     </p>
+
+    <div>
+        <span>
+            新規投稿
+        </span>
+
+        <form action="" method="GET" class="mt-1 mb-3">
+            <select name="is_open" class="mr-2">
+                <option value="0">ダイビング</option>
+                <option value="1">場所</option>
+                <option value="2">予定</option>
+            </select>
+
+            <input type="submit" name="new" id="" value="new">
+        </form>
+    </div>
 
     <div>
         投稿一覧
@@ -41,7 +60,7 @@
     <ul class="list-unstyled ml-3">
         <li class="my-2">
             <a href="{{ url('users/item/list') }}">
-                    個人投稿一覧
+                個人投稿一覧
             </a>
         </li>
 

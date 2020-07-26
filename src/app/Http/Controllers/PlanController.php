@@ -19,7 +19,7 @@ class PlanController extends Controller
         $plan = Plan::where('user_id', $a_id)->paginate($this->page);
 
         $param = ['items' => $plan,];
-        return view('/item_list/plans.index', $param);
+        return view('/items/plans.index', $param);
     }
 
     /**
@@ -33,7 +33,7 @@ class PlanController extends Controller
         $items = Plan::find($req->id);
         $param = ['items' => $items,];
         // dump($req->id);
-        return view('/item_list/plans.detail', $param);
+        return view('/items/plans.detail', $param);
     }
 
     /**
@@ -58,7 +58,7 @@ class PlanController extends Controller
     /** 新規登録 */
     public function new()
     {
-        return view('/item_list/plans.new');
+        return view('/items/plans.new');
     }
 
     /**
@@ -74,7 +74,7 @@ class PlanController extends Controller
         $items = $req->all();
         $param = ['items' => $items,];
         dump($param);
-        return view('/item_list/plans.new_check', $param);
+        return view('/items/plans.new_check', $param);
     }
 
     /** 新規登録_実行
@@ -104,7 +104,7 @@ class PlanController extends Controller
         $param = ['items' => $items,];
         // dump(strtotime($items->start));
         // dump($items->start);
-        return view('/item_list/plans.edit', $param);
+        return view('/items/plans.edit', $param);
     }
 
     /**
@@ -118,7 +118,7 @@ class PlanController extends Controller
         // $this->validate($req, Plan::$rules, Plan::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
-        return view('/item_list/plans.edit_check', $param);
+        return view('/items/plans.edit_check', $param);
     }
 
     /**
@@ -147,7 +147,7 @@ class PlanController extends Controller
     {
         $items = Plan::find($req->id);
         $param = ['items' => $items,];
-        return view('/item_list/plans.delete', $param);
+        return view('/items/plans.delete', $param);
     }
 
     /**
@@ -176,7 +176,7 @@ class PlanController extends Controller
 
         $param = ['items' => $teims];
         // dump($param);
-        return view('/item_list/plans.deleted', $param);
+        return view('/items/plans.deleted', $param);
     }
 
     /**
@@ -202,6 +202,6 @@ class PlanController extends Controller
         $items = Plan::onlyTrashed()->find($req->id);
         $param = ['items' => $items,];
         dump($req->id);
-        return view('/item_list/plans.detail', $param);
+        return view('/items/plans.detail', $param);
     }
 }

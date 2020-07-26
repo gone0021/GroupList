@@ -20,6 +20,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+
 </head>
 
 <body>
@@ -70,7 +72,7 @@
 
                                 {{-- dropdown-item --}}
                                 <a class="dropdown-item" href="{{ route('users') }}">Home</a>
-                                <a class="dropdown-item" href="{{ route('calendar') }}">カレンダー</a>
+                                <a class="dropdown-item" href="{{ url('calendar') }}">カレンダー</a>
                                 {{-- <a class="dropdown-item" href="{{ route('items') }}">投稿一覧</a> --}}
 
                                 {{-- logout --}}

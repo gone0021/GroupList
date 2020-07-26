@@ -16,11 +16,11 @@ class DivelogController extends Controller
     public function index(Request $req)
     {
         $a_id = Auth::id();
-        $trip = Divelog::where('user_id', $a_id)->paginate($this->page);
+        $divelog = Divelog::where('user_id', $a_id)->paginate($this->page);
 
-        $param = ['items' => $trip,];
+        $param = ['items' => $divelog,];
         // dump($param);
-        return view('/item_list/divelogs.index', $param);
+        return view('/items/divelogs.index', $param);
     }
 
     /**
@@ -34,32 +34,21 @@ class DivelogController extends Controller
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
         // dump($req->id);
-        return view('/item_list/divelogs.detail', $param);
-    }
-
-    /**
-     * 状態の編集
-     *
-     * @param Request $req
-     * @return void
-     */
-    public function status(Request $req)
-    {
-        $trip = Divelog::find($req->id);
-
-        if ($trip->status != 0) {
-            Divelog::find($req->id)->update(['status' => 0]);
-            return back();
-        } else {
-            Divelog::find($req->id)->update(['status' => 1]);
-            return back();
-        }
+        return view('/items/divelogs.detail', $param);
     }
 
     /** 新規登録 */
     public function new()
     {
-        return view('/item_list/divelogs.new');
+        $val = Divelog::orderBy('dive_num', 'desc')->value('dive_num');
+        // $date = new DateTime("Asia/Tokyo");
+        // $today = $date->format("Y-m-d");
+        $param = [
+            'val' => $val,
+            // 'date' => $today,
+        ];
+        dump($param);
+        return view('/items/divelogs.new', $param);
     }
 
     /**
@@ -74,7 +63,8 @@ class DivelogController extends Controller
 
         $items = $req->all();
         $param = ['items' => $items,];
-        return view('/item_list/divelogs.new_check', $param);
+        dump($param);
+        return view('/items/divelogs.new_check', $param);
     }
 
     /** 新規登録_実行
@@ -87,8 +77,8 @@ class DivelogController extends Controller
         $val = $req->all();
         unset($val['_token']);
 
-        $trip = new Divelog;
-        $trip->fill($val)->save();
+        $divelog = new Divelog;
+        $divelog->fill($val)->save();
         return redirect('/divelogs/new/done');
     }
 
@@ -102,7 +92,8 @@ class DivelogController extends Controller
     {
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
-        return view('/item_list/divelogs.edit', $param);
+        dump($param);
+        return view('/items/divelogs.edit', $param);
     }
 
     /**
@@ -116,7 +107,8 @@ class DivelogController extends Controller
         // $this->validate($req, Divelog::$rules, Divelog::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
-        return view('/item_list/divelogs.edit_check', $param);
+        dump($param);
+        return view('/items/divelogs.edit_check', $param);
     }
 
     /**
@@ -125,13 +117,16 @@ class DivelogController extends Controller
      * @param Request $req
      * @return void
      */
-    public function tripUpdate(Request $req)
+    public function divelogUpdate(Request $req)
     {
         $val = $req->all();
         unset($val['_token']);
 
-        $trip = Divelog::find($req->id);
-        $trip->fill($val)->update();
+        $divelog = Divelog::find($req->id);
+        $divelog->fill($val)->update();
+
+        dump($val);
+        // return view('test');
         return redirect('/divelogs/edit/done');
     }
 
@@ -145,7 +140,8 @@ class DivelogController extends Controller
     {
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
-        return view('/item_list/divelogs.delete', $param);
+        dump($param);
+        return view('/items/divelogs.delete', $param);
     }
 
     /**
@@ -171,10 +167,9 @@ class DivelogController extends Controller
     public function deletedDivelog()
     {
         $teims = Divelog::onlyTrashed()->paginate($this->page);
-
         $param = ['items' => $teims];
         // dump($param);
-        return view('/item_list/divelogs.deleted', $param);
+        return view('/items/divelogs.deleted', $param);
     }
 
     /**
@@ -183,7 +178,7 @@ class DivelogController extends Controller
      * @param Request $req
      * @return void
      */
-    public function tripRestore(Request $req)
+    public function divelogRestore(Request $req)
     {
         Divelog::onlyTrashed()->where('id', $req->id)->restore();
         return back();
@@ -200,6 +195,6 @@ class DivelogController extends Controller
         $items = Divelog::onlyTrashed()->find($req->id);
         $param = ['items' => $items,];
         dump($req->id);
-        return view('/item_list/divelogs.detail', $param);
+        return view('/items/divelogs.detail', $param);
     }
 }

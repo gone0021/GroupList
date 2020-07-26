@@ -185,11 +185,12 @@ Route::middleware('auth')->group(function () {
     Route::post('trips/new', 'TripController@newCheck');
     Route::post('trips/create', 'TripController@newCreate');
 
-    // create
+    // edit
     Route::get('trips/edit', 'TripController@edit');
     Route::post('trips/edit', 'TripController@editCheck');
     Route::post('trips/update', 'TripController@tripUpdate');
 
+    // delete
     Route::get('trips/delete', 'TripController@delete');
     Route::post('trips/delete', 'TripController@deleteAction');
 
@@ -212,85 +213,6 @@ Route::middleware('auth')->group(function () {
     Route::get('plans', 'PlanController@index')->name('plans');
     Route::get('plans/sort_title_a', 'SortController@planIndex');
     Route::get('plans/sort_title_d', 'SortController@planIndex');
-    Route::get('plans/sort_date_a', 'SortController@planIndex');
-    Route::get('plans/sort_date_d', 'SortController@planIndex');
-
-    Route::get('plans/detail', 'PlanController@detailPlan');
-
-    // status change
-    Route::get('plans/status', 'PlanController@status');
-
-    // new
-    Route::get('plans/new', 'PlanController@new'); //
-    Route::post('plans/new', 'PlanController@newCheck');
-    Route::post('plans/create', 'PlanController@newCreate');
-
-    // create
-    Route::get('plans/edit', 'PlanController@edit');
-    Route::post('plans/edit', 'PlanController@editCheck');
-    Route::post('plans/update', 'PlanController@planUpdate');
-
-    Route::get('plans/delete', 'PlanController@delete');
-    Route::post('plans/delete', 'PlanController@deleteAction');
-
-    // delted
-    Route::get('plans/deleted', 'PlanController@deletedPlan')->name('plan_deleted');
-    Route::get('plans/deleted/sort_title_a', 'SortController@planDeleted');
-    Route::get('plans/deleted/sort_title_d', 'SortController@planDeleted');
-    Route::get('plans/deleted/sort_start_a', 'SortController@planDeleted');
-    Route::get('plans/deleted/sort_start_d', 'SortController@planDeleted');
-
-    Route::post('plans/deleted', 'PlanController@planRestore');
-    Route::get('plans/deleted_detail', 'PlanController@deletedDetailPlan');
-
-
-    /************************\
-    --- daive_logs ---
-    \************************/
-
-    // --- index ---
-    Route::get('divelogs', 'DivelogController@index')->name('divelogs');
-    Route::get('divelogs/sort_title_a', 'SortController@planIndex');
-    Route::get('divelogs/sort_title_d', 'SortController@planIndex');
-    Route::get('divelogs/sort_date_a', 'SortController@planIndex');
-    Route::get('divelogs/sort_date_d', 'SortController@planIndex');
-
-    Route::get('divelogs/detail', 'DivelogController@detailPlan');
-
-    // status change
-    Route::get('divelogs/status', 'DivelogController@status');
-
-    // new
-    Route::get('divelogs/new', 'DivelogController@new'); //
-    Route::post('divelogs/new', 'DivelogController@newCheck');
-    Route::post('divelogs/create', 'DivelogController@newCreate');
-
-    // create
-    Route::get('divelogs/edit', 'DivelogController@edit');
-    Route::post('divelogs/edit', 'DivelogController@editCheck');
-    Route::post('divelogs/update', 'DivelogController@planUpdate');
-
-    Route::get('divelogs/delete', 'DivelogController@delete');
-    Route::post('divelogs/delete', 'DivelogController@deleteAction');
-
-    // delted
-    Route::get('divelogs/deleted', 'DivelogController@deletedPlan')->name('plan_deleted');
-    Route::get('divelogs/deleted/sort_title_a', 'SortController@planDeleted');
-    Route::get('divelogs/deleted/sort_title_d', 'SortController@planDeleted');
-    Route::get('divelogs/deleted/sort_start_a', 'SortController@planDeleted');
-    Route::get('divelogs/deleted/sort_start_d', 'SortController@planDeleted');
-
-    Route::post('divelogs/deleted', 'DivelogController@planRestore');
-    Route::get('divelogs/deleted_detail', 'PlanController@deletedDetailPlan');
-
-    /************************\
-    --- divelogs ---
-    \************************/
-
-    // --- index ---
-    Route::get('plans', 'PlanController@index')->name('plans');
-    Route::get('plans/sort_title_a', 'SortController@planIndex');
-    Route::get('plans/sort_title_d', 'SortController@planIndex');
     Route::get('plans/sort_start_a', 'SortController@planIndex');
     Route::get('plans/sort_start_d', 'SortController@planIndex');
 
@@ -304,11 +226,12 @@ Route::middleware('auth')->group(function () {
     Route::post('plans/new', 'PlanController@newCheck');
     Route::post('plans/create', 'PlanController@newCreate');
 
-    // create
+    // edit
     Route::get('plans/edit', 'PlanController@edit');
     Route::post('plans/edit', 'PlanController@editCheck');
     Route::post('plans/update', 'PlanController@planUpdate');
 
+    // delete
     Route::get('plans/delete', 'PlanController@delete');
     Route::post('plans/delete', 'PlanController@deleteAction');
 
@@ -323,12 +246,59 @@ Route::middleware('auth')->group(function () {
     Route::get('plans/deleted_detail', 'PlanController@deletedDetailPlan');
 
 
+    /************************\
+    --- dive_logs ---
+    \************************/
+
+    // --- index ---
+    Route::get('divelogs', 'DivelogController@index')->name('divelogs');
+    Route::get('divelogs/sort_title_a', 'SortController@divelogIndex');
+    Route::get('divelogs/sort_title_d', 'SortController@divelogIndex');
+    Route::get('divelogs/sort_date_a', 'SortController@divelogIndex');
+    Route::get('divelogs/sort_date_d', 'SortController@divelogIndex');
+
+    Route::get('divelogs/detail', 'DivelogController@detailDivelog');
+
+    // new
+    Route::get('divelogs/new', 'DivelogController@new'); //
+    Route::post('divelogs/new', 'DivelogController@newCheck');
+    Route::post('divelogs/create', 'DivelogController@newCreate');
+
+    // edit
+    Route::get('divelogs/edit', 'DivelogController@edit');
+    Route::post('divelogs/edit', 'DivelogController@editCheck');
+    Route::post('divelogs/update', 'DivelogController@divelogUpdate');
+
+    // delete
+    Route::get('divelogs/delete', 'DivelogController@delete');
+    Route::post('divelogs/delete', 'DivelogController@deleteAction');
+
+    // delted
+    Route::get('divelogs/deleted', 'DivelogController@deletedDivelog')->name('divelog_deleted');
+    Route::get('divelogs/deleted/sort_title_a', 'SortController@divelogDeleted');
+    Route::get('divelogs/deleted/sort_title_d', 'SortController@divelogDeleted');
+    Route::get('divelogs/deleted/sort_date_a', 'SortController@divelogDeleted');
+    Route::get('divelogs/deleted/sort_date_d', 'SortController@divelogDeleted');
+
+    Route::post('divelogs/deleted', 'DivelogController@divelogRestore');
+    Route::get('divelogs/deleted_detail', 'DivelogController@deletedDetailDivelog');
+
+    /************************\
+    --- item_group ---
+    \************************/
+    Route::get('groupitem', 'itemController@index');
+
+    /************************\
+    --- calendar ---
+    \************************/
+    // Route::get('calendar', 'itemController@calendar2');
+    Route::get('calendar', 'CalendarController@index');
 
 });
 
-    /************************\
-    --- done ---
-    \************************/
+/************************\
+--- done ---
+\************************/
 Route::post('register_add', 'AssistController@registerAdd');
 Route::get('users/done', 'DoneController@usersEdit');
 Route::get('users/password/done', 'DoneController@usersPassword');
@@ -353,9 +323,11 @@ Route::get('trips/new/done', 'DoneController@tripNew');
 Route::get('trips/edit/done', 'DoneController@tripEdit');
 Route::get('trips/delete/done', 'DoneController@tripDelete');
 
+Route::get('divelogs/new/done', 'DoneController@divelogNew');
+Route::get('divelogs/edit/done', 'DoneController@divelogEdit');
+Route::get('divelogs/delete/done', 'DoneController@divelogDelete');
+
 // ------------------------------------------------------------+
 //      done
 // ------------------------------------------------------------+
 
-// ------ 未作成
-Route::get('calendar', 'UserController@index')->name('calendar');

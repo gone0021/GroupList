@@ -18,6 +18,7 @@
             </th>
             <th>操作</th>
         </tr>
+
         @foreach ($items as $item)
         <tr>
             <td>

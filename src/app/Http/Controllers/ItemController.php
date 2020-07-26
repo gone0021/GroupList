@@ -8,41 +8,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserRequest;
 use App\Models\Trip;
+use App\Models\Plan;
+use App\Models\Divelog;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\Item;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
+use PhpParser\Node\Expr\New_;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $req)
     {
-        // $a_id = Auth::id();
-        $g_id = GroupUser::where('user_id', Auth::id())->pluck('group_id');
-        // $g_id = Trip::where('user_id', $a_id)->get();
-        $group = Group::whereIn('id',$g_id)->get('group_name');
+        $group = Group::find($req->group_id);
 
-        // $trip = Trip::where('user_id', Auth::id())->get();
+        if ($group->group_type == 0) {
+            $serch = DB::raw(Item::UnionNoDivelog());
+        } else if ($group->group_type == 1) {
+            $serch = DB::raw(Item::UnionAll());
+        }
 
-        $items = DB::table('users as u')
-        ->join('group_user as gu', '=', 'u.id','gu.user_id')
-        ->join('groups as g', 'gu.id','g.id')
-        ->join('trips as t', '=', 'u._id','t.user_id')
-        ->join('dive_logs as d', '=', 'u._id','d.user_id')
-        ->join('plans as p', '=', 'u._id','p.user_id')
-        // ->join('group_user', 'users.id','group_user.user_id')
-        // ->groupBy('t.id')
-        ->where('u.id', Auth::id())
-        ->get();
+        // DBファサードは配列が返りpaginateが使えないため、rawを用いたクエリビルダで副問い合わせを作る
+        $items = DB::table($serch)
+            ->select("item_id", "group_name", "item_type", "title", "date", "user_name", "status", "open_range", "is_open")
+            ->where('g.id', $req->group_id)
+            ->paginate(7);
 
         $param = [
+            'gid' => $req->group_id,
             'items' => $items,
-            'g_id' => $g_id,
             'group' => $group,
-            // 'user' => $users,
         ];
-        dump($param);
-        // return view('test',$trip);
+
         return view('/items.index', $param);
     }
+
 }

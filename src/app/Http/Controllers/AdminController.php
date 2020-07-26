@@ -282,10 +282,10 @@ class AdminController extends Controller
         }
 
         $req->session()->pull('group_id');
-        $group = Group::paginate($this->page);
+        $items = Group::paginate($this->page);
 
-        $param = ['items' => $group];
-        return redirect('/admin/list', $param);
+        $param = ['items' => $items];
+        return view('/admin.list', $param);
     }
 
     /**

@@ -11,6 +11,7 @@ use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\Trip;
 use App\Models\Plan;
+use App\Models\Divelog;
 
 class SortController extends Controller
 {
@@ -342,9 +343,9 @@ class SortController extends Controller
         $a_id = Auth::id();
 
         if (request()->path() == 'trips/sort_title_a') {
-            $items = Trip::where('user_id', $a_id)->orderBy('trip_title', 'asc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
         } else if (request()->path() == 'trips/sort_title_d') {
-            $items = Trip::where('user_id', $a_id)->orderBy('trip_title', 'desc')->paginate($this->page);
+            $items = Trip::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
         }
 
         if (request()->path() == 'trips/sort_date_a') {
@@ -356,7 +357,7 @@ class SortController extends Controller
         $param = [
             'items' => $items,
         ];
-        return view('/item_list/trips.index', $param);
+        return view('/items/trips.index', $param);
     }
 
     /**
@@ -381,7 +382,7 @@ class SortController extends Controller
         $param = [
             'items' => $items,
         ];
-        return view('/item_list/trips.deleted', $param);
+        return view('/items/trips.deleted', $param);
     }
 
     /************************\
@@ -398,9 +399,9 @@ class SortController extends Controller
         $a_id = Auth::id();
 
         if (request()->path() == 'plans/sort_title_a') {
-            $items = Plan::where('user_id', $a_id)->orderBy('plan_title', 'asc')->paginate($this->page);
+            $items = Plan::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
         } else if (request()->path() == 'plans/sort_title_d') {
-            $items = Plan::where('user_id', $a_id)->orderBy('plan_title', 'desc')->paginate($this->page);
+            $items = Plan::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
         }
 
         if (request()->path() == 'plans/sort_start_a') {
@@ -410,7 +411,7 @@ class SortController extends Controller
         }
 
         $param = ['items' => $items,];
-        return view('/item_list/plans.index', $param);
+        return view('/items/plans.index', $param);
     }
 
     /**
@@ -433,9 +434,61 @@ class SortController extends Controller
         }
 
         $param = ['items' => $items,];
-        return view('/item_list/plans.deleted', $param);
+        return view('/items/plans.deleted', $param);
     }
 
+
+    /************************\
+    ---DivelogController ---
+    \************************/
+
+    /**
+     * 個人_Plan List
+     *
+     * @return void
+     */
+    public function divelogIndex()
+    {
+        $a_id = Auth::id();
+
+        if (request()->path() == 'divelogs/sort_title_a') {
+            $items = Divelog::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'divelogs/sort_title_d') {
+            $items = Divelog::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
+        }
+
+        if (request()->path() == 'divelogs/sort_date_a') {
+            $items = Divelog::where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
+        } else if (request()->path() == 'divelogs/sort_date_d') {
+            $items = Divelog::where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
+        }
+
+        $param = ['items' => $items,];
+        return view('/items/divelogs.index', $param);
+    }
+
+    /**
+     * 個人_Plan List
+     *
+     * @return void
+     */
+    public function divelogDeleted()
+    {
+        if (request()->path() == 'divelogs/deleted/sort_title_a') {
+            $items = Divelog::trashedSortNameAsc();
+        } else if (request()->path() == 'divelogs/deleted/sort_title_d') {
+            $items = Divelog::trashedSortNameDesc();
+        }
+
+        if (request()->path() == 'divelogs/deleted/sort_date_a') {
+            $items = Divelog::trashedSortDateAsc();
+        } else if (request()->path() == 'divelogs/deleted/sort_date_d') {
+            $items = Divelog::trashedSortDateDesc();
+        }
+
+        $param = ['items' => $items,];
+        return view('/items/divelogs.deleted', $param);
+    }
 
     // return view('/test');
 }

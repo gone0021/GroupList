@@ -17,11 +17,11 @@ class CreateTripsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('item_type')->default(1);
-            $table->text('trip_title');
+            $table->text('title');
             $table->date('date');
-            $table->text('point_name');
-            $table->tinyInteger('is_went')->default(0);
-            $table->text('map_item')->nullable();
+            $table->text('point');
+            $table->tinyInteger('status')->default(0);
+            $table->text('map')->nullable();
             $table->text('comment')->nullable();
             $table->tinyInteger('open_range')->default(1);
             $table->tinyInteger('is_open')->default(0);

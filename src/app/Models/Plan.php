@@ -19,24 +19,24 @@ class Plan extends Model
 
     /** バリデーションルール */
     public static $rules = [
-        'plan_title' => 'required|max:50',
+        'title' => 'required|max:50',
         'start' => 'required|date',
         'finish' => 'required|date',
-        // 'map_item' => "required|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
-        'map_item' => "nullable|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
-        'comment' => 'max:1000',
+        // 'map' => "required|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
+        'map' => 'nullable|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s',
+        'comment' => 'nullable|max:1000',
     ];
 
     /** バリデーションエラーメッセージ */
     public static $messages = [
-        'plan_title.required' => 'タイトルを入力してください。',
-        'plan_title.max' => '50文字以内で入力してください。',
+        'title.required' => 'タイトルを入力してください。',
+        'title.max' => '50文字以内で入力してください。',
         'start.required' => '日付を入力してください。',
         'start.date' => '正しい日付を入力してください。',
         'finish.required' => '日付を入力してください。',
         'finish.date' => '正しい日付を入力してください。',
-        // 'map_item.required' => 'リンクを入力してください。',
-        'map_item.regex' => '正しいリンクを入力してください。',
+        // 'map.required' => 'リンクを入力してください。',
+        'map.regex' => '正しいリンクを入力してください。',
         'comment.max' => '1000文字以内で入力してください。',
     ];
 
@@ -60,7 +60,7 @@ class Plan extends Model
      */
     public function scopeTrashedSortNameAsc()
     {
-        $plan = $this->onlyTrashed()->orderBy('plan_title', 'asc')->paginate($this->p_num);
+        $plan = $this->onlyTrashed()->orderBy('title', 'asc')->paginate($this->p_num);
         return $plan;
     }
 
@@ -72,7 +72,7 @@ class Plan extends Model
      */
     public function scopeTrashedSortNameDesc()
     {
-        $plan = $this->onlyTrashed()->orderBy('plan_title', 'desc')->paginate($this->p_num);
+        $plan = $this->onlyTrashed()->orderBy('title', 'desc')->paginate($this->p_num);
         return $plan;
     }
 

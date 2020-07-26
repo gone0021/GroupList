@@ -17,11 +17,11 @@ class CreatePlansTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('item_type')->default(2);
-            $table->text('plan_title');
+            $table->text('title');
             $table->dateTime('start');
             $table->dateTime('finish');
-            $table->tinyInteger('is_fixed')->default(0);
-            $table->text('map_item')->nullable();
+            $table->tinyInteger('status')->default(0);
+            $table->text('map')->nullable();
             $table->text('comment')->nullable();
             $table->tinyInteger('open_range')->default(1);
             $table->tinyInteger('is_open')->default(0);

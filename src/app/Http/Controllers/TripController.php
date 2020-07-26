@@ -20,7 +20,7 @@ class TripController extends Controller
 
         $param = ['items' => $trip,];
         // dump($param);
-        return view('/item_list/trips.index', $param);
+        return view('/items/trips.index', $param);
     }
 
     /**
@@ -34,7 +34,7 @@ class TripController extends Controller
         $items = Trip::find($req->id);
         $param = ['items' => $items,];
         // dump($req->id);
-        return view('/item_list/trips.detail', $param);
+        return view('/items/trips.detail', $param);
     }
 
     /**
@@ -59,7 +59,7 @@ class TripController extends Controller
     /** 新規登録 */
     public function new()
     {
-        return view('/item_list/trips.new');
+        return view('/items/trips.new');
     }
 
     /**
@@ -74,7 +74,7 @@ class TripController extends Controller
 
         $items = $req->all();
         $param = ['items' => $items,];
-        return view('/item_list/trips.new_check', $param);
+        return view('/items/trips.new_check', $param);
     }
 
     /** 新規登録_実行
@@ -102,7 +102,7 @@ class TripController extends Controller
     {
         $items = Trip::find($req->id);
         $param = ['items' => $items,];
-        return view('/item_list/trips.edit', $param);
+        return view('/items/trips.edit', $param);
     }
 
     /**
@@ -116,7 +116,7 @@ class TripController extends Controller
         // $this->validate($req, Trip::$rules, Trip::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
-        return view('/item_list/trips.edit_check', $param);
+        return view('/items/trips.edit_check', $param);
     }
 
     /**
@@ -145,7 +145,7 @@ class TripController extends Controller
     {
         $items = Trip::find($req->id);
         $param = ['items' => $items,];
-        return view('/item_list/trips.delete', $param);
+        return view('/items/trips.delete', $param);
     }
 
     /**
@@ -174,7 +174,7 @@ class TripController extends Controller
 
         $param = ['items' => $teims];
         // dump($param);
-        return view('/item_list/trips.deleted', $param);
+        return view('/items/trips.deleted', $param);
     }
 
     /**
@@ -200,6 +200,6 @@ class TripController extends Controller
         $items = Trip::onlyTrashed()->find($req->id);
         $param = ['items' => $items,];
         dump($req->id);
-        return view('/item_list/trips.detail', $param);
+        return view('/items/trips.detail', $param);
     }
 }

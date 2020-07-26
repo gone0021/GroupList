@@ -233,7 +233,6 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
-
     /**
      * plansの編集
      *
@@ -250,7 +249,6 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
-
     /**
      * plansの削除
      *
@@ -266,4 +264,55 @@ class DoneController extends Controller
         $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
         return view('/assist.done', $param);
     }
+
+
+    /**
+     * plansの新規作成
+     *
+     * @return void
+     */
+    public function divelogNew()
+    {
+        $title = __(' New Dive Log');
+        $msg = '登録が完了しました';
+        $link =  route('divelogs');
+        $disp = 'ダイブログ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+
+    /**
+     * divelogsの編集
+     *
+     * @return void
+     */
+    public function divelogEdit()
+    {
+        $title = __(' Edit Dive Log');
+        $msg = '更新が完了しました';
+        $link =  route('divelogs');
+        $disp = 'ダイブログ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
+    /**
+     * divelogsの削除
+     *
+     * @return void
+     */
+    public function divelogDelete()
+    {
+        $title = __(' Delete Dive Log');
+        $msg = '削除が完了しました';
+        $link =  route('divelogs');
+        $disp = 'ダイブログ';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
 }

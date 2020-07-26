@@ -20,7 +20,7 @@
                 </td>
 
                 <td>
-                    <form action="{{ url('users/leave') }}" method="get">
+                    <form action="{{ url('groupitem') }}" method="get">
                         <input type="hidden" name="group_id" value="{{ $item->id }}">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">

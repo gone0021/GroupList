@@ -23,8 +23,8 @@ class CreateDiveLogsTable extends Migration
             $table->integer('dive_num')->unique();
             $table->text('shop_name');
             $table->tinyInteger('entry_type')->default(0);
-            $table->dateTime('start_time');
-            $table->dateTime('finish_time');
+            $table->time('start_time');
+            $table->time('finish_time');
             $table->integer('start_air')->default(200);
             $table->integer('finish_air');
             $table->double('avg_depth');
@@ -34,8 +34,8 @@ class CreateDiveLogsTable extends Migration
             $table->tinyInteger('weather')->default(0);
             $table->tinyInteger('wind')->default(0);
             $table->tinyInteger('current')->default(0);
-            $table->Integer('perspective');
-            $table->tinyInteger('tank_meterial')->default(0);
+            $table->Integer('view');
+            $table->tinyInteger('tank_material')->default(0);
             $table->Integer('tank_capacity')->default(10);
             $table->tinyInteger('suit_type')->default(0);
             $table->double('suit_size');
