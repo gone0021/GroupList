@@ -8,9 +8,6 @@
         {{-- user_id --}}
         <input type="hidden" name="user_id" value="{{ Auth::id() }}">
 
-        {{-- item_type --}}
-        <input type="hidden" name="item_type" value="0">
-
         <div class="form-group row">
             {{-- dive_num --}}
             <div class="form-group col-md-5 offset-md-1">

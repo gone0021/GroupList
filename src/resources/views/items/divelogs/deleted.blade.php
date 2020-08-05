@@ -3,7 +3,7 @@
 <div class="card-header">
     {{ __(' Plan List')}}
     <span class="ml-5">
-        <a href="{{ url('divelogs/new') }}?item_type=2">{{ __( 'New' ) }}</a>
+        <a href="{{ url('divelogs/new') }}?item_type=1">{{ __( 'New' ) }}</a>
     </span>
 </div>
 
@@ -17,8 +17,8 @@
 
             <th>
                 <span class="mr-2">タイトル</span>
-                <a href="{{ url('divelogs/deleted/sort_title_a') }}?item_type=2">↓</a>
-                <a href="{{ url('divelogs/deleted/sort_title_d') }}?item_type=2">↑</a>
+                <a href="{{ url('divelogs/deleted/sort_title_a') }}?item_type=1">↓</a>
+                <a href="{{ url('divelogs/deleted/sort_title_d') }}?item_type=1">↑</a>
             </th>
 
             <th>
@@ -27,8 +27,8 @@
 
             <th>
                 <span class="mr-2">日付</span>
-                <a href="{{ url('divelogs/deleted/sort_date_a') }}?item_type=2">↓</a>
-                <a href="{{ url('divelogs/deleted/sort_date_d') }}?item_type=2">↑</a>
+                <a href="{{ url('divelogs/deleted/sort_date_a') }}?item_type=1">↓</a>
+                <a href="{{ url('divelogs/deleted/sort_date_d') }}?item_type=1">↑</a>
             </th>
 
             <th>操作</th>

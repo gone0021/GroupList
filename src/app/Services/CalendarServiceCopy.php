@@ -18,7 +18,7 @@ class CalendarService
      *
      * @return array
      */
-    public function getWeeks(string $group_id, string $item_type)
+    public function getWeeks()
     {
         // 出力する値
         $weeks = [];
@@ -32,47 +32,66 @@ class CalendarService
 
         // 祝日の取得用
         $month = Carbon::parse(self::getYm_firstday())->format('Y');
-        $yasumi = Yasumi::create('Japan', $month, 'ja_JP');
+        $holidays = Yasumi::create('Japan', $month, 'ja_JP');
+        $holidayNname = $this->getHoliday($dt);
+        $holiday = '';
 
-        // ※ dbアイテム値の初期化
+        // dbアイテムの取得
+        $saerchA = $this->searchA();
         $item = '';
-        $selectItems = $this->selectItems($group_id, $item_type);
 
-        // dump($selectItems);
+        // $a = $this->searchItemsMineAllType();
+        $b = $this->searchItemsMineByType(2)->first();
+
+
 
         // 1週目に空のセルを追加
         $week .= str_repeat('<td></td>', $day_of_week);
 
         // 7日分（日～土）のループ
         for ($day = 1; $day <= $days_in_month; $day++, $day_of_week++) {
+            // $date = self::getYm() . '-' . date('j',$day);
             $date = self::getYm() . '-' . $day;
             $dateTime = new DateTime($date);
 
-            // dbアイテムの有無とtitleの取得
-            foreach ($selectItems as $k => $v) {
+            // 祝日の有無と祝日名の取得
+            foreach ($holidayNname as $k => $v) {
                 if ($k == $dateTime->format('Y-m-d')) {
-                    $item = '<p class="has-item">' . $v . '</p>';
+                    $holiday = $v;
+                    break;
+                } else {
+                    $holiday = '';
+                }
+            }
+
+            // dbアイテムの有無とtitleの取得
+            foreach ($saerchA as $k => $v) {
+                if ($k == $dateTime->format('Y-m-d')) {
+                    $item = $v;
                     break;
                 } else {
                     $item = '';
                 }
             }
+            // dump($dateTime->format('Y-m-d'));
+            // dump($v);
 
             // 当日ならclassにtodayを設定
             if (Carbon::now()->format('Y-m-j') === $date) {
-                // 祝日のチェックと表示
-                if (empty($yasumi->isHoliday($dateTime))) {
+                // 祝日にholidayを設定
+                if (empty($holidays->isHoliday($dateTime))) {
                     $week .= '<td class="today">' . $day . $item;
                 } else {
-                    $week .= '<td class="today">' . $day . '<pre>' . $this->getHolidayNmae($dateTime, $date) . '</pre>' . $item;
+                    $week .= '<td class="today">' . $day . '<br>' . $holiday . '<br>' . $item;
                 }
                 // classにcldを設定
             } else {
-                // 祝日のチェックと表示
-                if (empty($yasumi->isHoliday($dateTime))) {
-                    $week .= '<td class="cld">' . $day . $item;
+                // 祝日にholidayを設定
+                if ($holidays->isHoliday($dateTime)) {
+                    $week .= '<td class="cld holiday">' . $day . '<br>' . $holiday . $item;
+                    // classにcldを設定
                 } else {
-                    $week .= '<td class="cld holiday">' . $day . '<p>' . $this->getHolidayNmae($dateTime, $date) . '</p>' . $item;
+                    $week .= '<td class="cld">' . $day . '<br>' . $item;
                 }
             }
             // 出力
@@ -91,21 +110,31 @@ class CalendarService
             }
         }
 
-        // dump($item);
+
+        if ($this->getMonthCheck() == date('Y-m', strtotime($b->date))) {
+            if ($date == date('j',  strtotime($b->date)))
+                echo 'a';
+        }
+
+        dump($saerchA);
+        echo '<br>';
+
+        // dump($holidayNname);
+
+        // dump($name);
 
         return $weeks;
     }
 
     /**
      * 祝日名の取得
-     * $date引数から日付を取得してメソッド内で処理を完結
      *
      * @return string
      */
     // 祝日名の取得
-    function getHolidayNmae(DateTime $year, String $date): string
+    function getHolidayNmae(DateTime $month, String $date): string
     {
-        $holidays = Yasumi::create('Japan', (int)$year->format('Y'), 'ja_JP');
+        $holidays = Yasumi::create('Japan', (int)$month->format('Y'), 'ja_JP');
         $results  = [];
         foreach ($holidays->getHolidays() as $holiday) {
             $results[$holiday->format('Y-m-j')] = $holiday->getName();
@@ -113,51 +142,59 @@ class CalendarService
         return $results[$date];
     }
 
-
-    /**
-     * requestに合ったdb値を取得
-     *
-     * @return object
-     */
-    public function selectItems(string $group_id, string $item_type)
+    function getHoliday(DateTime $month): array
     {
-        if ($group_id > 0 && $item_type > 0) {
-            return $this->countItemsGroupByType($group_id, $item_type);
-        } elseif ($group_id > 0 && $item_type == 0) {
-            return $this->countItemsGroupAllType($group_id);
-        } elseif ($group_id == 0 && $item_type > 0) {
-            return $this->countItemsPersonByType($item_type);
-        } elseif ($group_id == 0 && $item_type == 0) {
-            return $this->countItemsPersonAllType();
+        $holidays = Yasumi::create('Japan', (int)$month->format('Y'), 'ja_JP');
+        $results  = [];
+        foreach ($holidays->getHolidays() as $holiday) {
+            $results[$holiday->format('Y-m-d')] = $holiday->getName();
         }
+        return $results;
     }
 
     /**
      * selectする値をフィールドにセット
      */
-    public $select = ["item_id", "item_type", "title", "date", "uid", "status", "deleted_at"];
+    public $select = ["item_id", "item_type", "title", "date", "uid", "status"];
 
     /**
      * items 該当日のアイテム数を取得（個人：全て）
      *
      * @return object
      */
-    public function countItemsPersonAllType()
+    public function searchItemsMineAllType($date)
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionNoGroupForCalendar());
+        $serch = DB::raw(Item::unionNoGroup());
 
         $imtes = DB::table($serch)
-            ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
+            ->select($this->select)
             ->where('uid', $a_id)
-            ->whereNull('is_deleted')
-            ->groupBy('date')
             ->get();
 
         $results  = [];
         foreach ($imtes as $item) {
-            $results[$item->date] = $item->t;
+            $results[$item->date] = $item->title;
+        }
+
+        return $results[$date];
+    }
+
+    public function searchA()
+    {
+        $a_id = Auth::id();
+
+        $serch = DB::raw(Item::unionNoGroup());
+
+        $imtes = DB::table($serch)
+            ->select($this->select)
+            ->where('uid', $a_id)
+            ->get();
+
+        $results  = [];
+        foreach ($imtes as $item) {
+            $results[$item->date] = $item->title;
         }
 
         return $results;
@@ -169,26 +206,19 @@ class CalendarService
      *
      * @return object
      */
-    public function countItemsPersonByType(String $item_type)
+    public function searchItemsMineByType(String $item_type)
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionNoGroupForCalendar());
+        $serch = DB::raw(Item::unionNoGroup());
 
         $imtes = DB::table($serch)
-            ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
-            ->where('uid', $a_id)
+            ->select($this->select)
             ->where('item_type', $item_type)
-            ->whereNull('is_deleted')
-            ->groupBy('date')
+            ->where('uid', $a_id)
             ->get();
 
-        $results  = [];
-        foreach ($imtes as $item) {
-            $results[$item->date] = $item->t;
-        }
-
-        return $results;
+        return $imtes;
     }
 
     /**
@@ -196,25 +226,18 @@ class CalendarService
      *
      * @return object
      */
-    public function countItemsGroupAllType(String $group_id)
+    public function searchItemsGroupAllType(String $group_id, String $item_type)
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionAllForCalendar());
+        $serch = DB::raw(Item::unionNoGroup());
 
         $imtes = DB::table($serch)
-            ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
+            ->select($this->select)
             ->where('group_id', $group_id)
-            ->whereNull('is_deleted')
-            ->groupBy('date')
             ->get();
 
-        $results  = [];
-        foreach ($imtes as $item) {
-            $results[$item->date] = $item->t;
-        }
-
-        return $results;
+        return $imtes;
     }
 
     /**
@@ -222,26 +245,19 @@ class CalendarService
      *
      * @return object
      */
-    public function countItemsGroupByType(String $group_id, String $item_type)
+    public function searchItemsGroupByType(String $group_id, String $item_type)
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionAllForCalendar());
+        $serch = DB::raw(Item::unionNoGroup());
 
         $imtes = DB::table($serch)
-            ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
+            ->select($this->select)
             ->where('group_id', $group_id)
             ->where('item_type', $item_type)
-            ->whereNull('is_deleted')
-            ->groupBy('date')
             ->get();
 
-        $results  = [];
-        foreach ($imtes as $item) {
-            $results[$item->date] = $item->t;
-        }
-
-        return $results;
+        return $imtes;
     }
 
 
@@ -256,23 +272,13 @@ class CalendarService
     }
 
     /**
-     * 表示月の文字列（Y-m）を返却する
+     * month 年月のチェック用の文字列を返却する
      *
      * @return string
      */
-    public function getDisplayMonth()
+    public function getMonthCheck()
     {
         return Carbon::parse(self::getYm_firstday())->format('Y-m');
-    }
-
-    /**
-     * 今月の文字列（Y-m）を返却する
-     *
-     * @return string
-     */
-    public function getThisMonth()
-    {
-        return Carbon::now()->format('Y-m');
     }
 
     /**

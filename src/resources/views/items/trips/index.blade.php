@@ -3,7 +3,7 @@
 <div class="card-header">
     {{ __(' Trip List')}}
     <span class="ml-5">
-        <a href="{{ url('trips/new') }}?item_type=1">{{ __( 'New' ) }}</a>
+        <a href="{{ url('trips/new') }}?item_type=2">{{ __( 'New' ) }}</a>
     </span>
 </div>
 
@@ -13,13 +13,13 @@
         <tr>
             <th>
                 <span class="mr-2">タイトル</span>
-                <a href="{{ url('trips/sort_title_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/sort_title_d') }}?item_type=1">↑</a>
+                <a href="{{ url('trips/sort_title_a') }}?item_type=2">↓</a>
+                <a href="{{ url('trips/sort_title_d') }}?item_type=2">↑</a>
             </th>
             <th>
                 <span class="mr-2">日付</span>
-                <a href="{{ url('trips/sort_date_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/sort_date_d') }}?item_type=1">↑</a>
+                <a href="{{ url('trips/sort_date_a') }}?item_type=2">↓</a>
+                <a href="{{ url('trips/sort_date_d') }}?item_type=2">↑</a>
             </th>
 
             <th>状態</th>

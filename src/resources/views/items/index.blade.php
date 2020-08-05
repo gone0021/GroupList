@@ -42,11 +42,11 @@
 
             {{-- item_type --}}
             <td>
-                @if ($item->item_type == 0)
+                @if ($item->item_type == 1)
                 ダイビング
-                @elseif ($item->item_type == 1)
-                場所
                 @elseif ($item->item_type == 2)
+                場所
+                @elseif ($item->item_type == 3)
                 予定
                 @else
                 ???
@@ -55,27 +55,19 @@
 
             {{-- タイトル --}}
             <td>
-                @if ($item->item_type == 0)
-                {{-- @if ($item->is_open == 1)
+                @if ($item->item_type == 1)
                 <form action="{{ url('divelogs/detail') }}" method="get" class="float-left mr-3">
-                    <input type="hidden" name="id" value="{{ $item->item_id }}">
-                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
-                </form>
-                @else
-                {{ $item->title }}
-                @endif --}}
-                <form action="{{ url('divelogs/detail') }}" method="get" class="float-left mr-3">
-                    <input type="hidden" name="id" value="{{ $item->item_id }}">
-                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
-                </form>
-
-                @elseif ($item->item_type == 1)
-                <form action="{{ url('trips/detail') }}" method="get" class="float-left mr-3">
                     <input type="hidden" name="id" value="{{ $item->item_id }}">
                     <input type="submit" value="{{ $item->title }}" class="btn btn-link">
                 </form>
 
                 @elseif ($item->item_type == 2)
+                <form action="{{ url('trips/detail') }}" method="get" class="float-left mr-3">
+                    <input type="hidden" name="id" value="{{ $item->item_id }}">
+                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
+                </form>
+
+                @elseif ($item->item_type == 3)
                 <form action="{{ url('plans/detail') }}" method="get" class="float-left mr-3">
                     <input type="hidden" name="id" value="{{ $item->item_id }}">
                     <input type="submit" value="{{ $item->title }}" class="btn btn-link">

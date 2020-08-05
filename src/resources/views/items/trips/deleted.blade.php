@@ -13,13 +13,13 @@
         <tr>
             <th>
                 <span class="mr-2">タイトル</span>
-                <a href="{{ url('trips/deleted/sort_title_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/deleted/sort_title_d') }}?item_type=1">↑</a>
+                <a href="{{ url('trips/deleted/sort_title_a') }}?item_type=2">↓</a>
+                <a href="{{ url('trips/deleted/sort_title_d') }}?item_type=2">↑</a>
             </th>
             <th>
                 <span class="mr-2">日付</span>
-                <a href="{{ url('trips/deleted/sort_date_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/deleted/sort_date_d') }}?item_type=1">↑</a>
+                <a href="{{ url('trips/deleted/sort_date_a') }}?item_type=2">↓</a>
+                <a href="{{ url('trips/deleted/sort_date_d') }}?item_type=2">↑</a>
             </th>
 
             <th>状態</th>

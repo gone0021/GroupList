@@ -52,9 +52,11 @@ Route::middleware('auth')->group(function () {
     // --- group list
     Route::get('users/group', 'UserController@group');
     // lrave
-    Route::get('users/leave/', 'UserController@leave');
+    Route::get('users/leave', 'UserController@leave');
     Route::post('users/leave', 'UserController@leaveAction');
 
+    // --- new items
+    Route::get('users/new', 'UserController@new');
     // --- item list
     Route::get('users/item/list', 'UserController@itemList')->name('item_list');
     // --- item group
@@ -291,7 +293,6 @@ Route::middleware('auth')->group(function () {
     /************************\
     --- calendar ---
     \************************/
-    // Route::get('calendar', 'itemController@calendar2');
     Route::get('calendar', 'CalendarController@index');
 
 });

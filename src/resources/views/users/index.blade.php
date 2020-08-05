@@ -38,18 +38,16 @@
     </p>
 
     <div>
-        <span>
-            新規投稿
-        </span>
-
-        <form action="" method="GET" class="mt-1 mb-3">
-            <select name="is_open" class="mr-2">
+        <form action="{{ url('users/new') }}" method="GET" class="mt-1 mb-3">
+            <label for="new" class="">{{ __('New') }}</label>
+            <br>
+            <select name="new" id="new" class="mr-2">
                 <option value="0">ダイビング</option>
                 <option value="1">場所</option>
                 <option value="2">予定</option>
             </select>
 
-            <input type="submit" name="new" id="" value="new">
+            <input type="submit" name="" id="" value="new" class="btn btn-light">
         </form>
     </div>
 

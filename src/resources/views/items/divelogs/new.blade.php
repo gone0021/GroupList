@@ -7,9 +7,6 @@
     {{-- <form method="post" action="{{ url('divelogs/new') }}" class=”form-inline”> --}}
         @csrf
 
-        {{-- item_type --}}
-        <input type="hidden" name="item_type" value="0">
-
         <div class="form-group row">
             {{-- dive_num --}}
             <div class="form-group col-md-5 offset-md-1">

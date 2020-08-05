@@ -6,9 +6,6 @@
     <form method="post" action="{{ url('trips/new') }}">
         @csrf
 
-        {{-- item_type --}}
-        <input type="hidden" name="item_type" value="1">
-
         {{-- item_title --}}
         <div class="form-group row">
             <label for="title" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>

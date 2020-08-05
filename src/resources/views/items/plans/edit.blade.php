@@ -11,9 +11,6 @@
         {{-- item_id --}}
         <input type="hidden" name="id" value="{{ $items->id }}">
 
-        {{-- item_type --}}
-        <input type="hidden" name="item_type" value="2">
-
         {{-- item_title --}}
         <div class="form-group row">
             <label for="title" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>

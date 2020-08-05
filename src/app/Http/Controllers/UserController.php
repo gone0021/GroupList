@@ -239,7 +239,7 @@ class UserController extends Controller
             'plan' => $plan,
         ];
 
-        dump($param);
+        // dump($param);
         // return view('test');
         return view('/users.item_list', $param);
     }
@@ -258,6 +258,21 @@ class UserController extends Controller
         return view('/users.item_group', $param);
     }
 
-    // return view('/test');
+    /**
+     * 新規投稿
+     *
+     * @return void
+     */
+    public function new(Request $req)
+    {
+        if ($req->new == 0) {
+            return redirect('divelogs/new');
+        } else if ($req->new == 1) {
+            return redirect('trips/new');
+        } else if ($req->new == 2) {
+            return redirect('plans/new');
+        }
+    }
 
+    // return view('/test');
 }

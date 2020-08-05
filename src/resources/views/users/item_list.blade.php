@@ -18,7 +18,7 @@
                 <td>ダイビング</td>
                 <td>
                     <form action="{{ url('divelogs') }}" method="get">
-                        <input type="hidden" name="item_type" value="0">
+                        <input type="hidden" name="item_type" value="1">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
                     </form>
@@ -31,7 +31,7 @@
                 <td>場所</td>
                 <td>
                     <form action="{{ url('trips') }}" method="get">
-                        <input type="hidden" name="item_type" value="1">
+                        <input type="hidden" name="item_type" value="2">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
                     </form>
@@ -44,7 +44,7 @@
                 <td>予定</td>
                 <td>
                     <form action="{{ url('plans') }}" method="get">
-                        <input type="hidden" name="item_type" value="2">
+                        <input type="hidden" name="item_type" value="3">
 
                         <input type="submit" value="{{ __('Items') }}" class="btn btn-light">
                     </form>
