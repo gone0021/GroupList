@@ -38,7 +38,7 @@ class CalendarService
         $item = '';
         $selectItems = $this->selectItems($group_id, $item_type);
 
-        // dump($selectItems);
+        $url = url('date_items');
 
         // 1週目に空のセルを追加
         $week .= str_repeat('<td></td>', $day_of_week);
@@ -48,10 +48,16 @@ class CalendarService
             $date = self::getYm() . '-' . $day;
             $dateTime = new DateTime($date);
 
+            // aタグ
+            $link = '<a href=" '.  url('date_items')  . '?date=' . $dateTime->format('Y-m-d')  . '&group_id=' . $group_id . '&item_type=' . $item_type . '">';
+
+
             // dbアイテムの有無とtitleの取得
             foreach ($selectItems as $k => $v) {
                 if ($k == $dateTime->format('Y-m-d')) {
-                    $item = '<p class="has-item">' . $v . '</p>';
+                    // 出力
+                    $item = '<p class="has-item">' . $link . $v . '</a></p>';
+                    // $item = '<p class="has-item">' . $v . '</p>';
                     break;
                 } else {
                     $item = '';
@@ -90,8 +96,6 @@ class CalendarService
                 $week = '';
             }
         }
-
-        // dump($item);
 
         return $weeks;
     }
@@ -146,7 +150,8 @@ class CalendarService
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionNoGroupForCalendar());
+        // $serch = DB::raw(Item::unionNoGroupForCalendar());
+        $serch = DB::raw(Item::unionAllNoGroup());
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
@@ -173,7 +178,8 @@ class CalendarService
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionNoGroupForCalendar());
+        // $serch = DB::raw(Item::unionNoGroupForCalendar());
+        $serch = DB::raw(Item::unionAllNoGroup());
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
@@ -200,7 +206,8 @@ class CalendarService
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionAllForCalendar());
+        // $serch = DB::raw(Item::unionAllForCalendar());
+        $serch = DB::raw(Item::unionAll());
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
@@ -226,7 +233,8 @@ class CalendarService
     {
         $a_id = Auth::id();
 
-        $serch = DB::raw(Item::unionAllForCalendar());
+        // $serch = DB::raw(Item::unionAllForCalendar());
+        $serch = DB::raw(Item::unionAll());
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")

@@ -35,9 +35,7 @@
 
             <div>
                 <a href="?ym={{ $prev }}&group_id={{ $group_id }}&item_type={{ $item_type }}" class="cld mr-2">&lt;</a>
-
                 <span class="cld mr-2">{{ $month }}</span>
-
                 <a href="?ym={{ $next }}&group_id={{ $group_id }}&item_type={{ $item_type }}" class="cld mr-4">&gt;</a>
 
                 <a href="?ym={{ $thisMonth }}&group_id={{ $group_id }}&item_type={{ $item_type }}" class="cld this-month"> &nbsp; 今月 </a>
@@ -56,9 +54,7 @@
             </table>
 
         </div>
-        {{-- .content --}}
     </div>
-    {{-- .flex-center .position-ref .full-height --}}
 
     <div class="col-md-10">
         <a href="{{ route('users') }}" class="btn btn-light mr-3">

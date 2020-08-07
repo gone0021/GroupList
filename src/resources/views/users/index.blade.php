@@ -39,7 +39,7 @@
 
     <div>
         <form action="{{ url('users/new') }}" method="GET" class="mt-1 mb-3">
-            <label for="new" class="">{{ __('New') }}</label>
+            <label for="new" class="">{{ __('New items') }}</label>
             <br>
             <select name="new" id="new" class="mr-2">
                 <option value="0">ダイビング</option>

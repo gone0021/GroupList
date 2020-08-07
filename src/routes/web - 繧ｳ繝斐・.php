@@ -167,47 +167,6 @@ Route::middleware('auth')->group(function () {
     Route::post('group/user/delete', 'AdminController@groupUserDel');
 
     /************************\
-    --- trips ---
-    \************************/
-
-    // --- index ---
-    Route::get('trips', 'TripController@index')->name('trips');
-    Route::get('trips/sort_title_a', 'SortController@tripIndex');
-    Route::get('trips/sort_title_d', 'SortController@tripIndex');
-    Route::get('trips/sort_date_a', 'SortController@tripIndex');
-    Route::get('trips/sort_date_d', 'SortController@tripIndex');
-
-    Route::get('trips/detail', 'TripController@detailTrip');
-
-    // status change
-    Route::get('trips/status', 'TripController@status');
-
-    // new
-    Route::get('trips/new', 'TripController@new'); //
-    Route::post('trips/new', 'TripController@newCheck');
-    Route::post('trips/create', 'TripController@newCreate');
-
-    // edit
-    Route::get('trips/edit', 'TripController@edit');
-    Route::post('trips/edit', 'TripController@editCheck');
-    Route::post('trips/update', 'TripController@tripUpdate');
-
-    // delete
-    Route::get('trips/delete', 'TripController@delete');
-    Route::post('trips/delete', 'TripController@deleteAction');
-
-    // delted
-    Route::get('trips/deleted', 'TripController@deletedTrip')->name('trip_deleted');
-    Route::get('trips/deleted/sort_title_a', 'SortController@tripDeleted');
-    Route::get('trips/deleted/sort_title_d', 'SortController@tripDeleted');
-    Route::get('trips/deleted/sort_date_a', 'SortController@tripDeleted');
-    Route::get('trips/deleted/sort_date_d', 'SortController@tripDeleted');
-
-    Route::post('trips/deleted', 'TripController@tripRestore');
-
-    Route::get('trips/deleted_detail', 'TripController@deletedDetailTrip');
-
-    /************************\
     --- plans ---
     \************************/
 
@@ -286,18 +245,60 @@ Route::middleware('auth')->group(function () {
     Route::get('divelogs/deleted_detail', 'DivelogController@deletedDetailDivelog');
 
     /************************\
-    --- item ---
+    --- item_group ---
     \************************/
-    Route::get('items/error', 'itemController@error');
     Route::get('groupitem', 'itemController@index');
-    Route::get('date_items', 'itemController@dateItems');
 
     /************************\
     --- calendar ---
     \************************/
-    Route::get('calendar', 'CalendarController@index')->name('calendar');
-
+    Route::get('calendar', 'CalendarController@index');
 });
+
+
+/************************\
+    --- trips ---
+    \************************/
+
+Route::middleware('auth')->prefix('trips')->group(function () {
+    // --- index ---
+    Route::get('trips', 'TripController@index')->name('trips');
+    Route::get('trips/sort_title_a', 'SortController@tripIndex');
+    Route::get('trips/sort_title_d', 'SortController@tripIndex');
+    Route::get('trips/sort_date_a', 'SortController@tripIndex');
+    Route::get('trips/sort_date_d', 'SortController@tripIndex');
+
+    Route::get('trips/detail', 'TripController@detailTrip');
+
+    // status change
+    Route::get('trips/status', 'TripController@status');
+
+    // new
+    Route::get('trips/new', 'TripController@new'); //
+    Route::post('trips/new', 'TripController@newCheck');
+    // Route::post('trips/create', 'TripController@newCreate');
+
+    // edit
+    Route::get('trips/edit', 'TripController@edit');
+    Route::post('trips/edit', 'TripController@editCheck');
+    // Route::post('trips/update', 'TripController@tripUpdate');
+
+    // delete
+    Route::get('trips/delete', 'TripController@delete');
+    Route::post('trips/delete', 'TripController@deleteAction');
+
+    // delted
+    Route::get('trips/deleted', 'TripController@deletedTrip')->name('trip_deleted');
+    Route::get('trips/deleted/sort_title_a', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_title_d', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_date_a', 'SortController@tripDeleted');
+    Route::get('trips/deleted/sort_date_d', 'SortController@tripDeleted');
+
+    Route::post('trips/deleted', 'TripController@tripRestore');
+
+    Route::get('trips/deleted_detail', 'TripController@deletedDetailTrip');
+});
+
 
 /************************\
 --- done ---

@@ -118,8 +118,8 @@ class AdminController extends Controller
     public function index()
     {
         if (!$this->checkAdmin()) {
-            dump($this->checkAdmin());
-            return view('/admin.error');
+            // dump($this->checkAdmin());
+            return redirect('/admin/error');
         }
 
         return view('/admin.index');
@@ -134,7 +134,7 @@ class AdminController extends Controller
     {
         // $this->checkMasterAdmin();
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $items = User::paginate($this->page);
@@ -154,7 +154,7 @@ class AdminController extends Controller
     public function userShow(Request $req)
     {
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $items = User::find($req->user_id);
 
@@ -175,7 +175,7 @@ class AdminController extends Controller
     public function userGroup(Request $req)
     {
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $user = User::find($req->user_id);
         $group = User::find($req->user_id)->group()->get();
@@ -197,7 +197,7 @@ class AdminController extends Controller
     public function userDel(Request $req)
     {
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         User::find($req->user_id)->delete();
         return back();
@@ -211,7 +211,7 @@ class AdminController extends Controller
     public function deletedUser()
     {
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $user = User::onlyTrashed()->paginate($this->page);
 
@@ -228,7 +228,7 @@ class AdminController extends Controller
     public function userRestore(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         User::onlyTrashed()->where('id', $req->user_id)->restore();
         return back();
@@ -243,7 +243,7 @@ class AdminController extends Controller
     public function create()
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         return view('/admin.create');
     }
@@ -258,7 +258,7 @@ class AdminController extends Controller
     public function createAdd(GroupRequest $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $val = $req->all();
         unset($val['_token']);
@@ -278,7 +278,7 @@ class AdminController extends Controller
     public function list(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $req->session()->pull('group_id');
@@ -298,7 +298,7 @@ class AdminController extends Controller
     public function edit(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $val = Group::find($req->group_id);
 
@@ -320,7 +320,7 @@ class AdminController extends Controller
     public function groupUpdate(GroupRequest $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $val = $req->all();
         unset($val['_token']);
@@ -341,7 +341,7 @@ class AdminController extends Controller
     public function groupAdmin(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         // sessionの保存と取得
         $req->session()->put('group_id', $req->group_id);
@@ -372,7 +372,7 @@ class AdminController extends Controller
     public function addGroupAdmin(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
@@ -400,7 +400,7 @@ class AdminController extends Controller
     public function addGroupAdminAction(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $u_id = $req->user_id;
         $ses_get =session()->get('group_id');
@@ -422,7 +422,7 @@ class AdminController extends Controller
     public function deleteGroupAdmin(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $u_id = $req->user_id;
         $user = User::find($u_id);
@@ -447,7 +447,7 @@ class AdminController extends Controller
     public function deleteGroupAdminAction(UserRequest $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         if (!$this->checkAdminNum($req->user_id)) {
@@ -470,7 +470,7 @@ class AdminController extends Controller
     public function delete(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $req->session()->put('group_id', $req->group_id);
         $group = Group::find($req->group_id);
@@ -502,7 +502,7 @@ class AdminController extends Controller
     public function deleteAction(UserRequest $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $ses_get = session()->get('group_id');
 
@@ -521,7 +521,7 @@ class AdminController extends Controller
     public function deletedGroup()
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $teims = Group::onlyTrashed()->paginate($this->page);
 
@@ -538,7 +538,7 @@ class AdminController extends Controller
     public function groupRestore(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         Group::onlyTrashed()->where('id', $req->group_id)->restore();
 
@@ -557,7 +557,7 @@ class AdminController extends Controller
     public function groupIndex()
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         if ($this->checkGroupAdmin()) {
@@ -584,7 +584,7 @@ class AdminController extends Controller
     public function groupUser(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $req->session()->put('group_id', $req->group_id);
@@ -605,7 +605,7 @@ class AdminController extends Controller
                     return view('/admin/group.user', $param);
                 }
             }
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $param = [
@@ -627,7 +627,7 @@ class AdminController extends Controller
     public function addUser(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $req->session()->put('group_id', $req->group_id);
 
@@ -651,7 +651,7 @@ class AdminController extends Controller
                     return view('/admin/group.add', $param);
                 }
             }
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $param = [
@@ -672,7 +672,7 @@ class AdminController extends Controller
     public function addAction(Request $req)
     {
         if (!$this->checkAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
         $ses_get = session()->get('group_id');
 
@@ -695,7 +695,7 @@ class AdminController extends Controller
     public function groupUserDel(Request $req)
     {
         if (!$this->checkMasterAdmin()) {
-            return view('/admin.error');
+            return redirect('/admin/error');
         }
 
         $ses_get = session()->get('group_id');
