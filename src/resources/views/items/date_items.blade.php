@@ -54,27 +54,27 @@
             </td>
 
             {{-- タイトル --}}
+            @if ($item->is_open != 0)
             <td>
                 @if ($item->item_type == 1)
-                <form action="{{ url('divelogs/detail') }}" method="get" class="float-left mr-3">
-                    <input type="hidden" name="id" value="{{ $item->item_id }}">
-                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
-                </form>
+                <a href="{{ url('divelogs/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
 
                 @elseif ($item->item_type == 2)
-                <form action="{{ url('trips/detail') }}" method="get" class="float-left mr-3">
-                    <input type="hidden" name="id" value="{{ $item->item_id }}">
-                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
-                </form>
+                <a href="{{ url('trips/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
 
                 @elseif ($item->item_type == 3)
-                <form action="{{ url('plans/detail') }}" method="get" class="float-left mr-3">
-                    <input type="hidden" name="id" value="{{ $item->item_id }}">
-                    <input type="submit" value="{{ $item->title }}" class="btn btn-link">
-                </form>
+                <a href="{{ url('plans/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
 
                 @endif
             </td>
+
+            @else
+            <td>
+                {{ $item->title }}
+            </td>
+
+            @endif
+
 
             {{-- 日付 --}}
             <td>
@@ -89,15 +89,15 @@
 
             {{-- 状態 --}}
             <td>
-                @if ($item->status != 0)
+                @if ($item->status == 99)
+                ログ
+                @elseif ($item->status != 0)
                 完了
                 @else
                 未完
                 @endif
             </td>
 
-            <td>{{$item->open_range}}</td>
-            <td>{{$item->is_open}}</td>
             @endforeach
         </tr>
     </table>

@@ -49,7 +49,7 @@ class CalendarService
             $dateTime = new DateTime($date);
 
             // aタグ
-            $link = '<a href=" '.  url('date_items')  . '?date=' . $dateTime->format('Y-m-d')  . '&group_id=' . $group_id . '&item_type=' . $item_type . '">';
+            $link = '<a href=" '.  url('date_items')  . '?date=' . $dateTime->format('Y-m-d')  . '&group_id=' . $group_id . '&item_type=' . $item_type . '" class="has-item">';
 
 
             // dbアイテムの有無とtitleの取得

@@ -6,20 +6,19 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Trip;
-use Illuminate\Support\Facades\DB;
+use App\helpers;
 
 class TripController extends Controller
 {
-    /** ぺジネーションの数 */
-    private $page = 7;
-
-    public function index(Request $req)
+    /**
+     * tripページ
+     *
+     * @return void
+     */
+    public function index()
     {
-        $a_id = Auth::id();
-        $trip = Trip::where('user_id', $a_id)->paginate($this->page);
-
-        $param = ['items' => $trip,];
-        // dump($param);
+        $items = Trip::where('user_id', Auth::id())->paginate(helpers::$page);
+        $param = ['items' => $items,];
         return view('/items/trips.index', $param);
     }
 
@@ -33,7 +32,6 @@ class TripController extends Controller
     {
         $items = Trip::find($req->id);
         $param = ['items' => $items,];
-        // dump($req->id);
         return view('/items/trips.detail', $param);
     }
 
@@ -46,7 +44,6 @@ class TripController extends Controller
     public function status(Request $req)
     {
         $trip = Trip::find($req->id);
-
         if ($trip->status != 0) {
             Trip::find($req->id)->update(['status' => 0]);
             return back();
@@ -56,14 +53,16 @@ class TripController extends Controller
         }
     }
 
-    /** 新規登録 */
+    /**
+     * 新規登録
+     */
     public function new()
     {
         return view('/items/trips.new');
     }
 
     /**
-     * 新規登録_確認
+     * 新規登録：確認
      *
      * @param Request $req
      * @return void
@@ -71,13 +70,12 @@ class TripController extends Controller
     public function newCheck(Request $req)
     {
         $this->validate($req, Trip::$rules, Trip::$messages);
-
         $items = $req->all();
         $param = ['items' => $items,];
         return view('/items/trips.new_check', $param);
     }
 
-    /** 新規登録_実行
+    /** 新規登録：実行
      *
      * @param Request $req
      * @return void
@@ -106,21 +104,21 @@ class TripController extends Controller
     }
 
     /**
-     * 編集_確認
+     * 編集：確認
      *
      * @param Request $req
      * @return void
      */
     public function editCheck(Request $req)
     {
-        // $this->validate($req, Trip::$rules, Trip::$messages);
+        $this->validate($req, Trip::$rules, Trip::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
         return view('/items/trips.edit_check', $param);
     }
 
     /**
-     * 編集_実行
+     * 編集：実行
      *
      * @param Request $req
      * @return void
@@ -136,7 +134,7 @@ class TripController extends Controller
     }
 
     /**
-     * 削除_確認
+     * 削除：確認
      *
      * @param Request $req
      * @return void
@@ -149,7 +147,7 @@ class TripController extends Controller
     }
 
     /**
-     * 削除_実行
+     * 削除：実行
      *
      * @param Request $req
      * @return void
@@ -157,8 +155,6 @@ class TripController extends Controller
     public function deleteAction(Request $req)
     {
         Trip::find($req->id)->delete();
-        // dump($req->id);
-        // return view('test');
         return redirect('/trips/delete/done');
     }
 
@@ -170,10 +166,8 @@ class TripController extends Controller
      */
     public function deletedTrip()
     {
-        $teims = Trip::onlyTrashed()->paginate($this->page);
-
+        $teims = Trip::onlyTrashed()->paginate(helpers::$page);
         $param = ['items' => $teims];
-        // dump($param);
         return view('/items/trips.deleted', $param);
     }
 
@@ -190,7 +184,7 @@ class TripController extends Controller
     }
 
     /**
-     * 削除済_詳細
+     * 削除済：詳細
      *
      * @param Request $req
      * @return void
@@ -199,7 +193,6 @@ class TripController extends Controller
     {
         $items = Trip::onlyTrashed()->find($req->id);
         $param = ['items' => $items,];
-        dump($req->id);
         return view('/items/trips.detail', $param);
     }
 }

@@ -22,7 +22,6 @@ class Trip extends Model
         'title' => 'required|max:50',
         'date' => 'required|date',
         'point' => 'required|max:50',
-        // 'map_item' => "required|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
         'map' => "nullable|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
         'comment' => 'nullable|max:1000',
     ];
@@ -36,7 +35,6 @@ class Trip extends Model
         'title.max' => '50文字以内で入力してください。',
         'point.required' => 'タイトルを入力してください。',
         'point.max' => '50文字以内で入力してください。',
-        // 'map_item.required' => 'リンクを入力してください。',
         'map.regex' => '正しいリンクを入力してください。',
         'comment.max' => '1000文字以内で入力してください。',
     ];

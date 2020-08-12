@@ -135,7 +135,7 @@
         </div>
 
         <div class="col-md-10 offset-md-2">
-            <input type="submit" value="{{ __('Do') }}" class="mr-3 btn btn-light">
+            <input type="submit" value="{{ __('Check') }}" class="mr-3 btn btn-light">
 
             <a href="{{ url('trips') }}" class="btn btn-light">
                 {{ __('Return') }}

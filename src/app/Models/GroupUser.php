@@ -29,4 +29,5 @@ class GroupUser extends Model
     {
         return $query->where('group_id', $n);
     }
+
 }

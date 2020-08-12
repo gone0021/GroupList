@@ -375,8 +375,8 @@
                 <label for="open_range" class="col-form-label text-md-right">{{ __('Open Range') }}</label>
 
                 <select name="open_range" class="form-control">
+                    <option value="1" selected>グループ</option>
                     <option value="0">個人</option>
-                    <option value="1">グループ</option>
                 </select>
             </div>
 
@@ -385,8 +385,8 @@
                 <label for="is_open" class="col-form-label text-md-right">{{ __('Display') }}</label>
 
                 <select name="is_open" class="form-control">
+                    <option value="1" selected>詳細表示する</option>
                     <option value="0">詳細表示しない</option>
-                    <option value="1">詳細表示する</option>
                 </select>
             </div>
         </div>

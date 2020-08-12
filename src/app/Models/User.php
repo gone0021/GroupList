@@ -8,19 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
-    /** テーブル */
-    protected $table = 'users';
-    /** ガードするフィールド */
     protected $guarded = array('id');
-    /** ソフトデリート */
     use SoftDeletes;
 
-    protected $casts = [
-        // 'id' => 'integer',
-        // 'id_admin' => 'integer'
-    ];
-
-    /** groupsのリレーション
+    /**
+     * groupsのリレーション
      *
      * @return void
      */
@@ -29,16 +21,8 @@ class User extends Model
         return $this->belongsToMany('App\Models\Group');
     }
 
-    /** 中間テーブルのリレーション
-     *
-     * @return void
-     */
-    public function groupUser()
-    {
-        return $this->belongsTo('App\Models\GroupUser', 'user_id', 'id');
-    }
-
-    /** tripsのリレーション
+    /**
+     * tripsとのリレーション
      *
      * @return void
      */
@@ -47,7 +31,8 @@ class User extends Model
         return $this->hasMany('App\Models\Trip');
     }
 
-    /** tripsのリレーション
+    /**
+     *  dive_logsとのリレーション
      *
      * @return void
      */
@@ -56,7 +41,8 @@ class User extends Model
         return $this->hasMany('App\Models\DiveLog');
     }
 
-    /** tripsのリレーション
+    /**
+     * plansとのリレーション
      *
      * @return void
      */
@@ -65,9 +51,7 @@ class User extends Model
         return $this->hasMany('App\Models\Plna');
     }
 
-    /************
-    - sort -
-    ************/
+    // ------ sort ------
 
     /** ぺジネーションの数 */
     public $p_num = 7;

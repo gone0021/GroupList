@@ -27,10 +27,10 @@ class CalendarController extends Controller
         $groups = User::find($a_id)->group()->get();
 
         if(empty($req->group_id)) {
-            $req->group_id = '0';
+            $req->group_id = 0;
         }
         if(empty($req->item_type)) {
-            $req->item_type = '0';
+            $req->item_type = 0;
         }
 
         $param = [

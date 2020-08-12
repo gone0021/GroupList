@@ -13,7 +13,7 @@ use App\Models\Trip;
 use App\Models\DiveLog;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use App\helpers;
 
 class UserController extends Controller
 {
@@ -24,18 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $is_admin = Auth::user()->is_admin;
-
-        $user_id = Auth::id();
-        $g_u = GroupUser::where('user_id', $user_id)->pluck('group_id');
-        $Group = Group::whereIn('id', $g_u)->get();
-
-        $param = ['items' => $Group];
-
-        // dump($user_id);
-        // dump($is_admin);
-        // dump($g_u);
-        return view('/users.index', $Group);
+        return view('/users.index');
     }
 
     /**
@@ -45,8 +34,7 @@ class UserController extends Controller
      */
     public function show()
     {
-        $a_id = Auth::user()->id;
-        $item = User::find($a_id);
+        $item = User::find(Auth::id());
         $param = ['item' => $item];
         return view('/users.show', $param);
     }
@@ -62,7 +50,7 @@ class UserController extends Controller
     }
 
     /**
-     * ユーザー情報の編集_確認画面
+     * ユーザー情報の編集：確認画面
      *
      * @return void
      */
@@ -74,7 +62,7 @@ class UserController extends Controller
     }
 
     /**
-     * ユーザー情報の編集_実行
+     * ユーザー情報の編集：実行
      *
      * @return void
      */
@@ -83,9 +71,7 @@ class UserController extends Controller
         $val = $req->all();
         unset($val['_token']);
 
-        $a_id = Auth::user()->id;
-        $user = User::find($a_id);
-
+        $user = User::find(Auth::id());
         $user->fill($val)->update();
 
         return redirect('/users/done');
@@ -98,8 +84,7 @@ class UserController extends Controller
      */
     public function account()
     {
-        $a_id = Auth::user()->id;
-        $param = ['id' => $a_id];
+        $param = ['id' =>  Auth::id()];
         return view('/users.account', $param);
     }
 
@@ -114,18 +99,15 @@ class UserController extends Controller
     }
 
     /**
-     * パスワードの変更_実行
+     * パスワードの変更：実行
      *
      * @return void
      */
     public function passwordUpdate(UserRequest $req)
     {
-        $inp = $req->password;
-        $pass = Hash::make($inp);
+        $pass = Hash::make($req->password);
 
-        $a_id = Auth::user()->id;
-        $user = User::find($a_id);
-
+        $user = User::find( Auth::id());
         $user->password = $pass;
         $user->update();
         return redirect('/users/password/done');
@@ -152,15 +134,13 @@ class UserController extends Controller
     }
 
     /**
-     * ユーザーの削除_実行
+     * ユーザーの削除：実行
      *
      * @return void
      */
     public function deleteAction(UserRequest $req)
     {
-        $a_id = Auth::user()->id;
-
-        if ($req->user_id != $a_id) {
+        if (!helpers::checkUserId($req->user_id)) {
             Auth::logout();
             return view('welcome');
         } else {
@@ -177,8 +157,8 @@ class UserController extends Controller
      */
     public function group()
     {
-        $a_id = Auth::id();
-        $group = User::find($a_id)->group()->get();
+        // 結合によりユーザーidから参加グループを取得
+        $group = User::find(Auth::id())->group()->get();
 
         $param = ['items' => $group];
         return view('/users.group', $param);
@@ -191,9 +171,7 @@ class UserController extends Controller
      */
     public function leave(Request $req)
     {
-        $g_id = $req->group_id;
-
-        $val = Group::find($g_id);
+        $val = Group::find($req->group_id);
         $param = [
             'id' => $val->id,
             "group_name" => $val->group_name,
@@ -202,20 +180,17 @@ class UserController extends Controller
     }
 
     /**
-     * グループの脱退_実行
+     * グループの脱退：実行
      *
      * @return void
      */
     public function leaveAction(Request $req)
     {
-        $a_id = Auth::user()->id;
-        $g_id = $req->group_id;
-
-        if ($req->user_id != $a_id) {
+        if (!helpers::checkUserId($req->user_id)) {
             Auth::logout();
             return view('/users.index');
         } else {
-            groupUser::where(['group_id' => $g_id, 'user_id' => $a_id])->delete();
+            groupUser::where(['group_id' => $req->group_id, 'user_id' =>  Auth::id()])->delete();
             return redirect('/users/leave/done');
         }
     }
@@ -227,20 +202,16 @@ class UserController extends Controller
      */
     public function itemList()
     {
-        $a_id = Auth::id();
-
-        $dive = DiveLog::where('user_id', $a_id)->count();
-        $trip = Trip::where('user_id', $a_id)->count();
-        $plan = Plan::where('user_id', $a_id)->count();
+        // 各アイテムの値を取得
+        $dive = DiveLog::where('user_id',  Auth::id())->count();
+        $trip = Trip::where('user_id',  Auth::id())->count();
+        $plan = Plan::where('user_id',  Auth::id())->count();
 
         $param = [
             'dive' => $dive,
             'trip' => $trip,
             'plan' => $plan,
         ];
-
-        // dump($param);
-        // return view('test');
         return view('/users.item_list', $param);
     }
 
@@ -251,8 +222,7 @@ class UserController extends Controller
      */
     public function itemGroup()
     {
-        $a_id = Auth::user()->id;
-        $group = User::find($a_id)->group()->get();
+        $group = User::find( Auth::id())->group()->get();
 
         $param = ['items' => $group];
         return view('/users.item_group', $param);
@@ -265,6 +235,7 @@ class UserController extends Controller
      */
     public function new(Request $req)
     {
+        // 1：ダイブログ、2：場所、3：予定
         if ($req->new == 0) {
             return redirect('divelogs/new');
         } else if ($req->new == 1) {
@@ -273,6 +244,4 @@ class UserController extends Controller
             return redirect('plans/new');
         }
     }
-
-    // return view('/test');
 }

@@ -39,7 +39,6 @@
     "Toggle navigation": "ナビゲーションを切り替える",
     "Too Many Requests": "大量のリクエストがありました",
     "Unauthorized": "認証が必要です",
-    "User List": "ユーザー一覧",
     "Verify Email Address": "メールアドレスを確認",
     "Verify Your Email Address": "メールアドレスを確認してください",
     "You are receiving this email because we received a password reset request for your account.": "パスワードリセットのリクエストを受け付けました。",
@@ -69,12 +68,14 @@
     "Group List": "グループ一覧",
     "Group Name" : "グループ名",
     "Group Type": "グループ属性",
+    "Item list": "投稿一覧",
     "Leave": "脱退",
     "Make new items": "新規投稿",
     "Name": "ユーザー名",
     "Not in the group.": "グループに参加していません。",
     "Password": "パスワード",
     "Register":"新規登録",
-    "Return": "戻る"
+    "Return": "戻る",
+    "User List": "ユーザー一覧"
 
 }

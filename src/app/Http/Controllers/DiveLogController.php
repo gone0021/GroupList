@@ -6,25 +6,24 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Divelog;
-use Illuminate\Support\Facades\DB;
+use App\helpers;
 
 class DivelogController extends Controller
 {
-    /** ぺジネーションの数 */
-    private $page = 7;
-
-    public function index(Request $req)
+    /**
+     * divelogページ
+     *
+     * @return void
+     */
+    public function index()
     {
-        $a_id = Auth::id();
-        $divelog = Divelog::where('user_id', $a_id)->paginate($this->page);
-
-        $param = ['items' => $divelog,];
-        // dump($param);
+        $items = Divelog::where('user_id', Auth::id())->paginate(helpers::$page);
+        $param = ['items' => $items,];
         return view('/items/divelogs.index', $param);
     }
 
     /**
-     * 詳細
+     * 詳細ページ
      *
      * @param Request $req
      * @return void
@@ -33,7 +32,6 @@ class DivelogController extends Controller
     {
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
-        // dump($req->id);
         return view('/items/divelogs.detail', $param);
     }
 
@@ -41,18 +39,12 @@ class DivelogController extends Controller
     public function new()
     {
         $val = Divelog::orderBy('dive_num', 'desc')->value('dive_num');
-        // $date = new DateTime("Asia/Tokyo");
-        // $today = $date->format("Y-m-d");
-        $param = [
-            'val' => $val,
-            // 'date' => $today,
-        ];
-        dump($param);
+        $param = ['val' => $val,];
         return view('/items/divelogs.new', $param);
     }
 
     /**
-     * 新規登録_確認
+     * 新規登録：確認
      *
      * @param Request $req
      * @return void
@@ -60,14 +52,12 @@ class DivelogController extends Controller
     public function newCheck(Request $req)
     {
         $this->validate($req, Divelog::$rules, Divelog::$messages);
-
         $items = $req->all();
         $param = ['items' => $items,];
-        dump($param);
         return view('/items/divelogs.new_check', $param);
     }
 
-    /** 新規登録_実行
+    /** 新規登録：実行
      *
      * @param Request $req
      * @return void
@@ -92,12 +82,11 @@ class DivelogController extends Controller
     {
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
-        dump($param);
         return view('/items/divelogs.edit', $param);
     }
 
     /**
-     * 編集_確認
+     * 編集：確認
      *
      * @param Request $req
      * @return void
@@ -107,12 +96,11 @@ class DivelogController extends Controller
         // $this->validate($req, Divelog::$rules, Divelog::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
-        dump($param);
         return view('/items/divelogs.edit_check', $param);
     }
 
     /**
-     * 編集_実行
+     * 編集：実行
      *
      * @param Request $req
      * @return void
@@ -124,14 +112,11 @@ class DivelogController extends Controller
 
         $divelog = Divelog::find($req->id);
         $divelog->fill($val)->update();
-
-        dump($val);
-        // return view('test');
         return redirect('/divelogs/edit/done');
     }
 
     /**
-     * 削除_確認
+     * 削除：確認
      *
      * @param Request $req
      * @return void
@@ -140,12 +125,11 @@ class DivelogController extends Controller
     {
         $items = Divelog::find($req->id);
         $param = ['items' => $items,];
-        dump($param);
         return view('/items/divelogs.delete', $param);
     }
 
     /**
-     * 削除_実行
+     * 削除：実行
      *
      * @param Request $req
      * @return void
@@ -153,8 +137,6 @@ class DivelogController extends Controller
     public function deleteAction(Request $req)
     {
         Divelog::find($req->id)->delete();
-        // dump($req->id);
-        // return view('test');
         return redirect('/divelogs/delete/done');
     }
 
@@ -166,9 +148,8 @@ class DivelogController extends Controller
      */
     public function deletedDivelog()
     {
-        $teims = Divelog::onlyTrashed()->paginate($this->page);
+        $teims = Divelog::onlyTrashed()->paginate(helpers::$page);
         $param = ['items' => $teims];
-        // dump($param);
         return view('/items/divelogs.deleted', $param);
     }
 
@@ -185,7 +166,7 @@ class DivelogController extends Controller
     }
 
     /**
-     * 削除済_詳細
+     * 削除済：詳細
      *
      * @param Request $req
      * @return void
@@ -194,7 +175,6 @@ class DivelogController extends Controller
     {
         $items = Divelog::onlyTrashed()->find($req->id);
         $param = ['items' => $items,];
-        dump($req->id);
         return view('/items/divelogs.detail', $param);
     }
 }

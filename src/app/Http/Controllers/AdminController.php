@@ -10,96 +10,10 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\helpers;
 
 class AdminController extends Controller
 {
-    /** ぺジネーションの数 */
-    private $page = 7;
-
-    /************************\
-    --- 自作メソッド ---
-    \************************/
-
-    /**
-     * マスター管理者のチェック
-     *
-     * @return boolean
-     */
-    public function checkMasterAdmin(): bool
-    {
-        if (Auth::user()->is_admin != 1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     *グループー管理者のチェック
-     *
-     * @return boolean
-     */
-    public function checkGroupAdmin(): bool
-    {
-        if (Auth::user()->is_admin != 2) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * 管理者のチェック
-     *
-     * @return boolean
-     */
-    public function checkAdmin(): bool
-    {
-        if (!$this->checkMasterAdmin() && !$this->checkGroupAdmin()) {
-            // if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
-    /**
-     * グループ管理者の取得
-     * group_adminより
-     *
-     * @return object
-     */
-    public function getGroupAdminUser()
-    {
-        $a_id = Auth::id();
-        $gu_admin = GroupUser::where('user_id', $a_id)->where('group_admin', 1)->get();
-        return $gu_admin;
-    }
-
-    /**
-     * グループ管理者の個とマスター管理者をチェック
-     * users
-     *
-     * @return boolean
-     */
-    public function checkAdminNum($var): bool
-    {
-        $g_admin = GroupUser::where('user_id', $var)->where('group_admin', 1)->pluck('group_admin');
-        $count = $g_admin->count();
-        $admin = User::find($var);
-
-        if ($count <= 1 && $admin->is_admin != 1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /************************\
-    --- admin ---
-    \************************/
-
     /**
      * エラーページ
      *
@@ -117,8 +31,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if (!$this->checkAdmin()) {
-            // dump($this->checkAdmin());
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
 
@@ -126,22 +39,19 @@ class AdminController extends Controller
     }
 
     /**
-     * 管理者ページ
+     * ユーザーリスト
      *
      * @return void
      */
     public function user()
     {
-        // $this->checkMasterAdmin();
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
 
-        $items = User::paginate($this->page);
+        $items = User::paginate(helpers::$page);
 
-        $param = [
-            'items' => $items,
-        ];
+        $param = ['items' => $items,];
         return view('/admin.user', $param);
     }
 
@@ -153,7 +63,7 @@ class AdminController extends Controller
      */
     public function userShow(Request $req)
     {
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
         $items = User::find($req->user_id);
@@ -174,7 +84,7 @@ class AdminController extends Controller
      */
     public function userGroup(Request $req)
     {
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
         $user = User::find($req->user_id);
@@ -196,7 +106,7 @@ class AdminController extends Controller
      */
     public function userDel(Request $req)
     {
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
         User::find($req->user_id)->delete();
@@ -210,10 +120,10 @@ class AdminController extends Controller
      */
     public function deletedUser()
     {
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
-        $user = User::onlyTrashed()->paginate($this->page);
+        $user = User::onlyTrashed()->paginate(helpers::$page);
 
         $param = ['items' => $user];
         return view('/admin.user_deleted', $param);
@@ -227,7 +137,7 @@ class AdminController extends Controller
      */
     public function userRestore(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         User::onlyTrashed()->where('id', $req->user_id)->restore();
@@ -235,29 +145,27 @@ class AdminController extends Controller
     }
 
     /**
-     * グループの作成
-     * 入力
+     * グループの作成：入力
      *
      * @return void
      */
     public function create()
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         return view('/admin.create');
     }
 
     /**
-     * グループの作成
-     * 実行
+     * グループの作成：実行
      *
      * @param Request $req
      * @return void
      */
     public function createAdd(GroupRequest $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $val = $req->all();
@@ -277,27 +185,26 @@ class AdminController extends Controller
      */
     public function list(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
 
         $req->session()->pull('group_id');
-        $items = Group::paginate($this->page);
+        $items = Group::paginate(helpers::$page);
 
         $param = ['items' => $items];
         return view('/admin.list', $param);
     }
 
     /**
-     * グループの編集
-     * 入力
+     * グループの編集：入力
      *
      * @param Request $req
      * @return void
      */
     public function edit(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $val = Group::find($req->group_id);
@@ -311,15 +218,14 @@ class AdminController extends Controller
     }
 
     /**
-     * グループ編集
-     * 実行
+     * グループ編集：実行
      *
      * @param Request $req
      * @return void
      */
     public function groupUpdate(GroupRequest $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $val = $req->all();
@@ -340,18 +246,18 @@ class AdminController extends Controller
      */
     public function groupAdmin(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
-        // sessionの保存と取得
         $req->session()->put('group_id', $req->group_id);
         $ses_get = session()->get('group_id');
+        // session値からグループを取得
         $group = Group::find($ses_get);
 
-        // group_userからグループ管理者を取得して配列へ
+        // group_userからグループ管理者以外を配列（コレクション）で取得
         $group_admin = GroupUser::where('group_id', $req->group_id)->where('group_admin', 1)->pluck('user_id');
         // ユーザー情報を取得
-        $user = user::whereIn('id', $group_admin)->paginate($this->page);
+        $user = user::whereIn('id', $group_admin)->paginate(helpers::$page);
 
         $param = [
             'items' => $user,
@@ -363,50 +269,50 @@ class AdminController extends Controller
     }
 
     /**
-     * グループ管理者の追加
-     * 選択
+     * グループ管理者の追加：選択
      *
      * @param Request $req
      * @return void
      */
     public function addGroupAdmin(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
-        // group_userからグループ管理者以外を取得して配列へ
+        // group_userからグループ管理者以外を配列（コレクション）で取得
         $not_admin = GroupUser::where('group_id', $ses_get)->where('group_admin', 0)->pluck('user_id');
         // G管理者とM管理者以外の情報を取得
-        $items = User::whereIn('id', $not_admin)->whereNotIn('is_admin', [1])->paginate($this->page);
+        $items = User::whereIn('id', $not_admin)->whereNotIn('is_admin', [1])->paginate(helpers::$page);
 
         $param = [
             'items' => $items,
             'ses_group_id' => $ses_get,
             'group_name' => $group->group_name,
         ];
+        dump($not_admin);
         return view('/admin/group_admin_add', $param);
     }
 
     /**
-     * グループ管理者の追加
-     * 実行
+     * グループ管理者の追加：実行
      *
      * @param Request $req
      * @return void
      */
     public function addGroupAdminAction(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
-        $u_id = $req->user_id;
-        $ses_get =session()->get('group_id');
+        $ses_get = session()->get('group_id');
 
-        GroupUser::where('group_id', $ses_get)->where('user_id', $u_id)->where('group_admin', 0)->update(['group_admin' => 1]);
-        User::find($u_id)->update(['is_admin' => 2]);
+        // group_userからgroup_adminが0を取得してアップデート
+        GroupUser::where('group_id', $ses_get)->where('user_id', $req->user_id)->where('group_admin', 0)->update(['group_admin' => 1]);
+        // 該当ユーザーをG管理者へアップデート
+        User::find($req->user_id)->update(['is_admin' => 2]);
 
         $req->session()->pull('group_id');
 
@@ -414,18 +320,17 @@ class AdminController extends Controller
     }
 
     /**
-     * グループ管理者の削除 / 選択・確認
+     * グループ管理者の削除：選択・確認
      *
      * @param Request $req
      * @return void
      */
     public function deleteGroupAdmin(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
-        $u_id = $req->user_id;
-        $user = User::find($u_id);
+        $user = User::find($req->user_id);
         $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
@@ -439,37 +344,38 @@ class AdminController extends Controller
     }
 
     /**
-     * グループ管理者の削除_実行
+     * グループ管理者の削除：実行
      *
      * @param Request $req
      * @return void
      */
     public function deleteGroupAdminAction(UserRequest $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
 
-        if (!$this->checkAdminNum($req->user_id)) {
+        // G管理者が1つのみでM管理者でもない場合はis_adminを0へ更新
+        if (!helpers::checkAdminNum($req->user_id)) {
             User::find($req->user_id)->update(['is_admin' => 0]);
         }
 
+        // group_userのgroup_adminが1を取得してアップデート
         GroupUser::where('group_id', $req->group_id)->where('user_id', $req->user_id)->where('group_admin', 1)->update(['group_admin' => 0]);
 
         $req->session()->pull('group_id');
-
         return redirect('/admin/delete/done');
     }
 
     /**
-     * グループの削除_選択
+     * グループの削除：選択
      *
      * @param Request $req
      * @return void
      */
     public function delete(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $req->session()->put('group_id', $req->group_id);
@@ -483,7 +389,7 @@ class AdminController extends Controller
     }
 
     /**
-     * パスワードによる確認
+     * パスワードによるチェック
      *
      * @return void
      */
@@ -494,18 +400,19 @@ class AdminController extends Controller
     }
 
     /**
-     * グループの削除 実行
+     * グループの削除：実行
      *
      * @param Request $req
      * @return void
      */
     public function deleteAction(UserRequest $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
-        $ses_get = session()->get('group_id');
 
+        $ses_get = session()->get('group_id');
+        // 値の削除
         Group::find($ses_get)->delete();
         GroupUser::where('group_id', $ses_get)->delete();
         $req->session()->pull('group_id');
@@ -520,10 +427,11 @@ class AdminController extends Controller
      */
     public function deletedGroup()
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
-        $teims = Group::onlyTrashed()->paginate($this->page);
+        // deleted_atのカラムを取得
+        $teims = Group::onlyTrashed()->paginate(helpers::$page);
 
         $param = ['items' => $teims];
         return view('/admin.group_deleted', $param);
@@ -537,17 +445,17 @@ class AdminController extends Controller
      */
     public function groupRestore(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
+        // deleted_atのカラムを復元
         Group::onlyTrashed()->where('id', $req->group_id)->restore();
 
         return back();
     }
 
-    /************************\
-    --- group ---
-    \************************/
+
+    // ------ group page ------
 
     /**
      * 管理グループ一覧
@@ -556,46 +464,47 @@ class AdminController extends Controller
      */
     public function groupIndex()
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
 
-        if ($this->checkGroupAdmin()) {
-            $admin_user = $this->getGroupAdminUser()->pluck('group_id');
-            $items = Group::whereIn('id', $admin_user)->paginate($this->page);
+        // グループ管理者の場合
+        if (helpers::checkGroupAdmin()) {
+            // グループ管理者のidを取得して配列（コレクション）で出力
+            $g_admin = helpers::getGroupAdminUser()->pluck('group_id');
+            $items = Group::whereIn('id', $g_admin)->paginate(helpers::$page);
+            // マスタ管理者の場合
         } else if (Auth::user()->is_admin == 1) {
-            $items = Group::paginate($this->page);
+            $items = Group::paginate(helpers::$page);
         }
 
         $param = ['items' => $items];
-
-        // dump($admin_user);
-        // return view('test');
         return view('/admin/group.index', $param);
     }
 
     /**
-     * 管理グループ
-     * ユーザー一覧
+     * 管理グループ：ユーザー一覧
      *
      * @param Request $req
      * @return void
      */
     public function groupUser(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
 
         $req->session()->put('group_id', $req->group_id);
+        // 削除でbackがあるためsessionで値を取得
         $ses_get = session()->get('group_id');
-
-        $user_list = Group::find($ses_get)->user()->paginate($this->page);
+        // グループ名を取得するためにグループをidから検索
         $group = Group::find($ses_get);
+        $user_list = Group::find($ses_get)->user()->paginate(helpers::$page);
 
-        if (!$this->checkMasterAdmin()) {
-            $gu_admin = $this->getGroupAdminUser();
-            foreach ($gu_admin as $ga) {
+        if (!helpers::checkMasterAdmin()) {
+            // グループ管理者のidを取得
+            $g_admin = helpers::getGroupAdminUser();
+            foreach ($g_admin as $ga) {
                 if ($ga->group_id == $ses_get) {
                     $param = [
                         'items' => $user_list,
@@ -618,15 +527,14 @@ class AdminController extends Controller
 
 
     /**
-     * 管理グループ
-     * ユーザーの追加_未参加ユーザーリスト
+     * 管理グループ：ユーザーの追加：未参加ユーザーリスト
      *
      * @param Request $req
      * @return void
      */
     public function addUser(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $req->session()->put('group_id', $req->group_id);
@@ -634,14 +542,15 @@ class AdminController extends Controller
         $ses_get = session()->get('group_id');
         $group = Group::find($ses_get);
 
-        // groupsとusersを結合してグループに属するユーザーを取得して配列へ
+        // グループに属するユーザーidを取得してを配列（コレクション）で出力
         $user_in_group = Group::find($req->group_id)->user()->pluck('id');
         // グループに所属していないユーザー情報の取得
-        $user_not = User::whereNotIn('id', $user_in_group)->paginate($this->page);
+        $user_not = User::whereNotIn('id', $user_in_group)->paginate(helpers::$page);
 
-        if (!$this->checkAdmin()) {
-            $gu_admin = $this->getGroupAdminUser();
-            foreach ($gu_admin as $ga) {
+        if (!helpers::checkAdmin()) {
+            // グループ管理者のidを取得
+            $g_admin = helpers::getGroupAdminUser();
+            foreach ($g_admin as $ga) {
                 if ($ga->group_id == $req->group_id) {
                     $param = [
                         'items' => $user_not,
@@ -663,15 +572,14 @@ class AdminController extends Controller
     }
 
     /**
-     * 管理グループ
-     * ユーザーの追加_実行
+     * 管理グループ：ユーザーの追加：実行
      *
      * @param Request $req
      * @return void
      */
     public function addAction(Request $req)
     {
-        if (!$this->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return redirect('/admin/error');
         }
         $ses_get = session()->get('group_id');
@@ -694,13 +602,13 @@ class AdminController extends Controller
      */
     public function groupUserDel(Request $req)
     {
-        if (!$this->checkMasterAdmin()) {
+        if (!helpers::checkMasterAdmin()) {
             return redirect('/admin/error');
         }
 
         $ses_get = session()->get('group_id');
 
-        if (!$this->checkAdminNum($req->user_id)) {
+        if (!helpers::checkAdminNum($req->user_id)) {
             User::find($req->user_id)->update(['is_admin' => 0]);
         }
 

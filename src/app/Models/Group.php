@@ -8,15 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
-    /** テーブル */
-    protected $table = 'groups';
-    /** ガードするフィールド */
     protected $guarded = array('id');
-    /** ソフトデリート */
     use SoftDeletes;
 
     /** usersのリレーション
-     * 
+     *
      * @return void
      */
     public function user()
@@ -25,22 +21,20 @@ class Group extends Model
     }
 
     /** 中間テーブルのリレーション
-     * 
+     *
      * @return void
      */
     public function groupUser()
     {
-        // return $this->hasMany('App\Models\GroupUser', 'id', 'group_id' );
-        return $this->belongsTo('App\Models\GroupUser', 'group_id', 'id' );
+        return $this->belongsTo('App\Models\GroupUser', 'group_id', 'id');
     }
 
-    /** ぺジネーションの数 */
-    public $p_num = 7;
+    // ------ sort ------
 
     /**
      * ソートid
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeSortIdAsc()
@@ -52,7 +46,7 @@ class Group extends Model
     /**
      * ソートid
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeSortIdDesc()
@@ -64,7 +58,7 @@ class Group extends Model
     /**
      * ソートname
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeSortNameAsc()
@@ -76,7 +70,7 @@ class Group extends Model
     /**
      * ソートname
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeSortNameDesc()
@@ -85,11 +79,10 @@ class Group extends Model
         return $group;
     }
 
-
     /**
      * 削除済のソートid
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortIdAsc()
@@ -101,7 +94,7 @@ class Group extends Model
     /**
      * 削除済のソートid
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortIdDesc()
@@ -113,7 +106,7 @@ class Group extends Model
     /**
      * 削除済のソートname
      * asc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortNameAsc()
@@ -125,7 +118,7 @@ class Group extends Model
     /**
      * 削除済のソートname
      * desc
-     * 
+     *
      * @return void
      */
     public function scopeTrashedSortNameDesc()

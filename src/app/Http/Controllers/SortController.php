@@ -12,6 +12,7 @@ use App\Models\GroupUser;
 use App\Models\Trip;
 use App\Models\Plan;
 use App\Models\Divelog;
+use App\helpers;
 
 class SortController extends Controller
 {
@@ -28,7 +29,7 @@ class SortController extends Controller
     public function adminUser()
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -58,7 +59,7 @@ class SortController extends Controller
     public function adminUserDeleted()
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -87,8 +88,7 @@ class SortController extends Controller
      */
     public function adminList()
     {
-        $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -117,8 +117,7 @@ class SortController extends Controller
      */
     public function adminGroupAdmin(Request $req)
     {
-        $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -128,15 +127,15 @@ class SortController extends Controller
         $group_admin = GroupUser::where('group_id', $ses_get)->where('group_admin', 1)->pluck('user_id');
 
         if (request()->path() == 'admin/group_admin/sort_id_a') {
-            $items = User::whereIn('id', $group_admin)->orderBy('id', 'asc')->paginate($this->page);
+            $items = User::whereIn('id', $group_admin)->orderBy('id', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'admin/group_admin/sort_id_d') {
-            $items = User::whereIn('id', $group_admin)->orderBy('id', 'desc')->paginate($this->page);
+            $items = User::whereIn('id', $group_admin)->orderBy('id', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'admin/group_admin/sort_name_a') {
-            $items = User::whereIn('id', $group_admin)->orderBy('user_name', 'asc')->paginate($this->page);
+            $items = User::whereIn('id', $group_admin)->orderBy('user_name', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'admin/group_admin/sort_name_d') {
-            $items = User::whereIn('id', $group_admin)->orderBy('user_name', 'desc')->paginate($this->page);
+            $items = User::whereIn('id', $group_admin)->orderBy('user_name', 'desc')->paginate(helpers::$page);
         }
 
 
@@ -157,7 +156,7 @@ class SortController extends Controller
     public function adminAddGroupAdmin(Request $req)
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -170,15 +169,15 @@ class SortController extends Controller
 
 
         if (request()->path() == 'admin/group_admin/add/sort_id_a') {
-            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('id', 'asc')->paginate($this->page);
+            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('id', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'admin/group_admin/add/sort_id_d') {
-            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('id', 'desc')->paginate($this->page);
+            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('id', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'admin/group_admin/add/sort_name_a') {
-            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('user_name', 'asc')->paginate($this->page);
+            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('user_name', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'admin/group_admin/add/sort_name_d') {
-            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('user_name', 'desc')->paginate($this->page);
+            $items = User::whereNotIn('id', $not_admin)->whereNotIn('is_admin', [1])->orderBy('user_name', 'desc')->paginate(helpers::$page);
         }
 
 
@@ -199,7 +198,7 @@ class SortController extends Controller
     public function adminGroupDeleted()
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -228,7 +227,7 @@ class SortController extends Controller
     public function group()
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             // if (Auth::user()->is_admin != 1 && Auth::user()->is_admin != 2) {
             return view('/admin.error');
         }
@@ -260,7 +259,7 @@ class SortController extends Controller
     public function groupUser(Request $req)
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -271,15 +270,15 @@ class SortController extends Controller
         $plucked = $user_in_group->pluck('id');
 
         if (request()->path() == 'group/user/sort_id_a') {
-            $items = user::whereIn('id', $plucked)->orderBy('id', 'asc')->paginate($this->page);
+            $items = user::whereIn('id', $plucked)->orderBy('id', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'group/user/sort_id_d') {
-            $items = user::whereIn('id', $plucked)->orderBy('id', 'desc')->paginate($this->page);
+            $items = user::whereIn('id', $plucked)->orderBy('id', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'group/user/sort_name_a') {
-            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'asc')->paginate($this->page);
+            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'group/user/sort_name_d') {
-            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'desc')->paginate($this->page);
+            $items = user::whereIn('id', $plucked)->orderBy('user_name', 'desc')->paginate(helpers::$page);
         }
 
         $param = [
@@ -299,7 +298,7 @@ class SortController extends Controller
     public function groupUserAdd(Request $req)
     {
         $admin = new AdminController;
-        if (!$admin->checkAdmin()) {
+        if (!helpers::checkAdmin()) {
             return view('/admin.error');
         }
 
@@ -310,15 +309,15 @@ class SortController extends Controller
         $plucked = $user_in_group->pluck('id');
 
         if (request()->path() == 'group/user/add/sort_id_a') {
-            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'asc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'group/user/add/sort_id_d') {
-            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'desc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('id', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'group/user/add/sort_name_a') {
-            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'asc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'group/user/add/sort_name_d') {
-            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'desc')->paginate($this->page);
+            $items = user::whereNotIn('id', $plucked)->orderBy('user_name', 'desc')->paginate(helpers::$page);
         }
 
         $param = [
@@ -334,24 +333,22 @@ class SortController extends Controller
     \************************/
 
     /**
-     * 個人_Trip List
+     * 個人_Trip
      *
      * @return void
      */
     public function tripIndex()
     {
-        $a_id = Auth::id();
-
         if (request()->path() == 'trips/sort_title_a') {
-            $items = Trip::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
+            $items = Trip::where('user_id', Auth::id())->orderBy('title', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'trips/sort_title_d') {
-            $items = Trip::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
+            $items = Trip::where('user_id', Auth::id())->orderBy('title', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'trips/sort_date_a') {
-            $items = Trip::where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
+            $items = Trip::where('user_id', Auth::id())->orderBy('date', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'trips/sort_date_d') {
-            $items = Trip::where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
+            $items = Trip::where('user_id', Auth::id())->orderBy('date', 'desc')->paginate(helpers::$page);
         }
 
         $param = [
@@ -361,7 +358,7 @@ class SortController extends Controller
     }
 
     /**
-     * 個人_Trip List
+     * 個人_Trip
      *
      * @return void
      */
@@ -390,24 +387,22 @@ class SortController extends Controller
     \************************/
 
     /**
-     * 個人_Plan List
+     * 個人_Plan
      *
      * @return void
      */
     public function planIndex()
     {
-        $a_id = Auth::id();
-
         if (request()->path() == 'plans/sort_title_a') {
-            $items = Plan::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
+            $items = Plan::where('user_id', Auth::id())->orderBy('title', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'plans/sort_title_d') {
-            $items = Plan::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
+            $items = Plan::where('user_id', Auth::id())->orderBy('title', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'plans/sort_start_a') {
-            $items = Plan::where('user_id', $a_id)->orderBy('start', 'asc')->paginate($this->page);
+            $items = Plan::where('user_id', Auth::id())->orderBy('start', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'plans/sort_start_d') {
-            $items = Plan::where('user_id', $a_id)->orderBy('start', 'desc')->paginate($this->page);
+            $items = Plan::where('user_id', Auth::id())->orderBy('start', 'desc')->paginate(helpers::$page);
         }
 
         $param = ['items' => $items,];
@@ -415,7 +410,7 @@ class SortController extends Controller
     }
 
     /**
-     * 個人_Plan List
+     * 個人_Plan
      *
      * @return void
      */
@@ -443,24 +438,22 @@ class SortController extends Controller
     \************************/
 
     /**
-     * 個人_Plan List
+     * 個人：Divelog
      *
      * @return void
      */
     public function divelogIndex()
     {
-        $a_id = Auth::id();
-
         if (request()->path() == 'divelogs/sort_title_a') {
-            $items = Divelog::where('user_id', $a_id)->orderBy('title', 'asc')->paginate($this->page);
+            $items = Divelog::where('user_id', Auth::id())->orderBy('title', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'divelogs/sort_title_d') {
-            $items = Divelog::where('user_id', $a_id)->orderBy('title', 'desc')->paginate($this->page);
+            $items = Divelog::where('user_id', Auth::id())->orderBy('title', 'desc')->paginate(helpers::$page);
         }
 
         if (request()->path() == 'divelogs/sort_date_a') {
-            $items = Divelog::where('user_id', $a_id)->orderBy('date', 'asc')->paginate($this->page);
+            $items = Divelog::where('user_id', Auth::id())->orderBy('date', 'asc')->paginate(helpers::$page);
         } else if (request()->path() == 'divelogs/sort_date_d') {
-            $items = Divelog::where('user_id', $a_id)->orderBy('date', 'desc')->paginate($this->page);
+            $items = Divelog::where('user_id', Auth::id())->orderBy('date', 'desc')->paginate(helpers::$page);
         }
 
         $param = ['items' => $items,];
@@ -468,7 +461,7 @@ class SortController extends Controller
     }
 
     /**
-     * 個人_Plan List
+     * 個人：Divelog：削除済
      *
      * @return void
      */

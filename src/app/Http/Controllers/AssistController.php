@@ -13,7 +13,7 @@ class AssistController extends Controller
 {
     /**
      * 新規登録_確認
-     * 
+     *
      * @param Request $req
      * @return void
      */
@@ -24,13 +24,12 @@ class AssistController extends Controller
         unset($val['password_confirmation']);
 
         $param = $val;
-        // dump($param);
         return view('/assist.register_check', $param, );
     }
 
     /**
      * 新規登録_実行
-     * 
+     *
      * @param Request $req
      * @return void
      */

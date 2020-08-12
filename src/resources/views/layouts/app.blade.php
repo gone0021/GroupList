@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'GroupList') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -26,70 +26,96 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand" href="{{ url('/users') }}">
+                    {{ config('app.name', 'GroupList') }}
                 </a>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="{{ __('Toggle navigation') }}">
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    {{-- <ul class="navbar-nav mr-auto">
 
-                    </ul>
+                    </ul> --}}
 
                     <!-- Right Side Of Navbar -->
+                    @guest
+                    @if (Route::has('register'))
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                         </li>
 
-                        @if (Route::has('register'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">
                                 {{ __('Register') }}
                             </a>
                         </li>
-                        @endif
+                    </ul>
+                    @endif
 
-                        @else
-                        <li class="nav-item dropdown">
-                            {{-- user name --}}
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->user_name }} <span class="caret"></span>
+                    @else
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav ml-3 mr-auto">
+
+                        <li class="nav-item active mr-1">
+                            <a class="nav-link" href="{{ route('users') }}">Home</a>
+                        </li>
+                        <li class="nav-item active mr-1">
+                            <a class="nav-link" href="{{ url('calendar') }}">カレンダー</a>
+                        </li>
+                        <li class="nav-item dropdown mr-3">
+                            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                投稿一覧
                             </a>
-
-                            {{-- dropdown-menu --}}
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-                                {{-- dropdown-item --}}
-                                <a class="dropdown-item" href="{{ route('users') }}">Home</a>
-                                <a class="dropdown-item" href="{{ url('calendar') }}">カレンダー</a>
-                                {{-- <a class="dropdown-item" href="{{ route('items') }}">投稿一覧</a> --}}
-
-                                {{-- logout --}}
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a href="{{ url('users/item/list') }}" class="dropdown-item">個人</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('users/item/group') }}" class="dropdown-item">グループ別</a>
                             </div>
                         </li>
+
+                        @if (Auth::user()->is_admin == '1' || Auth::user()->is_admin == '2')
+                        <li class="nav-item active">
+
+                            <a  class="nav-link" href="{{ route('admin') }}">
+                                管理者画面
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+
+                    <ul class="navbar-nav ml-5 ml-auto">
+
+                        <li class="nav-item active mr-3">
+                            <a class="nav-link" href="{{ url('calendar') }}">USER ： {{ Auth::user()->user_name }}</a>
+                        </li>
+
+                        {{-- logout --}}
+                        <li class="nav-item active">
+                            <a class="nav-link btn btn-light" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+
                         @endguest
                     </ul>
                 </div>
             </div>
+            {{-- container --}}
         </nav>
 
         {{-- menu --}}

@@ -44,6 +44,7 @@
                     </form>
 
                     {{-- 削除（テスト用） --}}
+                    @if (Auth::user()->is_admin == 1)
                     <form action="{{ url('admin/user/delete') }}" method="get" class="float-both">
                         <input type="hidden" name="user_id" value="{{ $item->id }}">
                         @if (Auth::user()->is_admin !== $item->is_admin)
@@ -51,8 +52,8 @@
                         @else
                         <input type="submit" value="{{ __('Delete') }}" disabled class="btn btn-light">
                         @endif
-
                     </form>
+                    @endif
                 </div>
             </td>
             @endforeach

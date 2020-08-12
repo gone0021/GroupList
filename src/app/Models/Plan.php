@@ -22,7 +22,6 @@ class Plan extends Model
         'title' => 'required|max:50',
         'start' => 'required|date',
         'finish' => 'required|date',
-        // 'map' => "required|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s",
         'map' => 'nullable|regex:/<iframe src=\"https:\/\/www\.google\.com\/map(.*?)<\/iframe>/s',
         'comment' => 'nullable|max:1000',
     ];
@@ -35,7 +34,6 @@ class Plan extends Model
         'start.date' => '正しい日付を入力してください。',
         'finish.required' => '日付を入力してください。',
         'finish.date' => '正しい日付を入力してください。',
-        // 'map.required' => 'リンクを入力してください。',
         'map.regex' => '正しいリンクを入力してください。',
         'comment.max' => '1000文字以内で入力してください。',
     ];
@@ -49,54 +47,5 @@ class Plan extends Model
     public function groupUser()
     {
         return $this->belongsTo('App\Models\GroupUser', 'user_id', 'user_id');
-    }
-
-
-    /**
-     * 削除済のソートname
-     * desc
-     *
-     * @return void
-     */
-    public function scopeTrashedSortNameAsc()
-    {
-        $plan = $this->onlyTrashed()->orderBy('title', 'asc')->paginate($this->p_num);
-        return $plan;
-    }
-
-    /**
-     * 削除済のソートname
-     * desc
-     *
-     * @return void
-     */
-    public function scopeTrashedSortNameDesc()
-    {
-        $plan = $this->onlyTrashed()->orderBy('title', 'desc')->paginate($this->p_num);
-        return $plan;
-    }
-
-    /**
-     * 削除済のソートdate
-     * asc
-     *
-     * @return void
-     */
-    public function scopeTrashedSortStartAsc()
-    {
-        $plan = $this->onlyTrashed()->orderBy('start', 'asc')->paginate($this->p_num);
-        return $plan;
-    }
-
-    /**
-     * 削除済のソートdate
-     * desc
-     *
-     * @return void
-     */
-    public function scopeTrashedSortStartDesc()
-    {
-        $plan = $this->onlyTrashed()->orderBy('start', 'desc')->paginate($this->p_num);
-        return $plan;
     }
 }

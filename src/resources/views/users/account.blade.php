@@ -5,6 +5,11 @@
 
 <div class="card-body">
     <p>
+        <a href="{{ url('users/show') }}">
+            ユーザー情報
+        </a>
+    </p>
+    <p>
         <a href="{{ url('users/password') }}">
             パスワードの変更
         </a>

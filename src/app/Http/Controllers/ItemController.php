@@ -4,26 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserRequest;
-use App\Models\Trip;
-use App\Models\Plan;
-use App\Models\Divelog;
-use App\Models\User;
 use App\Models\Group;
-use App\Models\GroupUser;
 use App\Models\Item;
-use Carbon\Carbon;
+use App\helpers;
+
 use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use PhpParser\Node\Expr\New_;
 
 class ItemController extends Controller
 {
-    public $p_num = 7;
+    // select条件
     public $select = ["item_id", "group_name", "item_type", "title", "date", "uid", "user_name", "status", "open_range", "is_open"];
-
 
     /**
      * エラーページ
@@ -36,29 +26,23 @@ class ItemController extends Controller
     }
 
     /**
-     * アイテム一覧
+     * グループごとのアイテム一覧
      *
      * @return object
      */
     public function index(Request $req)
     {
-        if (!$this->checkInGroup($req->group_id)) {
+        if (!helpers::checkInGroup($req->group_id)) {
             return redirect('items/error');
         }
 
         $group = Group::find($req->group_id);
 
-        if ($group->group_type == 0) {
-            $serch = DB::raw(Item::UnionNoDivelog());
-        } else if ($group->group_type == 1) {
-            $serch = DB::raw(Item::UnionAll());
-        }
+        // ダイビング関連のグループかどうかを判定
+        $serch = self::checkDivingGroup($group->group_type);
 
         // DBファサードは配列が返りpaginateが使えないため、rawを用いたクエリビルダで副問い合わせを作る
-        $items = DB::table($serch)
-            ->select($this->select)
-            ->where('g.id', $req->group_id)
-            ->paginate($this->p_num);
+        $items = $this->getItemByGroup($serch, $req->group_id);
 
         $param = [
             'gid' => $req->group_id,
@@ -76,12 +60,12 @@ class ItemController extends Controller
      */
     public function dateItems(Request $req)
     {
-        if ($req->group_id != 0 && !$this->checkInGroup($req->group_id)) {
-            // if (!$this->checkInGroup($req->group_id)) {
+        // グループidが0の場合はエラーを返さない
+        if ($req->group_id != 0 && !helpers::checkInGroup($req->group_id)) {
             return redirect('items/error');
         }
 
-        // グループIDの有無
+        // グループIDの有無（グループまたは個人）の判定
         if ($req->group_id != 0) {
             $group = Group::find($req->group_id);
         } else {
@@ -93,53 +77,11 @@ class ItemController extends Controller
             $serch = DB::raw(Item::UnionAllNoGroup());
             // グループIDが存在する場合
         } else {
-            if ($group->group_type == 0) {
-                $serch = DB::raw(Item::UnionNoDivelog());
-            } else if ($group->group_type == 1) {
-                $serch = DB::raw(Item::UnionAll());
-            }
+            $serch = self::checkDivingGroup($group->group_type);
         }
 
-        // group_idあり、item_typeあり
-        if ($req->group_id > 0 && $req->item_type > 0) {
-            $items = DB::table($serch)
-                // ->Item::DateItemGroupByType($req->date)
-                ->select($this->select)
-                ->where('g.id', $req->group_id)
-                ->where('item_type', $req->item_type)
-                ->where('date', $req->date)
-                ->whereNull('is_deleted')
-                ->paginate($this->p_num);
-
-            // group_idあり、item_typeなし
-        } elseif ($req->group_id > 0 && $req->item_type == 0) {
-            $items = DB::table($serch)
-                // ->Item::DateItemGroupAllType($req->date)
-                ->select($this->select)
-                ->where('g.id', $req->group_id)
-                ->where('date', $req->date)
-                ->whereNull('is_deleted')
-                ->paginate($this->p_num);
-
-            // group_idなし、item_typeあり
-        } elseif ($req->group_id == 0 && $req->item_type > 0) {
-            $items = DB::table($serch)
-                // ->Item::DateItemPersonByType($req->date)
-                ->select($this->select)
-                ->where('item_type', $req->item_type)
-                ->where('date', $req->date)
-                ->whereNull('is_deleted')
-                ->paginate($this->p_num);
-
-            // group_idなし、item_typeなし
-        } elseif ($req->group_id == 0 && $req->item_type == 0) {
-            $items = DB::table($serch)
-                // ->Item::DateItemPersonAllType($req->date)
-                ->select($this->select)
-                ->where('date', $req->date)
-                ->whereNull('is_deleted')
-                ->paginate($this->p_num);
-        }
+        // グループとアイテムの条件に合わせて日別でレコードを取得
+        $items = $this->selectUserDateItem($serch, $req->group_id, $req->item_type, $req->date);
 
         $param = [
             'gid' => $req->group_id,
@@ -152,28 +94,112 @@ class ItemController extends Controller
 
 
     /**
-     * グループに参加しているかチェック
-     *
-     * @return boolean
+     * グループ別にレコードを取得
      */
-    public function checkInGroup($group_id): bool
+    public function getItemByGroup($serch, $group_id)
     {
-        $a_id = Auth::id();
-        $group = User::find($a_id)->group()->get()->toArray();
-        $res = false;
+        $items = DB::table($serch)
+            ->select($this->select)
+            ->where('g.id', $group_id)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
 
-        foreach ($group as $g) {
-            // if ( $group_id == 0) {
-            //     $res = true;
-            //     break;
-            // }
-            if (empty($g['id'] == $group_id)) {
-                $res = false;
-            } else {
-                $res = true;
-                break;
-            }
+    /**
+     * ダイビング関連のグループかどうかを判定
+     */
+    public static function checkDivingGroup($group_type)
+    {
+        if ($group_type == 0) {
+            $serch = DB::raw(Item::UnionNoDivelog());
+        } else if ($group_type == 1) {
+            $serch = DB::raw(Item::UnionAll());
         }
-        return $res;
+        return $serch;
+    }
+
+    /**
+     * グループとアイテムの条件に合わせて日別でレコードを取得
+     */
+    public function selectUserDateItem($serch, $group_id, $item_type, $date)
+    {
+        // グループ別：タイプ別
+        if ($group_id != 0 && $item_type != 0) {
+            $items = $this->getDateItemGroupByType($serch, $group_id, $item_type, $date);
+
+            // グループ別：全タイプ
+        } elseif ($group_id != 0 && $item_type == 0) {
+            $items = $this->getDateItemGroupAllType($serch, $group_id, $date);
+
+            // 個人：タイプ別
+        } elseif ($group_id == 0 && $item_type != 0) {
+            $items = $this->getDateItemPersonByType($serch, $item_type, $date);
+
+            // 個人：全タイプ
+        } elseif ($group_id == 0 && $item_type == 0) {
+            $items = $this->getDateItemPersonAllType($serch, $date);
+        }
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * グループ別：タイプ別
+     */
+    public function getDateItemGroupByType($serch, $group_id, $item_type, $date)
+    {
+        $items = DB::table($serch)
+            ->select($this->select)
+            ->where('g.id', $group_id)
+            ->where('item_type', $item_type)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * グループ別：全タイプ
+     */
+    public function getDateItemGroupAllType($serch, $group_id, $date)
+    {
+        $items = DB::table($serch)
+            ->select($this->select)
+            ->where('g.id', $group_id)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * 個人：タイプ別
+     */
+    public function getDateItemPersonByType($serch, $item_type, $date)
+    {
+        $items = DB::table($serch)
+            ->select($this->select)
+            ->where('item_type', $item_type)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * 個人：全タイプ
+     */
+    public function getDateItemPersonAllType($serch, $date)
+    {
+        $items = DB::table($serch)
+            ->select($this->select)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return  $items;
     }
 }

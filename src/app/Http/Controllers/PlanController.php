@@ -6,19 +6,20 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Plan;
-use Illuminate\Support\Facades\DB;
+use App\helpers;
 
 class PlanController extends Controller
 {
-    /** ぺジネーションの数 */
-    private $page = 7;
-
-    public function index(Request $req)
+    /**
+     * palnページ
+     *
+     * @return void
+     */
+    public function index()
     {
-        $a_id = Auth::id();
-        $plan = Plan::where('user_id', $a_id)->paginate($this->page);
+        $items = Plan::where('user_id', Auth::id())->paginate(helpers::$page);
 
-        $param = ['items' => $plan,];
+        $param = ['items' => $items,];
         return view('/items/plans.index', $param);
     }
 
@@ -32,7 +33,6 @@ class PlanController extends Controller
     {
         $items = Plan::find($req->id);
         $param = ['items' => $items,];
-        // dump($req->id);
         return view('/items/plans.detail', $param);
     }
 
@@ -45,7 +45,6 @@ class PlanController extends Controller
     public function status(Request $req)
     {
         $plan = Plan::find($req->id);
-
         if ($plan->status != 0) {
             Plan::find($req->id)->update(['status' => 0]);
             return back();
@@ -55,14 +54,16 @@ class PlanController extends Controller
         }
     }
 
-    /** 新規登録 */
+    /**
+     * 新規登録
+     */
     public function new()
     {
         return view('/items/plans.new');
     }
 
     /**
-     * 新規登録_確認
+     * 新規登録：確認
      *
      * @param Request $req
      * @return void
@@ -70,14 +71,13 @@ class PlanController extends Controller
     public function newCheck(Request $req)
     {
         $this->validate($req, Plan::$rules, Plan::$messages);
-
         $items = $req->all();
+
         $param = ['items' => $items,];
-        dump($param);
         return view('/items/plans.new_check', $param);
     }
 
-    /** 新規登録_実行
+    /** 新規登録：実行
      *
      * @param Request $req
      * @return void
@@ -101,28 +101,27 @@ class PlanController extends Controller
     public function edit(Request $req)
     {
         $items = Plan::find($req->id);
+
         $param = ['items' => $items,];
-        // dump(strtotime($items->start));
-        // dump($items->start);
         return view('/items/plans.edit', $param);
     }
 
     /**
-     * 編集_確認
+     * 編集：確認
      *
      * @param Request $req
      * @return void
      */
     public function editCheck(Request $req)
     {
-        // $this->validate($req, Plan::$rules, Plan::$messages);
+        $this->validate($req, Plan::$rules, Plan::$messages);
         $items = $req->all();
         $param = ['items' => $items,];
         return view('/items/plans.edit_check', $param);
     }
 
     /**
-     * 編集_実行
+     * 編集：実行
      *
      * @param Request $req
      * @return void
@@ -131,14 +130,13 @@ class PlanController extends Controller
     {
         $val = $req->all();
         unset($val['_token']);
-
         $plan = Plan::find($req->id);
         $plan->fill($val)->update();
         return redirect('/plans/edit/done');
     }
 
     /**
-     * 削除_確認
+     * 削除：確認
      *
      * @param Request $req
      * @return void
@@ -151,7 +149,7 @@ class PlanController extends Controller
     }
 
     /**
-     * 削除_実行
+     * 削除：実行
      *
      * @param Request $req
      * @return void
@@ -159,8 +157,6 @@ class PlanController extends Controller
     public function deleteAction(Request $req)
     {
         Plan::find($req->id)->delete();
-        // dump($req->id);
-        // return view('test');
         return redirect('/plans/delete/done');
     }
 
@@ -172,10 +168,9 @@ class PlanController extends Controller
      */
     public function deletedPlan()
     {
-        $teims = Plan::onlyTrashed()->paginate($this->page);
+        $teims = Plan::onlyTrashed()->paginate(helpers::$page);
 
         $param = ['items' => $teims];
-        // dump($param);
         return view('/items/plans.deleted', $param);
     }
 
@@ -192,7 +187,7 @@ class PlanController extends Controller
     }
 
     /**
-     * 削除済_詳細
+     * 削除済：詳細
      *
      * @param Request $req
      * @return void
@@ -200,8 +195,8 @@ class PlanController extends Controller
     public function deletedDetailPlan(Request $req)
     {
         $items = Plan::onlyTrashed()->find($req->id);
+
         $param = ['items' => $items,];
-        dump($req->id);
         return view('/items/plans.detail', $param);
     }
 }

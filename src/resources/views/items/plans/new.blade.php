@@ -114,8 +114,8 @@
 
             <div class="col-md-6">
                 <select name="open_range">
+                    <option value="1" selected>グループ</option>
                     <option value="0">個人</option>
-                    <option value="1">グループ</option>
                 </select>
             </div>
         </div>
@@ -126,8 +126,8 @@
 
             <div class="col-md-6">
                 <select name="is_open">
+                    <option value="1" selected>詳細表示する</option>
                     <option value="0">詳細表示しない</option>
-                    <option value="1">詳細表示する</option>
                 </select>
             </div>
         </div>
