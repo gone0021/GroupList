@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Rules\Current;
 
 class User extends Model
 {
@@ -51,6 +52,19 @@ class User extends Model
         return $this->hasMany('App\Models\Plna');
     }
 
+    /** バリデーションルール */
+    public static $rules = [
+        'email' => ['string','email','max:255'],
+        'birthday' => ['date'],
+    ];
+
+    /** バリデーションエラーメッセージ */
+    public static $messages = [
+        'email.email' => 'メールアドレスを入力してください',
+        'email.max' => '255文字まで',
+        'birthday.date' => '日付を入力してください',
+    ];
+
     // ------ sort ------
 
     /** ぺジネーションの数 */
@@ -74,7 +88,7 @@ class User extends Model
      *
      * @return void
      */
-     public function scopeSortIdDesc()
+    public function scopeSortIdDesc()
     {
         $user = $this->orderBy('id', 'desc')->paginate($this->p_num);
         return $user;
@@ -135,7 +149,7 @@ class User extends Model
      *
      * @return void
      */
-        public function scopeTrashedSortNameAsc()
+    public function scopeTrashedSortNameAsc()
     {
         $user = $this->onlyTrashed()->orderBy('user_name', 'asc')->paginate($this->p_num);
         return $user;

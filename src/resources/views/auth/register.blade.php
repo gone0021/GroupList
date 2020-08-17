@@ -73,7 +73,7 @@
                             </div>
                         </div>
 
-                        {{-- パスワードチェック --}}
+                        {{-- パスワード（確認用） --}}
                         <div class="form-group row">
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
@@ -84,11 +84,14 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
+                                <input type="submit" class="btn btn-primary mr-3" value="{{ __('Register') }}">
+
+                                <a href="{{ route('login') }}" class="btn btn-primary">{{ __('Return') }}</a>
+                                </a>
+
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

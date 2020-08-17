@@ -22,6 +22,23 @@ class DoneController extends Controller
         return view('/assist.done', $param);
     }
 
+
+    /**
+     * パスワードの忘れ
+     *
+     * @return void
+     */
+    public function forgetPass()
+    {
+        $title = __(' Edit Password Completed');
+        $msg = 'パスワードを変更しました';
+        $link =  route('login');
+        $disp = 'login';
+
+        $param = ['title' => $title, 'msg' => $msg, 'link' => $link, 'disp' => $disp];
+        return view('/assist.done', $param);
+    }
+
     /**
      * ユーザー情報の編集
      *

@@ -25,10 +25,9 @@ class CalendarService
         $week = '';
 
         // カレンダーの作成
-        // $dt = new Carbon(self::getYm_firstday());
-        $dt = new Carbon(self::getYm_firstday());
-        $day_of_week = $dt->dayOfWeek; // 曜日
-        $days_in_month = $dt->daysInMonth; // その月の日数
+        $carbon = new Carbon(self::getYm_firstday());
+        $day_of_week = $carbon->dayOfWeek; // 曜日
+        $days = $carbon->daysInMonth; // その月の日数
 
         // 祝日の取得用
         $month = Carbon::parse(self::getYm_firstday())->format('Y');
@@ -38,17 +37,15 @@ class CalendarService
         $item = '';
         $selectItems = $this->selectItems($group_id, $item_type);
 
-        $url = url('date_items');
-
         // 1週目に空のセルを追加
         $week .= str_repeat('<td></td>', $day_of_week);
 
         // 7日分（日～土）のループ
-        for ($day = 1; $day <= $days_in_month; $day++, $day_of_week++) {
+        for ($day = 1; $day <= $days; $day++, $day_of_week++) {
             $date = self::getYm() . '-' . $day;
             $dateTime = new DateTime($date);
 
-            // aタグ
+            // aタグでアイテム数を表示
             $link = '<a href=" '.  url('date_items')  . '?date=' . $dateTime->format('Y-m-d')  . '&group_id=' . $group_id . '&item_type=' . $item_type . '" class="has-item">';
 
 
@@ -64,21 +61,20 @@ class CalendarService
                 }
             }
 
-            // 当日ならclassにtodayを設定
-            if (Carbon::now()->format('Y-m-j') === $date) {
-                // 祝日のチェックと表示
-                if (empty($yasumi->isHoliday($dateTime))) {
-                    $week .= '<td class="today">' . $day . $item;
-                } else {
-                    $week .= '<td class="today">' . $day . '<pre>' . $this->getHolidayNmae($dateTime, $date) . '</pre>' . $item;
-                }
-                // classにcldを設定
-            } else {
-                // 祝日のチェックと表示
+            // 当日の判定
+            if (Carbon::now()->format('Y-m-j') !== $date) {
+                // 祝日のチェック
                 if (empty($yasumi->isHoliday($dateTime))) {
                     $week .= '<td class="cld">' . $day . $item;
                 } else {
                     $week .= '<td class="cld holiday">' . $day . '<p>' . $this->getHolidayNmae($dateTime, $date) . '</p>' . $item;
+                }
+            } else {
+                // 祝日のチェック
+                if (empty($yasumi->isHoliday($dateTime))) {
+                    $week .= '<td class="today">' . $day . $item;
+                } else {
+                    $week .= '<td class="today">' . $day . '<pre>' . $this->getHolidayNmae($dateTime, $date) . '</pre>' . $item;
                 }
             }
             // 出力
@@ -86,9 +82,9 @@ class CalendarService
             // }
 
             // 週の終わりの改行、または月末の改行と空白tdタグ
-            if (($day_of_week % 7 === 6) || ($day === $days_in_month)) {
+            if (($day_of_week % 7 === 6) || ($day === $days)) {
                 // 月末の空白tdタグ
-                if ($day === $days_in_month) {
+                if ($day === $days) {
                     $week .= str_repeat('<td></td>', 6 - ($day_of_week % 7));
                 }
                 // 出力
@@ -137,11 +133,6 @@ class CalendarService
     }
 
     /**
-     * selectする値をフィールドにセット
-     */
-    public $select = ["item_id", "item_type", "title", "date", "uid", "status", "deleted_at"];
-
-    /**
      * items 該当日のアイテム数を取得（個人：全て）
      *
      * @return object
@@ -149,8 +140,6 @@ class CalendarService
     public function countItemsPersonAllType()
     {
         $a_id = Auth::id();
-
-        // $serch = DB::raw(Item::unionNoGroupForCalendar());
         $serch = DB::raw(Item::unionAllNoGroup());
 
         $imtes = DB::table($serch)
@@ -177,8 +166,6 @@ class CalendarService
     public function countItemsPersonByType(String $item_type)
     {
         $a_id = Auth::id();
-
-        // $serch = DB::raw(Item::unionNoGroupForCalendar());
         $serch = DB::raw(Item::unionAllNoGroup());
 
         $imtes = DB::table($serch)
@@ -205,8 +192,6 @@ class CalendarService
     public function countItemsGroupAllType(String $group_id)
     {
         $a_id = Auth::id();
-
-        // $serch = DB::raw(Item::unionAllForCalendar());
         $serch = DB::raw(Item::unionAll());
 
         $imtes = DB::table($serch)
@@ -232,8 +217,6 @@ class CalendarService
     public function countItemsGroupByType(String $group_id, String $item_type)
     {
         $a_id = Auth::id();
-
-        // $serch = DB::raw(Item::unionAllForCalendar());
         $serch = DB::raw(Item::unionAll());
 
         $imtes = DB::table($serch)

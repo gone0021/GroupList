@@ -107,7 +107,7 @@ class UserController extends Controller
     {
         $pass = Hash::make($req->password);
 
-        $user = User::find( Auth::id());
+        $user = User::find(Auth::id());
         $user->password = $pass;
         $user->update();
         return redirect('/users/password/done');

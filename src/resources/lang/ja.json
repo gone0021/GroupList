@@ -52,6 +52,7 @@
     "Admin": "管理者",
     "Admin Page": "管理者ページ",
     "Are you sure you want to leave?": "本当に脱退しますか？",
+    "Confirm E-Mail Address": "メールアドレス（確認用）",
     "Confirm Password": "パスワード（確認用）",
     "Current Password": "現在のパスワード",
     "Birthday": "誕生日",
@@ -75,6 +76,7 @@
     "Not in the group.": "グループに参加していません。",
     "Password": "パスワード",
     "Register":"新規登録",
+    "Rest password": "パスワードのリセット",
     "Return": "戻る",
     "User List": "ユーザー一覧"
 

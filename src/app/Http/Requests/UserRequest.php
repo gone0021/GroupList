@@ -48,7 +48,7 @@ class UserRequest extends FormRequest
             'birthday' => ['date'],
 
             // 'password' => ['string', 'min:8', 'confirmed', "regex:$pass"],
-            'password' => ['string', 'min:2', 'confirmed',],
+            'password' => ['string', 'min:2', 'confirmed'],
             'current_password' => new Current(),
         ];
     }
