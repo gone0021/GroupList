@@ -22,6 +22,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('register_check', 'AssistController@registerCheck');
 Route::get('register_done', 'DoneController@register');
 
+Route::get('forget_pass', 'AssistController@forgetPass'); //
+Route::get('reset_pass', 'AssistController@resetPass');
+Route::post('reset_pass', 'AssistController@passAction');
+Route::get('pass_done', 'DoneController@forgetPass');
+
 Route::post('password_check', 'AssistController@passwordCheck');
 
 Route::middleware('auth')->group(function () {
