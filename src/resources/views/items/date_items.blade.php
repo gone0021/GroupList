@@ -105,13 +105,11 @@
 
     <div>
         {{-- group_idでwhereをしているためappendsでクエリに表示する --}}
-        {{ $items->appends(['group_id' => $gid])->links() }}
+        {{ $items->appends(['date' => $date])->appends(['group_id' => $gid])->appends(['item_type' => $type])->links() }}
     </div>
 
     <div class="col-md-10">
-        <a href="{{ route('calendar') }}" class="btn btn-light mr-3">
-            {{ __('Return') }}
-        </a>
+        <button type="button" onclick="history.back()" class="btn btn-light">{{ __('Return') }}</button>
     </div>
 
 </div>
