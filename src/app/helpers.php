@@ -5,10 +5,15 @@ namespace App;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\GroupUser;
+use App\Models\item;
+use Illuminate\Support\Facades\DB;
 
 class helpers
 {
     public static $page = 7; // ペジネーションの数
+
+    // select条件
+    public static $select = ["item_id", "group_name", "item_type", "title", "date", "uid", "user_name", "status", "open_range", "is_open"];
 
     /**
      * ログイン中のユーザーとリクエストされたユーザーidをチェック
@@ -21,7 +26,6 @@ class helpers
             return true;
         }
     }
-
 
     /**
      * マスタ管理者のチェック
@@ -104,5 +108,18 @@ class helpers
             }
         }
         return $res;
+    }
+
+    /**
+     * ダイビング関連のグループかどうかを判定
+     */
+    public static function checkDivingGroup($group_type)
+    {
+        if ($group_type == 0) {
+            $serch = DB::raw(Item::UnionNoDivelog());
+        } else if ($group_type == 1) {
+            $serch = DB::raw(Item::UnionAll());
+        }
+        return $serch;
     }
 }
