@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use App\helpers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Item extends Model
 {
-    public $p_num = 7;
+    // 共通のselect条件
+    public static $select = ["item_id", "group_name", "item_type", "title", "date", "uid", "user_name", "status", "open_range", "is_open"];
 
     public function scopeSortIdAsc()
     {
@@ -101,5 +103,118 @@ class Item extends Model
         )
         JOIN users as u ON uid = u.id
         ';
+    }
+
+
+    /**
+     * グループ別にレコードを取得
+     */
+    public static function getItemByGroup($serch, $group_id)
+    {
+        $items = DB::table($serch)
+            ->select(self::$select)
+            ->where('g.id', $group_id)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * ダイビング関連のグループかどうかを判定
+     */
+    public static function checkDivingGroup($group_type)
+    {
+        if ($group_type == 0) {
+            $serch = DB::raw(self::UnionNoDivelog());
+        } else if ($group_type == 1) {
+            $serch = DB::raw(self::UnionAll());
+        }
+        return $serch;
+    }
+
+    /**
+     * グループとアイテムの条件に合わせて日別でレコードを取得
+     */
+    public static function selectUserDateItem($serch, $group_id, $item_type, $date, $uid)
+    {
+        // グループ別：タイプ別
+        if ($group_id != 0 && $item_type != 0) {
+            $items = self::getDateItemGroupByType($serch, $group_id, $item_type, $date);
+
+            // グループ別：全タイプ
+        } elseif ($group_id != 0 && $item_type == 0) {
+            $items = self::getDateItemGroupAllType($serch, $group_id, $date);
+
+            // 個人：タイプ別
+        } elseif ($group_id == 0 && $item_type != 0) {
+            $items = self::getDateItemPersonByType($serch, $item_type, $date, $uid);
+
+            // 個人：全タイプ
+        } elseif ($group_id == 0 && $item_type == 0) {
+            $items = self::getDateItemPersonAllType($serch, $date, $uid);
+        }
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * グループ別：タイプ別
+     */
+    public static function getDateItemGroupByType($serch, $group_id, $item_type, $date)
+    {
+        $items = DB::table($serch)
+            ->select(self::$select)
+            ->where('g.id', $group_id)
+            ->where('item_type', $item_type)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * グループ別：全タイプ
+     */
+    public static function getDateItemGroupAllType($serch, $group_id, $date)
+    {
+        $items = DB::table($serch)
+            ->select(self::$select)
+            ->where('g.id', $group_id)
+            ->where('date', $date)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * 個人：タイプ別
+     */
+    public static function getDateItemPersonByType($serch, $item_type, $date, $uid)
+    {
+        $items = DB::table($serch)
+            ->select(self::$select)
+            ->where('item_type', $item_type)
+            ->where('date', $date)
+            ->where('uid', $uid)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return $items;
+    }
+
+    /**
+     * 日別でレコードを取得
+     * 個人：全タイプ
+     */
+    public static function getDateItemPersonAllType($serch, $date,$uid)
+    {
+        $items = DB::table($serch)
+            ->select(self::$select)
+            ->where('date', $date)
+            ->where('uid', $uid)
+            ->whereNull('is_deleted')
+            ->paginate(helpers::$page);
+        return  $items;
     }
 }

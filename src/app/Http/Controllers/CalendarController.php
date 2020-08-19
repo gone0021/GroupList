@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Item;
-use Illuminate\Support\Facades\DB;
 
 class CalendarController extends Controller
 {

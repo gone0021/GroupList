@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\helpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\Group;
 use App\Models\Item;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -191,8 +193,9 @@ class CalendarService
      */
     public function countItemsGroupAllType(String $group_id)
     {
-        $a_id = Auth::id();
-        $serch = DB::raw(Item::unionAll());
+        $group = Group::find($group_id);
+        // ダイビング関連のグループかどうかを判定して取得するselectを選択
+        $serch = item::checkDivingGroup($group->group_type);
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
@@ -216,8 +219,9 @@ class CalendarService
      */
     public function countItemsGroupByType(String $group_id, String $item_type)
     {
-        $a_id = Auth::id();
-        $serch = DB::raw(Item::unionAll());
+        $group = Group::find($group_id);
+        // ダイビング関連のグループかどうかを判定して取得するselectを選択
+        $serch = Item::checkDivingGroup($group->group_type);
 
         $imtes = DB::table($serch)
             ->select("item_id", "item_type", "title", "date", DB::raw("count(title) as t"), "uid", "status")
