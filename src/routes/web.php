@@ -295,6 +295,11 @@ Route::middleware('auth')->group(function () {
     \************************/
     Route::get('items/error', 'itemController@error');
     Route::get('groupitem', 'itemController@index');
+    Route::get('groupitem/sort_type_a', 'itemController@index');
+    Route::get('groupitem/sort_type_b', 'itemController@index');
+    Route::get('groupitem/sort_date_a', 'itemController@index');
+    Route::get('groupitem/sort_date_b', 'itemController@index');
+
     Route::get('date_items', 'itemController@dateItems');
 
     /************************\
