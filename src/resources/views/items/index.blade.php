@@ -7,99 +7,97 @@
 
 <div class="card-body">
 
-    <table class="table">
-        <tr>
-            <th>
-                <span class="mr-2">{{ __('Type') }}</span>
-                {{-- <a href="{{ url('trips/sort_title_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/sort_title_d') }}?item_type=1">↑</a> --}}
-            </th>
+    <table class="table" id="tb-item">
+        <thead>
+            <tr>
+                <th>
+                    <span class="mr-2">{{ __('Type') }}</span>
+                    <a href="{{ url('groupitem/sort_type_a') }}?group_id={{ $gid }}">↓</a>
+                    <a href="{{ url('groupitem/sort_type_b') }}?group_id={{ $gid }}">↑</a>
+                </th>
 
-            <th>
-                <span>{{ __('Title') }}</span>
-            </th>
+                <th>
+                    <span>{{ __('Title') }}</span>
+                </th>
 
-            <th>
-                <span class="mr-2">{{ __('Date')}}</span>
-                {{-- <a href="{{ url('trips/sort_date_a') }}?item_type=1">↓</a>
-                <a href="{{ url('trips/sort_date_d') }}?item_type=1">↑</a>
-            </th> --}}
+                <th>
+                    <span class="mr-2">{{ __('Date')}}</span>
+                    <a href="{{ url('groupitem/sort_date_a') }}?group_id={{ $gid }}">↓</a>
+                    <a href="{{ url('groupitem/sort_date_b') }}?group_id={{ $gid }}">↑</a>
+                </th>
 
-            <th>
-                <span>{{ __('User') }}</span>
-            </th>
+                <th>
+                    <span class="">{{ __('User') }}</span>
+                </th>
 
-            <th>
-                <span>
-                    {{ __('Stasut')}}
-                </span>
-            </th>
+                <th>
+                    <span>
+                        {{ __('Stasut')}}
+                    </span>
+                </th>
+            </tr>
+        </thead>
 
-        </tr>
+        <tbody>
+            @foreach ($items as $item)
+            <tr>
+                <td id="type">
+                    @if ($item->item_type == 1)
+                    ダイビング
+                    @elseif ($item->item_type == 2)
+                    場所
+                    @elseif ($item->item_type == 3)
+                    予定
+                    @else
+                    ???
+                    @endif
+                </td>
 
-        @foreach ($items as $item)
-        <tr>
+                @if ($item->is_open != 0)
+                <td id="title">
+                    @if ($item->item_type == 1)
+                    <a href="{{ url('divelogs/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
 
-            {{-- item_type --}}
-            <td>
-                @if ($item->item_type == 1)
-                ダイビング
-                @elseif ($item->item_type == 2)
-                場所
-                @elseif ($item->item_type == 3)
-                予定
+                    @elseif ($item->item_type == 2)
+                    <a href="{{ url('trips/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
+
+                    @elseif ($item->item_type == 3)
+                    <a href="{{ url('plans/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
+                    @endif
+                </td>
+
                 @else
-                ???
+                <td id="title">
+                    {{ $item->title }}
+                </td>
                 @endif
-            </td>
-
-            {{-- タイトル --}}
-            @if ($item->is_open != 0)
-            <td>
-                @if ($item->item_type == 1)
-                <a href="{{ url('divelogs/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
-
-                @elseif ($item->item_type == 2)
-                <a href="{{ url('trips/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
-
-                @elseif ($item->item_type == 3)
-                <a href="{{ url('plans/detail') }}?id={{ $item->item_id }}">{{ $item->title }}</a>
-
-                @endif
-            </td>
-
-            @else
-            <td>
-                {{ $item->title }}
-            </td>
-
-            @endif
 
 
-            {{-- 日付 --}}
-            <td>
-                {{ date('y年m月d日', strtotime($item->date)) }}
-            </td>
+                {{-- 日付 --}}
+                <td id="date">
+                    {{ date('y年m月d日', strtotime($item->date)) }}
+                </td>
 
 
-            {{-- user名 --}}
-            <td>
-                {{ $item->user_name }}
-            </td>
+                {{-- user名 --}}
+                <td id="name">
+                    {{ $item->user_name }}
+                </td>
 
-            {{-- 状態 --}}
-            <td>
-                @if ($item->status == 99)
-                ログ
-                @elseif ($item->status != 0)
-                完了
-                @else
-                未完
-                @endif
-            </td>
+                {{-- 状態 --}}
+                <td id="status">
+                    @if ($item->status == 99)
+                    ログ
+                    @elseif ($item->status != 0)
+                    完了
+                    @else
+                    未完
+                    @endif
+                </td>
 
-            @endforeach
-        </tr>
+                @endforeach
+            </tr>
+        </tbody>
     </table>
 
 

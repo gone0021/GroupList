@@ -40,11 +40,25 @@ class ItemController extends Controller
         $serch = Item::checkDivingGroup($group->group_type);
 
         // DBファサードは配列が返りpaginateが使えないため、rawを用いたクエリビルダで副問い合わせを作る
-        $items = Item::getItemByGroup($serch, $req->group_id);
+        if (request()->path() == 'groupitem/sort_type_a') {
+            $sort = Item::getItemByGroup($serch, $req->group_id)
+                ->orderBy('item_type', 'asc');
+        } elseif (request()->path() == 'groupitem/sort_type_b') {
+            $sort = Item::getItemByGroup($serch, $req->group_id)
+                ->orderBy('item_type', 'desc');
+        } elseif (request()->path() == 'groupitem/sort_date_b') {
+            $sort = Item::getItemByGroup($serch, $req->group_id)
+                ->orderBy('date', 'desc');
+        } else {
+            $sort = Item::getItemByGroup($serch, $req->group_id)
+                ->orderBy('date', 'asc');
+        }
+
+        // dd($sort->toSql());
 
         $param = [
             'gid' => $req->group_id,
-            'items' => $items,
+            'items' => $sort->paginate(helpers::$page),
             'group' => $group,
         ];
 
@@ -77,15 +91,17 @@ class ItemController extends Controller
         } else {
             $serch = Item::checkDivingGroup($group->group_type);
         }
-        $uid = Auth::id();
+        $aid = Auth::id();
 
         // グループとアイテムの条件に合わせて日別でレコードを取得
-        $items = Item::selectUserDateItem($serch, $req->group_id, $req->item_type, $req->date, $uid);
+        $items = Item::selectUserDateItem($serch, $req->group_id, $req->item_type, $req->date, $aid)
+            ->paginate(helpers::$page);
 
         $param = [
+            'ym' => date('Y-m', strtotime($req->date)),
             'date' => $req->date,
-            'gid' => $req->group_id,
-            'type' => $req->item_type,
+            'group_id' => $req->group_id,
+            'item_type' => $req->item_type,
             'items' => $items,
             'group' => $group,
         ];

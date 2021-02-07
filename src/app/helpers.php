@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class helpers
 {
-    public static $page = 7; // ペジネーションの数
+    public static $page = 8; // ペジネーションの数
 
     // select条件
     public static $select = ["item_id", "group_name", "item_type", "title", "date", "uid", "user_name", "status", "open_range", "is_open"];
