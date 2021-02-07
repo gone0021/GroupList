@@ -105,7 +105,6 @@ class Item extends Model
         ';
     }
 
-
     /**
      * グループ別にレコードを取得
      */
@@ -114,8 +113,7 @@ class Item extends Model
         $items = DB::table($serch)
             ->select(self::$select)
             ->where('g.id', $group_id)
-            ->whereNull('is_deleted')
-            ->paginate(helpers::$page);
+            ->whereNull('is_deleted');
         return $items;
     }
 
@@ -167,8 +165,7 @@ class Item extends Model
             ->where('g.id', $group_id)
             ->where('item_type', $item_type)
             ->where('date', $date)
-            ->whereNull('is_deleted')
-            ->paginate(helpers::$page);
+            ->whereNull('is_deleted');
         return $items;
     }
 
@@ -182,8 +179,7 @@ class Item extends Model
             ->select(self::$select)
             ->where('g.id', $group_id)
             ->where('date', $date)
-            ->whereNull('is_deleted')
-            ->paginate(helpers::$page);
+            ->whereNull('is_deleted');
         return $items;
     }
 
@@ -198,8 +194,7 @@ class Item extends Model
             ->where('item_type', $item_type)
             ->where('date', $date)
             ->where('uid', $uid)
-            ->whereNull('is_deleted')
-            ->paginate(helpers::$page);
+            ->whereNull('is_deleted');
         return $items;
     }
 
@@ -213,8 +208,7 @@ class Item extends Model
             ->select(self::$select)
             ->where('date', $date)
             ->where('uid', $uid)
-            ->whereNull('is_deleted')
-            ->paginate(helpers::$page);
+            ->whereNull('is_deleted');
         return  $items;
     }
 }

@@ -81,7 +81,7 @@ class Divelog extends Model
      */
     public function scopeTrashedSortNameAsc()
     {
-        $trip = $this->onlyTrashed()->orderBy('title', 'asc')->paginate($this->p_num);
+        $trip = $this->onlyTrashed()->orderBy('title', 'asc');
         return $trip;
     }
 
@@ -93,7 +93,7 @@ class Divelog extends Model
      */
     public function scopeTrashedSortNameDesc()
     {
-        $trip = $this->onlyTrashed()->orderBy('title', 'desc')->paginate($this->p_num);
+        $trip = $this->onlyTrashed()->orderBy('title', 'desc');
         return $trip;
     }
 
@@ -105,7 +105,7 @@ class Divelog extends Model
      */
     public function scopeTrashedSortDateAsc()
     {
-        $trip = $this->onlyTrashed()->orderBy('date', 'asc')->paginate($this->p_num);
+        $trip = $this->onlyTrashed()->orderBy('date', 'asc');
         return $trip;
     }
 
@@ -117,7 +117,7 @@ class Divelog extends Model
      */
     public function scopeTrashedSortDateDesc()
     {
-        $trip = $this->onlyTrashed()->orderBy('date', 'desc')->paginate($this->p_num);
+        $trip = $this->onlyTrashed()->orderBy('date', 'desc');
         return $trip;
     }
 }
