@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Facades\Calendar;
 use App\Services\CalendarService;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Item;
