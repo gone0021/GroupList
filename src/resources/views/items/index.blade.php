@@ -91,7 +91,7 @@
                     @elseif ($item->status != 0)
                     完了
                     @else
-                    未完
+                    予定
                     @endif
                 </td>
 
